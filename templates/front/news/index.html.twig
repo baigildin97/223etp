@@ -1,0 +1,35 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Новости | Электронная торговая площадка РесТорг{% endblock %}
+
+{% block body %}
+    <style>
+        .digital{
+            width: 100%;
+            float: none;
+            clear: both;
+            border: dotted 1px #8F949C;
+            padding: 1px 1px 1px 20px;
+            vertical-align: middle;
+            margin: 10px 0 5px 0;
+            background-color: #f2f2f5;
+        }
+    </style>
+    <div class="container">
+        <div class="row m50">
+            <div class="col-xs-12">
+                <h3>Новости</h3>
+                {% for news in pagination %}
+                <p><strong><span><a href="{{ path('front.news.show', {'news_id':news.id}) }}">{{ date(news.created_at) }}</a></span></strong>
+                    <br>
+                    {{ news.subject }}
+                </p>
+                {% endfor %}
+
+                <div class="navigation">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Панель управления{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item active">Панель управления</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+{#    {{ work_projects_calendar() }}#}
+    <div class="row">
+        <div class="col-md-6">
+
+{#            {{ work_projects_own_tasks() }}#}
+        </div>
+        <div class="col-md-6">
+{#            {{ work_projects_tasks_for_me() }}#}
+        </div>
+    </div>
+
+{% endblock %}

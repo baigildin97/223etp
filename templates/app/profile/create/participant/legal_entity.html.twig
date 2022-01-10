@@ -1,0 +1,377 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Профиль | Участник | Юридическое лицо{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('profile.create') }}">Шаг 1</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('profile.create.participant') }}">Шаг 2</a></li>
+        <li class="breadcrumb-item">Шаг 3</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <div class="fade-in" id="#zayava">
+        {{ form_start(form) }}
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        Шаг 3. Необходимо заполнить запрашиваемые данные
+                    </div>
+                    <div class="card-body">
+                        <fieldset class="form-group">
+                            <label>Выберите сертификат</label>
+                            <div class="input-group">
+                                    <span class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <svg class="c-icon"><use
+                                                        xlink:href="/assets/svg/free.svg#cil-contact"></use></svg>
+                                        </span>
+                                    </span>
+                                {{ form_widget(form.certificate, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.certificate) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>ИНН</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.inn, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.inn) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset id="position" style="display: none" class="form-group">
+                            <label>Должность</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.position, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.position) }}
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Данные пользователя
+                    </div>
+                    <div class="card-body">
+
+                        <fieldset class="form-group">
+                            <label>Документ(ы), подтверждающие полномочия представителя/руководителя юридического лица</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-description"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.confirmingDocument, {'attr': {'placeholder': 'Протокол №1 от 12.12.2011', 'class':'form-control'}}) }}
+                                {{ form_errors(form.confirmingDocument) }}
+                            </div>
+                            <small class="text-muted">Полное наименование документа, его дата и номер</small>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>ИНН представителя/руководителя юридического лица</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-description"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.representativeInn, {'attr': {'placeholder': '', 'class':'form-control'}}) }}
+                                {{ form_errors(form.representativeInn) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Контактный телефон</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-phone"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.phone, {'attr': {'placeholder': '+7-999-999-9999', 'class':'form-control'}}) }}
+                                {{ form_errors(form.phone) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>Адрес сайта</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-newspaper"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.webSite, {'attr': {'placeholder': 'http://example.com', 'class':'form-control'}}) }}
+                                {{ form_errors(form.webSite) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Данные организации
+                    </div>
+                    <div class="card-body">
+                        <fieldset class="form-group">
+                            <label>Краткое наименование организации</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.shortTitleOrganization, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.shortTitleOrganization) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>Полное наименование организации</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.fullTitleOrganization, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.fullTitleOrganization) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>ОГРН</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.ogrn, {'attr': {'placeholder': '0000000000000', 'class':'form-control'}}) }}
+                                {{ form_errors(form.ogrn) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>КПП</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.kpp, {'attr': {'placeholder': '02548862', 'class':'form-control'}}) }}
+                                {{ form_errors(form.kpp) }}
+                            </div>
+                        </fieldset>
+
+
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Юридический адрес
+                    </div>
+                    <div class="card-body">
+
+
+                        <fieldset class="form-group col-sm-3">
+                            <label>Индекс</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.legalIndex, {'attr': {'placeholder': '000000', 'class':'form-control'}}) }}
+                                {{ form_errors(form.legalIndex) }}
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset class="form-group col-sm-3">
+                            <label>Страна</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.legalCountry, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.legalCountry) }}
+                            </div>
+                        </fieldset>
+
+
+                        <fieldset class="form-group col-sm-3">
+                            <label>Регион</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.legalRegion, {'attr': {'placeholder': 'Республика Башкортостан', 'class':'form-control'}}) }}
+                                {{ form_errors(form.legalRegion) }}
+                            </div>
+
+                        </fieldset>
+
+
+                        <fieldset class="form-group col-sm-3">
+                            <label>Город</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.legalCity, {'attr': {'placeholder': 'г. Уфа', 'class':'form-control'}}) }}
+                                {{ form_errors(form.legalCity) }}
+                            </div>
+
+                        </fieldset>
+
+
+
+                        <fieldset class="form-group col-sm-3">
+                            <label>Улица</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.legalStreet, {'attr': {'placeholder': 'ул. Ленина', 'class':'form-control'}}) }}
+                                {{ form_errors(form.legalStreet) }}
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset class="form-group col-sm-3">
+                            <label>Дом/корпус/квартира/офис</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                {{ form_widget(form.legalHouse, {'attr': {'placeholder': 'д. 12, корпус 4, квартира 85', 'class':'form-control'}}) }}
+                                {{ form_errors(form.legalHouse) }}
+                            </div>
+
+                        </fieldset>
+
+
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Адрес фактического места нахождения
+                    </div>
+                    <div class="card-body">
+
+                        <fieldset class="form-group col-sm-6">
+                            <div class="form-check checkbox">
+                                <input class="form-check-input" id="address_matches" type="checkbox" value="">
+                                <label class="form-check-label" for="address_matches">Адрес фактического места нахождения совпадает с юридическим адресом</label>
+                            </div>
+
+                        </fieldset>
+
+
+
+                        <div id="form_fact_addreses">
+                            <fieldset class="form-group col-sm-3">
+                                <label>Индекс</label>
+                                <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                    {{ form_widget(form.factIndex, {'attr': {'placeholder': '000000', 'class':'form-control'}}) }}
+                                    {{ form_errors(form.factIndex) }}
+                                </div>
+
+                            </fieldset>
+
+
+                            <fieldset class="form-group col-sm-3">
+                                <label>Страна</label>
+                                <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                    {{ form_widget(form.factCountry, {'attr': {'class':'form-control'}}) }}
+                                    {{ form_errors(form.factCountry) }}
+                                </div>
+                            </fieldset>
+
+
+                            <fieldset class="form-group col-sm-3">
+                                <label>Регион</label>
+                                <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                    {{ form_widget(form.factRegion, {'attr': {'placeholder': 'Республика Башкортостан', 'class':'form-control'}}) }}
+                                    {{ form_errors(form.factRegion) }}
+                                </div>
+
+                            </fieldset>
+
+
+                            <fieldset class="form-group col-sm-3">
+                                <label>Город</label>
+                                <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                    {{ form_widget(form.factCity, {'attr': {'placeholder': 'г. Уфа', 'class':'form-control'}}) }}
+                                    {{ form_errors(form.factCity) }}
+                                </div>
+
+                            </fieldset>
+
+
+
+                            <fieldset class="form-group col-sm-3">
+                                <label>Улица</label>
+                                <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                    {{ form_widget(form.factStreet, {'attr': {'placeholder': 'Ленина 23', 'class':'form-control'}}) }}
+                                    {{ form_errors(form.factStreet) }}
+                                </div>
+
+                            </fieldset>
+
+                            <fieldset class="form-group col-sm-3">
+                                <label>Дом/корпус/квартира/офис</label>
+                                <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                                <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                </svg></span></span>
+                                    {{ form_widget(form.factHouse, {'attr': {'placeholder': 'д. 12, корпус 4, квартира 85', 'class':'form-control'}}) }}
+                                    {{ form_errors(form.factHouse) }}
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+                <div class="card">
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('profile_cert_list_modal') }}
+    {{ encore_entry_script_tags('create_profile') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('profile_cert_list_modal_css') }}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% block title %}Список лотов процедуры{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedureId}) }}">Процедура
+                №{{ procedureNumber }}</a></li>
+        <li class="breadcrumb-item active">Лоты</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <th>Номер лота</th>
+                <th>Название лота</th>
+                <th{% if lots.isSorted('l.starting_price') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(lots, 'Стартовая цена', 'l.starting_price') }}
+                <th{% if lots.isSorted('l.deposit_amount') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(lots, 'Размер депозита', 'l.deposit_amount') }}
+                <th{% if lots.isSorted('l.start_date_of_applications') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(lots, 'Начало приема заявок', 'l.start_date_of_applications') }}
+                <th{% if lots.isSorted('l.closing_date_of_applications') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(lots, 'Окончание приема заявок', 'l.closing_date_of_applications') }}
+                <th{% if lots.isSorted('l.created_at') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(lots, 'Дата создания лота', 'l.created_at') }}
+                <th></th>
+                </thead>
+                <tbody>
+                {% for lot in lots %}
+                    <tr>
+                        <td>{{ lot.id_number }}</td>
+                        <td>{{ lot.lot_name }}</td>
+                        <td>{{ money(lot.starting_price) }}</td>
+                        <td>{{ money(lot.deposit_amount) }}</td>
+                        <td>{{ date(lot.start_date_of_applications) }}</td>
+                        <td>{{ date(lot.closing_date_of_applications) }}</td>
+                        <td>{{ date(lot.created_at) }}</td>
+                        <td><a href="{{ path('lot.show', {'lotId': lot.id}) }}">Просмотреть</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation">
+                {{ knp_pagination_render(lots) }}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{{ path('procedure.lot.add', {'procedureId': procedureId}) }}">
+                <button class="btn btn-primary">Добавить</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

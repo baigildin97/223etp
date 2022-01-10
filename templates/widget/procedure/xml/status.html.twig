@@ -1,0 +1,15 @@
+{% if status == 'STATUS_SIGNED' %}
+    <span class="badge badge-success">Опубликован</span>
+{% elseif status == 'STATUS_MODERATE' %}
+    <span class="badge badge-warning">На модерации</span>
+{% elseif status == 'STATUS_APPROVE' %}
+    <span class="badge badge-info">Одобрен к публикации</span>
+{% elseif status == 'STATUS_RECALLED' %}
+    <span class="badge badge-secondary">Отозван</span>
+{% elseif status == 'STATUS_REJECTED' %}
+    <span class="badge badge-warning">Отклонен</span>
+{% elseif status == 'STATUS_NOT_SIGNED' %}
+    <span class="badge badge-info">Черновик</span>
+{% elseif status == 'STATUS_CANCELLING_PUBLICATION' %}
+    <span class="badge badge-info">Отмена публикации</span>
+{% endif %}

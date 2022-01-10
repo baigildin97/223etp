@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Изменение банковских данных{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    Изменение банковских данных
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <fieldset class="form-group">
+                            <label>Название банка</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+    <svg class="c-icon">
+    <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+    </svg></span></span>
+                                {{ form_widget(form.bankName, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.bankName) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>БИК банка</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+        <svg class="c-icon">
+        <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+        </svg></span></span>
+                                {{ form_widget(form.bankBik, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.bankBik) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Расчетный счет</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+            <svg class="c-icon">
+            <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+            </svg></span></span>
+                                {{ form_widget(form.paymentAccount, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.paymentAccount) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Корреспондентский счет</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+                <svg class="c-icon">
+                <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                </svg></span></span>
+                                {{ form_widget(form.correspondentAccount, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.correspondentAccount) }}
+                            </div>
+                        </fieldset>
+                        <button class="btn btn-sm btn-primary" type="submit">Подтвердить изменения</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

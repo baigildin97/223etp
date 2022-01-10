@@ -1,0 +1,8 @@
+{% extends 'mail.html.twig' %}
+
+{% block body %}
+    <p style="margin: 10px 0;">Ваша заявка на процедуру ожидает модерации.<br/>
+        Вы получите уведомление о результатах рассмотрения заявки в течение {{ moderated_period}}-х рабочих дней.<br/>
+        Номер заявки {{ procedure_number }}
+    </p>
+{% endblock %}

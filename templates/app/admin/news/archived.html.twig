@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Архив новостей{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('admin.news') }}">Новости</a></li>
+        <li class="breadcrumb-item active">Архив новостей</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Архив новостей</div>
+
+                <div class="card-body">
+
+
+
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Тема</th>
+                            <th>Дата публикации</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for news in pagination %}
+                            <tr>
+                                <td>{{ news.subject }}</td>
+                                <td>{{ date(news.created_at) }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

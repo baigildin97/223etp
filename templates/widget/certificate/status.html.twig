@@ -1,0 +1,9 @@
+{% if status == 'STATUS_ACTIVE' %}
+    <span class="badge badge-success">Активный</span>
+{% elseif status == 'STATUS_ARCHIVED' %}
+    <span class="badge badge-dark">Архивирован</span>
+{% elseif status == 'STATUS_REJECT' %}
+    <span class="badge badge-danger">Отклонен</span>
+{% elseif status == 'STATUS_MODERATE' %}
+    <span class="badge badge-warning">На модерации</span>
+{% endif %}

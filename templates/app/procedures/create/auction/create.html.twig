@@ -1,0 +1,168 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Новая процедура{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item">
+            <a href="{{ path('procedure.create') }}">Новая процедура</a>
+        </li>
+        <li class="breadcrumb-item active">Аукцион</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <div class="fade-in">
+        <div class="row justify-content-center">
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><b>Общие сведения о торгах</b></div>
+                    {{ form_start(form) }}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <fieldset class="form-group">
+                                    <label>Форма проведения</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.procedureType, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.procedureType) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-4">
+                                <fieldset class="form-group">
+                                    <label>Форма представления предложений о цене</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.pricePresentationForm, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.pricePresentationForm) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+
+                        <fieldset class="form-group">
+                            <label>Наименование процедуры</label>
+                            <div class="input-group">
+
+                                {{ form_widget(form.procedureName, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.procedureName) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><b>Сведения об организаторе торгов</b></div>
+                    <div class="card-body">
+                        <fieldset class="form-group">
+                            <label>Сокращенное наименование</label>
+                            <div class="input-group">
+                                <input type="text" disabled value="{{ organizerProfile.short_title_organization }}"
+                                       required="required" class="form-control">
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Полное наименование</label>
+                            <div class="input-group">
+                                <input type="text" disabled value="{{ organizerProfile.full_title_organization }}"
+                                       required="required" class="form-control">
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Адрес места нахождения</label>
+                            <div class="input-group">
+                                <input type="text" disabled value="{{ organizerProfile.getFactAddress() }}"
+                                       required="required" class="form-control">
+                            </div>
+                        </fieldset>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <fieldset class="form-group">
+                                    <label>Контактное лицо организатора торгов</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.organizerFullName, {'attr':{'placeholder':'ФИО'}}) }}
+                                        {{ form_errors(form.organizerFullName) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-4">
+                                <fieldset class="form-group">
+                                    <label>Email контактного лица организатора</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.organizerEmail) }}
+                                        {{ form_errors(form.organizerEmail) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-4">
+                                <fieldset class="form-group">
+                                    <label>Телефон контактного лица организатора</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.organizerPhone) }}
+                                        {{ form_errors(form.organizerPhone) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><b>Участие в торгах и порядок их проведения</b></div>
+
+                    <div class="card-body">
+                        <fieldset class="form-group">
+                            <label>Место представления заявок</label>
+                            <div class="input-group">
+                                {{ form_widget(form.infoPointEntry) }}
+                                {{ form_errors(form.infoPointEntry) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>Место проведения торгов</label>
+                            <div class="input-group">
+                                {{ form_widget(form.infoTradingVenue) }}
+                                {{ form_errors(form.infoTradingVenue) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>Порядок представления заявок на участие в торгах</label>
+                            <div class="input-group">
+                                {{ form_widget(form.infoBiddingProcess) }}
+                                {{ form_errors(form.infoBiddingProcess) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Порядок проведения торгов</label>
+                            <div class="input-group">
+                                {{ form_widget(form.tenderingProcess) }}
+                                {{ form_errors(form.tenderingProcess) }}
+                            </div>
+                        </fieldset>
+                        <div class="card-footer">
+                            <button class="btn btn-sm btn-success" type="submit">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('create_procedure') }}
+    {% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Реестр процедур | Электронная торговая площадка РесТорг{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row m50" style="padding: 20px;">
+            <div class="col-xs-12">
+                {% if notification.isCancelType() %}
+                    <h3 style="text-align: center">{{ xml.organizerFullName }}</h3>
+                    <h4 style="text-align: center">Извещение об отмене торгов в электронной форме</h4>
+                    <p><strong>Форма проведения торгов: </strong>{{ xml.procedureType }}</p>
+                    <p><strong>Форма подачи предложений о цене: </strong>{{ xml.pricePresentationForm }}</p>
+                    <p><strong>Оператор электронной торговой площадки: </strong>{{ xml.nameOrganization }}</p>
+                    <p><strong>Организатор торгов: </strong>{{ xml.organizerFullName }}</p>
+                    {% for lot in xml.lots %}
+                        <p><strong>Процедура №{{ procedure.id_number }}: </strong>{{ lot.name }}</p>
+                        <p><strong>Начальная цена лота: </strong>{{ lot.startingPrice }}, {{ lot.nds }}</p>
+                        <p><strong>Размер задатка: </strong>{{ lot.depositAmount }}</p>
+                        <p><strong>Шаг аукциона: </strong>{{ lot.auctionStep }}</p>
+                    {% endfor %}
+                    <p><strong>Основание: </strong>{{ xml.organizerComment }}</p>
+                {% else %}
+                {% for lot in xml.lots %}
+                    <h3 style="text-align: center">{{ xml.organizerFullName }}</h3>
+                    <h4 style="text-align: center">Извещение о проведении торгов в электронной форме</h4>
+                    
+                <p><strong>Оператор электронной торговой площадки: </strong>{{ xml.nameOrganization }}</p>
+                <p><strong>Организатор торгов: </strong>{{ xml.organizerFullName }}</p>
+
+                <br/>
+                <p><strong style="font-size: 16px">Предмет торгов</strong></p>
+                {#
+                <p><strong>Лот: №{{ lot.number }}</strong></p>
+                #}
+                <p>{{ lot.name }}</p>
+                <p><strong>Основание для проведения торгов: </strong>{{ lot.tenderBasic }}</p>
+                <p><strong>Форма проведения торгов: </strong>{{ lot.procedureType }}</p>
+                <p><strong>Форма подачи предложений о цене: </strong>{{ xml.pricePresentationForm }}</p>
+                <p><strong>Начальная цена лота: </strong>{{ lot.startingPrice }}, {{ lot.nds }}</p>
+                <p><strong>Шаг аукциона: </strong>{{ lot.auctionStep }}</p>
+                <p><strong>Сумма задатка: </strong>{{ lot.depositAmount }}</p>
+                <br/>
+                <p>
+                    В установленных законодательством РФ случаях на стоимость имущества начисляется НДС.
+                    Задаток должен поступить на реквизиты: {{ lot.requisite }}, не позднее {{ date(lot.advancePaymentTime, true) }}.
+                    Документом, подтверждающим поступление задатка на счет, является выписка со счета.
+                    Сумма внесенного задатка засчитывается в счет исполнения обязательств Победителя торгов по оплате приобретенного имущества.
+                </p>
+                <p>
+                    Ознакомиться с дополнительной информацией о предмете торгов и порядке их проведения и проектом договора купли-продажи заинтересованные лица могут на сайтах:
+                    https://229etp.ru/, http://www.torgi.gov.ru,
+                    {{ xml.organizerWebSite }}
+                    торгов и по телефону {{ xml.organizerPhone }}
+                </p>
+                <p><strong>Контактное лицо организатора: </strong>{{ xml.contactPerson }}
+                </p>
+                <p style="white-space: pre-line;"><strong>Место представления заявок: </strong>{{ lot.infoPointEntry }}</p>
+                <p style="white-space: pre-line;"><strong>Место проведения торгов: </strong>{{ xml.infoTradingVenue }}</p>
+                <p style="white-space: pre-line;"><strong>Порядок оформления участия в торгах и их проведение: </strong>{{ xml.infoBiddingProcess }}
+                    {{ xml.tendering_process }}</p>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {#<div class="col-xs-12">
+                <div class="table-mobile offset-top-22">
+                    <table style="font-size: 14px" class="table">
+                        <thead>
+                        <tr>
+                            <th>Документ подписан</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Владелец сертификата</td>
+                            <td>Шишков Евгений Николаевич</td>
+                        </tr>
+                        <tr>
+                            <td>Отпечаток сертификата</td>
+                            <td>A1FCCAA685571055F039DD8982F6913EFE300DB2</td>
+                        </tr>
+                        <tr>
+                            <td>Отпечаток подписи</td>
+                            <td>MIIgeAYJKoZIhvcNAQcCoIIgaTCCIGUCAQExDjAMBggqhQMHAQECAgUAMAsGCSqGSIb3DQEHAaCC
+                                GiwwggUUMIIEwaADAgECAh...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>#}
+        </div>
+    </div>
+{% endblock %}

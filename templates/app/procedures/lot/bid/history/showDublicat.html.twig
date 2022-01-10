@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+{% block title %}Просмотр истории{% endblock %}
+{% block breadcrumbs %}
+   <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Мои процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': bid.procedureId}) }}">Процедура №{{ bid.procedureNumber }}</a></li>
+{#        <li class="breadcrumb-item"><a href="{{ path('lot.show', {'lotId': bid.lotId}) }}">Лот №{{ bid.lotNumber}}</a></li>#}
+       <li class="breadcrumb-item"><a href="{{ path('bid.show', {'bidId': bid.id}) }}">Заявка №{{ bid.bidNumber }}</a></li>
+       <li class="breadcrumb-item"><a href="{{ path('bid.history', {'bidId': bid.id}) }}">История изменений</a></li>
+        <li class="breadcrumb-item active">Просмотр истории</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header text-center p-2"><h5>Заявка на участие в электронных торгах</h5></div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Номер заявки</td>
+                            <td>№{{ bid.bidNumber }}</td>
+                        </tr>
+                        <tr>
+                            <td>Лот</td>
+                            <td>№{{ bid.procedureNumber }}-{{ bid.lotNumber }}</td>
+                        </tr>
+                        <tr>
+                            <td>Дата и время создания</td>
+                            <td>{{ bid.createdAt }} </td>
+                        </tr>
+                        <tr>
+                            <td>Дата и время подписания</td>
+                            <td>{{ bid.createdAt }} </td>
+                        </tr>
+                        <tr>
+                            <td>Статус</td>
+                            <td>{{ bid_status(bid.status) }} </td>
+                        </tr>
+                        {% if bid.status == 'STATUS_REJECT' %}
+                            <tr>
+                                <td>Причина отклонения</td>
+                                <td class="text-danger">{{ bid.causeReject }}</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+           <div class="card">
+                <div class="card-header">Сведения об участнике</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Организация</td>
+                            <td>{{ bid.participantInfo.organizationName }}</td>
+                        </tr>
+                        <tr>
+                            <td>ИНН</td>
+                            <td>{{ bid.participantInfo.organizationInn }}</td>
+                        </tr>
+                        <tr>
+                            <td>Ф.И.О</td>
+                            <td>{{ bid.participantInfo.owner}} </td>
+                        </tr>
+                        <tr>
+                            <td>Должность</td>
+                            <td>{{ bid.participantInfo.owner_position }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Документы</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Документ</th>
+                            <th>Дата и время загрузки</th>
+                            <th>Статус</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Договор о задатке</td>
+                            <td><a target="_blank" href="{{ storage_path(bid.depositAgreementFilePath ~ '/' ~ bid.depositAgreementFileName) }}">{{ bid.depositAgreementFileRealName }}</a></td>
+                            <td>{{ bid.createdAt }}</td>
+                            <td>
+                                <span class="badge badge-success">Подписан</span>
+                            </td>
+                        </tr>
+                        {% for document in documents %}
+                            <tr>
+                                <td>{{ document.documentName }}</td>
+                                <td><a target="_blank" href="{{ document.url }}">{{ document.fileRealName }}</a></td>
+                                <td>{{ document.createdAt }}</td>
+                                <td>
+                                    <span class="badge badge-success">Подписан</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

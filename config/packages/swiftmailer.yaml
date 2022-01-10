@@ -1,0 +1,8 @@
+swiftmailer:
+    url: '%env(MAILER_URL)%'
+    timeout: 1000
+    stream_options:
+        ssl:
+            verify_peer: false
+            verify_peer_name: false
+            allow_self_signed: false

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Генерация нового протокола{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedure.id}) }}">Процедура
+                №{{ procedure.id_number }}</a></li>
+{#
+        <li class="breadcrumb-item"><a href="{{ path('lot.protocols', {'lot_id': lot.id}) }}">Протоколы</a></li>
+#}
+        <li class="breadcrumb-item active">Создание протокола</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">{{ typeName }}</div>
+                    {{ form_start(form) }}
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Основание:</label>
+                            <div class="input-group">
+                                {{ form_widget(form.organizerComment, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.organizerComment) }}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-success" type="submit">Сформировать документ</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}

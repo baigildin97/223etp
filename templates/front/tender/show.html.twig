@@ -1,0 +1,225 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Реестр процедур | Электронная торговая площадка РесТорг{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row m50">
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Общие сведения о проведении торгов</h5></div>
+                        <div class="panel-body">
+                            <div class="procedure">
+                                <p>Номер процедуры: {{ procedure.procedure_number }}</p>
+                                <p>Состояние торгов: {{ statusProcedure(procedure.status, false) }}</p>
+                                <p>Тип процедуры: Aукцион</p>
+                                <p>Форма представления предложений о цене: Открытая</p>
+                                <p>Предмет торгов: {{ procedure.title }}</p>
+                                <p>Повторный аукцион: нет</p>
+                                <!--<p><a style='color: #3a89ae;' href='https://test.229etp.ru/procedures/189/izveshenie'>Извещение №034189 о проведении торговой процедуры</a></p>-->
+                                <p>Шаг аукциона: {{ money(procedure.auction_step) }}</p>
+                                <!--<p>Время ожидания ценового предложения, мин: 5</p>
+                                <p>Начало подача заявок: 15.03.2021 11:00</p>
+                                <p>Окончание подачи заявок 26.03.2021 18:00</p>
+                                <p>Подведение итогов по заявкам: 30.03.2021 11:00</p>-->
+                                <p>Начало торгов: {{ date(procedure.start_trading_date) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Сведения о предмете торгов</h5></div>
+                        <div class="panel-body">
+                            <div class="object">
+                                <p>Начальная цена: {{ money(procedure.starting_price) }}</p>
+                                <p>Тип НДС: {{ ndsType(procedure.nds) }}</p>
+                                <p>Размер задатка: {{ money(procedure.deposit_amount) }}</p>
+                                <p>Тип арестованного имущества: {{ arrested_type(procedure.arrested_property_type) }}</p>
+                                <p>Регион: {{ procedure.region }}</p>
+                                <p>Местонахождение предмета торгов:{{ procedure.location_object }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h4>Информация о задатке</h4></div>
+                        <div class="panel-body">
+                            <div class="dolgnikInfo">
+                                <p>Задаток должен поступить на счет организатора не позднее: 2021-03-26</p>
+                                <p>Реквизиты для внесения задатка: Задаток должен поступить на реквизиты Межрегионального территориального управления Федерального агентства по управлению государственным имуществом в городе Санкт-Петербурге и Ленинградской области:  Получатель: УФК по г. Санкт-Петербургу (МТУ Росимущества в городе Санкт-Петербурге и Ленинградской области, л/с 05721А16220), р/с 03212643000000017200 в Северо-Западном ГУ Банка России//УФК по г. Санкт-Петербургу, г. Санкт-Петербург, БИК 014030106, к/с 40102810945370000005, ИНН 7838426520, КПП 784001001, ОКТМО 40909000, статус налогоплательщика 01, УИН/0, КБК 16711414011010500440</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h4>Данные дела</h4></div>
+                        <div class="panel-body">
+                            <div class="dolgnikInfo">
+                                <p>Номер исполнительного производства: 113332/18/78012-ИП</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Сведения об организаторе торгов</h5></div>
+                        <div class="panel-body">
+                            <div class="organizer">
+                                <p>Краткое наименование: {{ procedure.organization_short_title }}</p>
+                                <p>Полное наименование: {{ procedure.organization_full_title }}</p>
+                                <p>Контактное лицо организатора: {{ procedure.organizer_full_name }}</p>
+                                <p>Телефон контактного лица организатора: {{ procedure.organizer_phone }}</p>
+                                <p>Email контактного лица организатора: {{ procedure.organizer_email }}</p>
+                                <p>Почтовый адрес:
+                                    {{ procedure.organization_fact_index }},
+                                    {{ country(procedure.organization_fact_country) }},
+                                    {{ procedure.organization_fact_region }},
+                                    {{ procedure.organization_fact_city }},
+                                    {{ procedure.organization_fact_street }},
+                                    {{ procedure.organization_fact_house }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Сведения о должнике</h5></div>
+                        <div class="panel-body">
+                            <div class="dolgnikInfo">
+                                <p>Наименование должника (Ф.И.О): {{ procedure.debtor_full_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Сведения о торгах</h5></div>
+                        <div class="panel-body">
+                            <div class="torgi">
+                                <p>Порядок представления заявок:
+                                    {{ procedure.info_bidding_process }}
+                                </p>
+                                <p>Место представления заявок:
+                                    {{ procedure.info_point_entry }}
+                                </p>
+                                <p>Место проведения торгов:
+                                    {{ procedure.tendering_process }}
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Документы</h5></div>
+                        <div class="panel-body">
+                            <div class="documents">
+                                {% for key, value in files %}
+
+
+
+                                    {% for file in value %}
+                                        {% if (file.file_type == 'CONTRACT_OF_SALE') %}
+                                            <p><a class="blue-link" target="_blank" href="{{ storage_path(file.file_path~"/"~file.file_name) }}">Проект договора купли-продажи</a></p>
+                                        {% endif %}
+                                    {% endfor %}
+
+
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Извещения</h5></div>
+                        <div class="panel-body">
+                            <div class="documents">
+                                {% for notification in notifications %}
+                                    {% if (notification.type == 'TYPE_NOTIFY_DOCUMENT') %}
+                                        <p><a class="blue-link" href="{{ path("front.tender.notification.show", {'procedure_id': procedure.procedure_id, 'notification_id': notification.id}) }}">
+                                                Извещение о проведении торговой процедуры №{{ notification.number }} от {{ date(notification.signed_at) }}</a> </p>
+                                    {% endif %}
+                                    {% if (notification.type == 'TYPE_NOTIFY_CANCEL') %}
+                                        <p><a class="blue-link" href="{{ path("front.tender.notification.show", {'procedure_id': procedure.procedure_id, 'notification_id': notification.id}) }}">
+                                                Извещение об отмене торговой процедуры №{{ notification.number }} от {{ date(notification.signed_at) }}</a> </p>
+                                    {% endif %}
+
+
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Лоты</h5></div>
+                        <div class="panel-body">
+                            <div class="lots">
+                                <p>Наименование: {{ procedure.title }}</p>
+                                <!--<p>Номер: 1</p>
+                                <p>Начальная цена: 2868000</p>
+                                <p>Размер задатка: 1434000</p>
+                                <p>Тип арестованного имущества: 1</p>
+                                <p>Дополнительные характеристики объекта: </p>
+                                <p>Регион местонахождения объекта: Северо-Западный</p>
+                                <p>Адрес местонахождения объекта: Ленинградская обл., Ломоносовский район, МО &quot;Кипенское сельское поселение&quot;, д. Кипень, ул. Новостроек, участок 12</p>
+                                <p> </p>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><h5>Дополнительные документы</h5></div>
+                        <div class="panel-body">
+                            <div class="documents">
+
+                      
+                                {% for key, value in files %}
+
+                                   {%  if (key == 'OTHER') %}
+                                       {% for file in value %}
+                                       <p><a class="blue-link" target="_blank" href="{{ storage_path(file.file_path~"/"~file.file_name) }}">{{ file.file_real_name }}</a></p>
+                                       {% endfor %}
+                                    {% endif %}
+
+                                {% endfor %}
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Сертификат: {{ certificate.thumbprint }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('certificates', {user_id: user_id}) }}">Мои сертификаты ЭП</a></li>
+        <li class="breadcrumb-item active">Сертификат: {{ certificate.thumbprint }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-footer">
+                    <a href="{{ path('certificate.create') }}" >Добавить новый сертификат ЭП</a><br>
+                    {#                    <a href="{{ path('profile.certificate.archive', {'profile_id':profile_id}) }}" >Архив сертификатов ЭП</a>#}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    Владелец
+                </div>
+                <div class="card-body">
+                    <div class="nav-tabs-boxed">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="home-1" role="tabpanel">
+                                <table class="table table-responsive-sm table-sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>Ф.И.О</td>
+                                        <td>{{ certificate.subject_name_user_name }}</td>
+                                    </tr>
+                                    {% if not certificate.subject_name_position is empty %}
+                                        <tr>
+                                            <td>Должность</td>
+                                            <td>{{ certificate.subject_name_position }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td>Владелец</td>
+                                        <td>{{ certificate.subject_name_owner }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Регион</td>
+                                        <td>{{ certificate.subject_name_region }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Город</td>
+                                        <td>{{ certificate.subject_name_city }}</td>
+                                    </tr>
+                                    {% if not certificate.subject_name_position is empty %}
+                                        <tr>
+                                            <td>Улица</td>
+                                            <td>{{ certificate.subject_name_street }}</td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% if not certificate.subject_name_email is empty %}
+                                    <tr>
+                                        <td>E-mail</td>
+                                        <td>{{ certificate.subject_name_email }}</td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if not certificate.subject_name_ogrn is empty %}
+                                        <tr>
+                                            <td>ОГРН</td>
+                                            <td>{{ certificate.subject_name_ogrn }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td>СНИЛС</td>
+                                        <td>{{ certificate.subject_name_snils }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ИНН</td>
+                                        <td>{{ certificate.subject_name_inn }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Дата выпуска</td>
+                                        <td>{{ date(certificate.valid_from) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Действителен до</td>
+                                        <td>{{ date(certificate.valid_to) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Дата добавления на ЭТП</td>
+                                        <td>{{ date(certificate.created_at) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Отпечаток подписи</td>
+                                        <td>{{ certificate.thumbprint }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Статус</td>
+                                        <td>{{ certificate_status(certificate.status) }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    Издатель
+                </div>
+                <div class="card-body">
+                    <div class="nav-tabs-boxed nav-tabs-boxed-top-right">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="home-2" role="tabpanel">
+                                <table class="table table-responsive-sm table-sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>Издатель</td>
+                                        <td>{{ certificate.issuer_name_issuer }}</td>
+                                    </tr>
+                                    {% if not certificate.issuer_name_unit_organization is empty %}
+                                        <tr>
+                                            <td>Подразделение организации</td>
+                                            <td>{{ certificate.issuer_name_unit_organization }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td>ИНН</td>
+                                        <td>{{ certificate.issuer_name_inn }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ОГРН</td>
+                                        <td>{{ certificate.issuer_name_ogrn }}</td>
+                                    </tr>
+                                    {% if not certificate.issuer_name_email is empty %}
+                                    <tr>
+                                        <td>E-mail</td>
+                                        <td>{{ certificate.issuer_name_email }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td>Регион</td>
+                                        <td>{{ certificate.issuer_name_region }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Город</td>
+                                        <td>{{ certificate.issuer_name_city }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Улица</td>
+                                        <td>{{ certificate.issuer_name_street }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

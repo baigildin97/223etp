@@ -1,0 +1,341 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Процедура №{{ procedure.id_number }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item active">Процедура №{{ procedure.id_number }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <a {% if not (profileAccess.canCreateLot(procedure.id)) %} class="btn btn-sm btn-dark link-disabled" {% else %} class="btn btn-sm btn-dark" {% endif %}
+                            href="{{ path("procedure.lot.add", {'procedureId': procedure.id}) }}">Добавить новый лот</a>
+                    <a {% if not (profileAccess.canEditProcedure(procedure.id)) %}
+                            class="btn btn-sm btn-dark link-disabled" {% else %} class="btn btn-sm btn-dark"
+                            {% endif %}href="{{ path('procedure.edit', {'procedure_id': procedure.id}) }}">Редактировать</a>
+
+                    <a class="btn btn-sm btn-dark"
+                       href="{{ path('procedure.notifications', {'procedure_id': procedure.id}) }}">Извещения</a>
+
+                    <a class="btn btn-sm btn-dark"
+                       onclick="if (! confirm('Вы действительно хотите клонировать данную процедуру?')) { return false; }"  href="{{ path('procedure.duplicate', {'procedure_id': procedure.id}) }}">Клонировать</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    Общие сведения о проведении торгов
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Номер</td>
+                            <td>№{{ procedure.id_number }}</td>
+                        </tr>
+                        <tr>
+                            <td>Наименование процедуры</td>
+                            <td>{{ procedure.title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Тип процедуры</td>
+                            <td>{{ procedure_type(procedure.type) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Форма представления предложений о цене</td>
+                            <td>{{ presentation_type(procedure.price_presentation_form) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Состояние процедуры</td>
+                            <td>{{ statusProcedure(procedure.status) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    Сведения об организаторе торгов
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Краткое наименование</td>
+                            <td>{{ procedure.organization_short_title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Полное наименование</td>
+                            <td>{{ procedure.organization_full_title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Контактное лицо организатора</td>
+                            <td>{{ procedure.organizer_full_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email контактного лица организатора</td>
+                            <td>{{ procedure.organizer_email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Телефон контактного лица организатора</td>
+                            <td>{{ procedure.organizer_phone }}</td>
+                        </tr>
+                        <tr>
+                            <td>Адрес фактического места нахождения</td>
+                            <td>
+                                {{ procedure.organization_fact_index }},
+                                {{ country(procedure.organization_fact_country) }},
+                                {{ procedure.organization_fact_region }},
+                                {{ procedure.organization_fact_city }},
+                                {{ procedure.organization_fact_street }},
+                                {{ procedure.organization_fact_house }}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+          {#  <div class="card">
+                <div class="card-header">Документы</div>
+                <div class="card-body">
+
+
+                    <div class="card-body" id="documentBlock" data-certificate="{{ certificate_thumbprint }}">
+                        <div class="nav-tabs-boxed nav-tabs-boxed-left">
+                            <ul class="nav flex-column nav-tabs" id="tab-procedure-files"
+                                style="max-width: 35%; min-width: 35%;" role="tablist">
+                                <li class="nav-item">
+                                    <a {% if (files) %}
+                                        {% for file in files %}
+                                            {% if file.file_type == 'DEPOSIT_AGREEMENT' %}
+                                                style="color: #005500"
+                                            {% else %}
+                                                style="color: #ff0000"
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        style="color: #ff0000"
+                                    {% endif %}class="nav-link active" data-toggle="tab" href="#DRAFT_CONTRACT_OF_SALE" role="tab" aria-controls="home" aria-selected="true">Проект договора купли-продажи*</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a style="color: #005500" class="nav-link" data-toggle="tab" href="#OTHER"
+                                       role="tab" aria-controls="home" aria-selected="true">
+                                        Дополнительные документы
+                                    </a>
+                                </li>
+
+                            </ul>
+
+
+                            <div class="tab-content" style="width: 100%; overflow-y: scroll; max-height: 100%;">
+
+                                <div class="tab-pane active" id="DRAFT_CONTRACT_OF_SALE" role="tabpanel">
+                                    <table class="table table-responsive-sm table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th>Документ</th>
+                                            <th>Дата и время загрузки</th>
+                                            <th>Статус</th>
+                                            <th>
+                                                {% if procedure.status == 'STATUS_NEW' or procedure.status == 'STATUS_REJECT' %}
+                                                    {% if(profileAccess.canUploadFileProcedure()) %}
+                                                        <a href="{{ path("procedure.file.upload", {'procedureId': procedure.id, 'fileType': 'DEPOSIT_AGREEMENT'}) }}"
+                                                           style="float: right; margin-right: 30px;">
+                                                            <svg class="c-icon">
+                                                                <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                                                            </svg>
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for file in files %}
+                                            {% if file.file_type == 'DEPOSIT_AGREEMENT' %}
+                                                <tr>
+                                                    <td>
+                                                        <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                                                            {{ file.file_real_name }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ date(file.created_at) }}</td>
+                                                    <td>
+                                                        {% if file.status == 'STATUS_NEW' %}
+                                                            {% if(profileAccess.canSignFileProcedure()) %}
+                                                                <span class="badge badge-danger" style="display: none">Не подписан</span>
+                                                                <button data-file-type="{{ file.file_type }}"
+                                                                        data-file-id="{{ file.id }}"
+                                                                        class="sign_procedure_file btn-sign btn btn-sm btn-primary btn-ladda ladda-button"
+                                                                        data-style="expand-right"><span
+                                                                            class="ladda-label">Подписать</span><span
+                                                                            class="ladda-spinner"></span></button>
+                                                                <input type="hidden" readonly
+                                                                       value="{{ file.file_hash }}">
+                                                            {% else %}
+                                                                <span class="badge badge-danger" style="display: none">Не подписан</span>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <span class="badge badge-success">Подписан</span>
+                                                        {% endif %}
+
+
+                                                    </td>
+                                                    <td>
+                                                        {% if procedure.status == 'STATUS_NEW' or procedure.status == 'STATUS_REJECT' %}
+                                                            {% set token = csrf_token('index') %}
+                                                            {% if(profileAccess.catDeleteFileProcedure()) %}
+                                                                <form action={{ path("procedure.delete-file", {'procedureId': procedure.id, 'fileId': file.id}) }} method="post"
+                                                                      onsubmit="return confirm('Вы действительно хотите удалить данный файл ?')">
+                                                                    <input type="hidden" name="token"
+                                                                           value="{{ token }}">
+                                                                    <button type="submit"
+                                                                            class="btn btn-danger mini-btn">
+                                                                        <svg class="c-icon">
+                                                                            <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                                                        </svg>
+                                                                    </button>
+                                                                </form>
+                                                            {% endif %}
+                                                        {% endif %}
+
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                                <div class="tab-pane" id="OTHER" role="tabpanel">
+                                    <table class="table table-responsive-sm table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th>Документ</th>
+                                            <th>Дата и время загрузки</th>
+                                            <th>Статус</th>
+                                            <th>
+                                                {% if procedure.status == 'STATUS_NEW' or procedure.status == 'STATUS_REJECT' %}
+                                                    {% if(profileAccess.canUploadFileProcedure()) %}
+                                                        <a href="{{ path("procedure.file.upload", {'procedureId': procedure.id, 'fileType': 'OTHER'}) }}"
+                                                           style="float: right; margin-right: 30px;">
+                                                            <svg class="c-icon">
+                                                                <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                                                            </svg>
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for file in files %}
+                                            {% if file.file_type == 'OTHER' %}
+                                                <tr>
+                                                    <td>
+                                                        <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                                                            {{ file.file_real_name }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ date(file.created_at) }}</td>
+                                                    <td>
+                                                        {% if file.status == 'STATUS_NEW' %}
+                                                            {% if(profileAccess.canSignFileProcedure()) %}
+                                                                <span class="badge badge-danger" style="display: none">Не подписан</span>
+                                                                <button data-file-type="{{ file.file_type }}"
+                                                                        data-file-id="{{ file.id }}"
+                                                                        class="sign_procedure_file btn-sign btn btn-sm btn-primary btn-ladda ladda-button"
+                                                                        data-style="expand-right"><span
+                                                                            class="ladda-label">Подписать</span><span
+                                                                            class="ladda-spinner"></span></button>
+                                                                <input type="hidden" readonly
+                                                                       value="{{ file.file_hash }}">
+
+                                                            {% else %}
+                                                                <span class="badge badge-danger" style="display: none">Не подписан</span>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <span class="badge badge-success">Подписан</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if procedure.status == 'STATUS_NEW' or procedure.status == 'STATUS_REJECT' %}
+                                                            {% set token = csrf_token('index') %}
+                                                            {% if(profileAccess.catDeleteFileProcedure()) %}
+                                                                <form action={{ path("procedure.delete-file", {'procedureId': procedure.id, 'fileId': file.id}) }} method="post"
+                                                                      onsubmit="return confirm('Вы действительно хотите удалить данный файл ?')">
+                                                                    <input type="hidden" name="token"
+                                                                           value="{{ token }}">
+                                                                    <button type="submit"
+                                                                            class="btn btn-danger mini-btn">
+                                                                        <svg class="c-icon">
+                                                                            <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                                                        </svg>
+                                                                    </button>
+                                                                </form>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>#}
+            <div class="card">
+                <div class="card-header">Лоты</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Номер</th>
+                            <th>Наименование лота</th>
+                            <th>Тип арестованного имущества</th>
+                            <th>Стартовая цена</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% set token = csrf_token('archive') %}
+                        {% for lot in lots %}
+                            <tr>
+                                <td><a href="{{ path("lot.show", {'lotId': lot.id}) }}">№{{ lot.id_number }}</a></td>
+                                <td><a href="{{ path("lot.show", {'lotId': lot.id}) }}">{{ lot.lot_name }}</a></td>
+                                <td>{{ arrested_type(lot.arrested_property_type) }}</td>
+                                <td>{{ money(lot.starting_price) }}</td>
+                                <td>
+                                    {% if(profileAccess.canCreateBidToLot(lot.id)) %}
+                                        <a href="{{ path('bid.apply', {'lotId': lot.id}) }}">Подать заявку</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('sign_procedure_file') }}
+    {% endblock %}

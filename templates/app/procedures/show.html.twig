@@ -1,0 +1,460 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Процедура №{{ procedure.procedure_number }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item active">Процедура №{{ procedure.procedure_number }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    {% if (profileAccess.canEditProcedure(procedure.procedure_id)) %}
+                        <a class="btn btn-sm btn-dark" href="{{ path('procedure.edit', {'procedure_id': procedure.procedure_id}) }}">Редактировать</a>
+                    {% endif %}
+                    <a class="btn btn-sm btn-dark"
+                       href="{{ path('procedure.notifications', {'procedure_id': procedure.procedure_id}) }}">Извещения</a>
+                    {% if(profileAccess.canShowProtocols(procedure.procedure_id, procedure.lot_id)) %}
+                    <a class="btn btn-sm btn-dark" href="{{ path('lot.protocols', {'lot_id': procedure.id}) }}">Протоколы</a>
+                    {% endif %}
+                    {% if(profileAccess.canCreateBidToLot(procedure.id)) %}
+                        <a class="btn btn-sm btn-dark" href="{{ path('bid.apply', {'lotId': procedure.id}) }}">Подать заявку</a>
+                    {% endif %}
+                    {% if profileAccess.canProcedureNotificationRecall(procedure.procedure_id) %}
+                        <a class="btn btn-sm btn-dark" href="{{ path('procedure.notification.recall', {'procedure_id':procedure.procedure_id, 'notification_id':lastNotification.id}) }}">Отозвать заявление</a>
+                    {% endif %}
+                    {% if (profileAccess.canCloneProcedure(procedure.procedure_id)) %}
+                    <a class="btn btn-sm btn-dark"
+                       onclick="if (! confirm('Вы действительно хотите копировать данную процедуру?')) { return false; }"  href="{{ path('procedure.duplicate', {'procedure_id': procedure.procedure_id}) }}">Копировать</a>
+                    {% endif %}
+                    {% if(profileAccess.canReviewBids(procedure.lot_id)) %}
+                        <a class="btn btn-sm btn-dark" href="{{ path('lot.bids', {'lotId': procedure.id}) }}">Смотреть все заявки</a>
+                    {% endif %}
+                    <a {% if not profileAccess.canShowAuction(procedure.auction_id) %}
+                            class="btn btn-dark btn-sm link-disabled" {% else %} class="btn btn-sm btn-dark"
+                            {% endif %}href="{{ path('auction.show', {'lotId': procedure.id, 'auctionId': procedure.auction_id }) }}">Перейти
+                        в аукционный зал</a>
+                    <a href="{{ path('procedure.lots.list', {'procedure_id': procedure.procedure_id}) }}" class="btn btn-sm btn-dark">Список лотов</a>
+
+                    {% if(profileAccess.isPaymentWinnerConfirm(procedure.procedure_id)) %}
+                                    {{ form_start(form) }}
+                                    {{ form_widget(form.approved, {'label': 'Подтвердить оплату имущество победитилем', 'attr': {'class': 'btn btn-sm btn-dark'}}) }}
+                                    {{ form_widget(form.reject, {'label': 'Победитель не оплатил в отведенный срок сумму по имуществу', 'attr': {'class': 'btn btn-sm btn-warning'}}) }}
+                                    {{ form_end(form) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <b>Общие сведения о торгах</b>
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+
+                        <tr>
+                            <td style="width: 25%;">Номер процедуры</td>
+                            <td>№{{ procedure.procedure_number }}</td>
+                        </tr>
+                        <tr>
+                            <td>Состояние процедуры</td>
+                            <td>{{ statusProcedure(procedure.status) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Тип процедуры</td>
+                            <td>{{ procedure_type(procedure.type) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Форма представления предложений о цене</td>
+                            <td>{{ presentation_type(procedure.price_presentation_form) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Наименование предмета торгов</td>
+                            <td>{{ procedure.title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Торговая процедура повторная</td>
+                            <td>{{ reloadLot(procedure.reload_lot) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Начальная цена</td>
+                            <td>{{ money(procedure.starting_price) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Тип НДС</td>
+                            <td>{{ ndsType(procedure.nds) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Шаг аукциона</td>
+                            <td>{{ money(procedure.auction_step) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Дата и время проведения торгов</td>
+                            <td>{{ date(procedure.start_trading_date) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Дата и время начала подачи заявок</td>
+                            <td>{{ date(procedure.start_date_of_applications) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Дата и время окончания подачи заявок</td>
+                            <td>{{ date(procedure.closing_date_of_applications) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Дата и время подведения итогов приема заявок</td>
+                            <td>{{ date(procedure.summing_up_applications) }}</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <b>Информация о задатке</b>
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td style="width: 25%;">Размер задатка</td>
+                            <td>{{ money(procedure.deposit_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Дата внесения задатка, не позднее</td>
+                            <td>{{ date(procedure.advance_payment_time, true) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Реквизиты для внесения задатка</td>
+                            <td>{{ procedure.requisite }}</td>
+                        </tr>
+                        <tr>
+                            <td>Порядок внесения задатка</td>
+                            <td>{{ procedure.deposit_policy }}</td>
+                        </tr>
+                        {#                        {% if not procedure.additional_object_characteristics is empty %}#}
+                        {#                            <tr>#}
+                        {#                                <td>Дополнительные характеристики объекта</td>#}
+                        {#                                <td>{{ procedure.additional_object_characteristics }}</td>#}
+                        {#                            </tr>#}
+                        {#                        {% endif %}#}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <b>Сведения о должнике и его имуществе</b>
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td style="width: 25%;">Наименование должника</td>
+                            <td>{{ procedure.debtor_full_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Тип арестованного имущества</td>
+                            <td>{{ arrested_type(procedure.arrested_property_type) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Регион</td>
+                            <td>{{ procedure.region }}</td>
+                        </tr>
+                        <tr>
+                            <td>Местонахождение объекта</td>
+                            <td>{{ procedure.location_object }}</td>
+                        </tr>
+                        {% if not procedure.pledgeer is empty %}
+                            <tr>
+                                <td>Залогодержатель</td>
+                                <td>{{ procedure.pledgeer }}</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+       {#     <div class="card">
+                <div class="card-header">
+                    <b>Основание для проведения торгов</b>
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Основание для проведения торгов</td>
+                            <td>{{ procedure.tender_basic }}</td>
+                        </tr>
+                        <tr>
+                            <td>Номер и дата исполнительного производства</td>
+                            <td>{{ procedure.executive_production_number }} от {{ date(procedure.date_enforcement_proceedings, true) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Наименование отдела службы судебных приставов</td>
+                            <td>{{ procedure.bailiffs_name_dative_case }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>#}
+
+            <div class="card">
+                <div class="card-header">
+                    <b>Сведения об организаторе торгов</b>
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td style="width: 25%;">Сокращенное наименование</td>
+                            <td>{{ procedure.organization_short_title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Полное наименование</td>
+                            <td>{{ procedure.organization_full_title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Адрес сайта</td>
+                            <td><a target="_blank" href="{{ procedure.web_site }}">{{ procedure.web_site }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Контактное лицо организатора</td>
+                            <td>{{ procedure.organizer_full_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Телефон контактного лица организатора</td>
+                            <td>{{ procedure.organizer_phone }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email контактного лица организатора</td>
+                            <td>{{ procedure.organizer_email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Адрес места нахождения</td>
+                            <td>
+                                {{ procedure.organization_fact_index }},
+                                {{ country(procedure.organization_fact_country) }},
+                                {{ procedure.organization_fact_region }},
+                                {{ procedure.organization_fact_city }},
+                                {{ procedure.organization_fact_street }},
+                                {{ procedure.organization_fact_house }}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <b>Участие в торгах и порядок их проведения</b>
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td style="width: 25%;">Место представления заявок</td>
+                            <td style="white-space: pre-line;">{{ procedure.info_point_entry }}</td>
+                        </tr>
+                        <tr>
+                            <td>Место проведения торгов</td>
+                            <td style="white-space: pre-line;">{{ procedure.info_trading_venue }}</td>
+                        </tr>
+                        <tr>
+                            <td>Порядок представления заявок на участие в торгах</td>
+                            <td style="white-space: pre-line;">{{ procedure.info_bidding_process }}</td>
+                        </tr>
+                        <tr>
+                            <td>Порядок проведения торгов</td>
+                            <td style="white-space: pre-line;">{{ procedure.tendering_process }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header">
+                    Документы
+                </div>
+                <div class="card-body" id="documentBlock"
+                     data-certificate="{{ certificate_thumbprint }}">
+                    <div class="nav-tabs-boxed nav-tabs-boxed-left tabs-profile-files">
+                        <ul id="tab-procedure-files" class="nav flex-column nav-tabs"
+                            style="max-width: 35%; min-width: 35%;" role="tablist">
+                            {% for type, count in filesCount %}
+
+                                {% if (type == 'DOCUMENT_COMPOSITION') %}
+
+                                    {% if (profileAccess.isModeratorOrAdmin()) %}
+                                        <li class="nav-item">
+                                            <a{% if (count.0 != count.1 or count.1 == 0) %}
+                                                {% if type == 'OTHER' %}
+                                                    style="color: #333333"
+                                                {% else %}
+                                                    style="color: #ff0000"
+                                                {% endif %}
+                                            {% else %}
+                                                style="color: #005500"
+                                                    {% endif %}
+                                                    class="nav-link"
+                                                    data-toggle="tab" href="#{{ type }}" role="tab" aria-controls="home">
+                                                <span class="files-signed">{{ count.0 }}</span>/<span
+                                                        class="files-all">{{ count.1 }}</span> {{ typesNames[type] }}
+                                            </a>
+                                        </li>
+                                        {% else %}
+                                            {% if (profileAccess.canEditProcedure(procedure.procedure_id)) %}
+                                                <li class="nav-item">
+                                                    <a{% if (count.0 != count.1 or count.1 == 0) %}
+                                                        {% if type == 'OTHER' %}
+                                                            style="color: #333333"
+                                                        {% else %}
+                                                            style="color: #ff0000"
+                                                        {% endif %}
+                                                    {% else %}
+                                                        style="color: #005500"
+                                                            {% endif %}
+                                                            class="nav-link"
+                                                            data-toggle="tab" href="#{{ type }}" role="tab" aria-controls="home">
+                                                        <span class="files-signed">{{ count.0 }}</span>/<span
+                                                                class="files-all">{{ count.1 }}</span> {{ typesNames[type] }}
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+
+                                    {% endif %}
+
+
+
+
+
+                                    {% else %}
+
+                                        <li class="nav-item">
+                                            <a{% if (count.0 != count.1 or count.1 == 0) %}
+                                                {% if type == 'OTHER' %}
+                                                    style="color: #333333"
+                                                {% else %}
+                                                    style="color: #ff0000"
+                                                {% endif %}
+                                            {% else %}
+                                                style="color: #005500"
+                                                    {% endif %}
+                                                    class="nav-link"
+                                                    data-toggle="tab" href="#{{ type }}" role="tab" aria-controls="home">
+                                                <span class="files-signed">{{ count.0 }}</span>/<span
+                                                        class="files-all">{{ count.1 }}</span> {{ typesNames[type] }}
+                                            </a>
+                                        </li>
+                                {% endif %}
+
+
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content" style="width: 100%; overflow-y: scroll; max-height: 100%;">
+                            {% for key, value in files %}
+                                <div class="tab-pane" id="{{ key }}" role="tabpanel">
+                                    <table class="table table-responsive-sm table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th>Документ</th>
+                                            <th>Дата и время загрузки</th>
+                                            <th>Статус</th>
+                                            {% if (profileAccess.canEditProcedure(procedure.procedure_id)) %}
+                                                <th>
+                                                    <a href="{{ path('procedure.upload.file', {'procedureId': procedure.procedure_id,'fileType': key}) }}"
+                                                       style="float: right; margin-right: 30px;">
+                                                        <svg class="c-icon">
+                                                            <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                                                        </svg>
+                                                    </a>
+                                                </th>
+                                            {% endif %}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for file in value %}
+                                            <tr>
+                                                  <td>
+                                                    {% if (profileAccess.isModeratorOrAdmin()) %}
+                                                        <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                                                            {{ file.file_real_name }}
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{{ path('procedure.download', {'file_id': file.id}) }}">
+                                                            {{ file.file_real_name }}
+                                                        </a>
+                                                    {% endif %}
+                                                </td>
+
+                                                <td>{{ date(file.created_at) }}</td>
+                                                <td>
+                                                    {% if file.status == 'STATUS_NEW' %}
+                                                        {% if(profileAccess.canSignFileProcedure()) %}
+                                                            <span class="badge badge-danger" style="display: none">Не подписан</span>
+                                                            <button data-file-type="{{ file.file_type }}"
+                                                                    data-file-id="{{ file.id }}"
+                                                                    class="sign_procedure_file btn-sign btn btn-sm btn-primary btn-ladda ladda-button"
+                                                                    data-style="expand-right"><span
+                                                                        class="ladda-label">Подписать</span><span
+                                                                        class="ladda-spinner"></span></button>
+                                                            <input type="hidden" readonly
+                                                                   value="{{ file.file_hash }}">
+                                                        {% else %}
+                                                            <span class="badge badge-danger" style="display: none">Не подписан</span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="badge badge-success">Подписан {{ date(file.file_signed_at) }}</span>
+                                                    {% endif %}
+                                                </td>
+
+                                                {% if (profileAccess.canEditProcedure(procedure.procedure_id)) %}
+                                                    <td>
+                                                        {% set token = csrf_token('index') %}
+                                                        <form action="{{ path('procedure.delete-file', {'procedureId': procedure.procedure_id, 'fileId': file.id}) }}"
+                                                              method="post"
+                                                              onsubmit="return confirm('Вы действительно хотите удалить данный файл ?')">
+                                                            <input type="hidden" name="token" value="{{ token }}"/>
+                                                            <button type="submit" class="btn btn-danger mini-btn">
+                                                                <svg class="c-icon">
+                                                                    <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('sign_procedure_file') }}
+    {% endblock %}

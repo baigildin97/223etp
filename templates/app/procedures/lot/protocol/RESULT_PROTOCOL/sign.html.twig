@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Генерация нового протокола{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedure_id}) }}">Процедура №{{ protocol.procedureNumber }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('lot.protocols', {'lot_id':lot.id}) }}">Протоколы</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('lot.protocol.create', {'lot_id':lot.id}) }}">Создание протокола</a></li>
+        <li class="breadcrumb-item active">{{ protocol.protocolName }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    {{ form_start(form) }}
+                    {{ form_widget(form.sign) }}
+                    {{ form_errors(form.sign) }}
+                    <div class="card-footer">
+                        <button id="sign_protocol" class="btn btn-sm btn-success" data-hash="{{ hash }}" data-thumbprint="{{ certificate_thumbprint }}" type="submit">Подписать и опубликовать</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            <div id="printableArea" class="col-sm-12">
+                <div class="card">
+                    {# <div class="card-header d-flex align-items-center"> #}
+                    {# <a class="btn btn-sm btn-secondary mfs-auto mfe-1 d-print-none" href="#" onclick="printDiv('printableArea');"> #}
+                    {# <svg class="c-icon"> #}
+                    {# <use xlink:href="/assets/svg/free.svg#cil-print"></use> #}
+                    {# </svg> Печать</a></div> #}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5 class="text-center">{{ protocol.protocolName }} (торговая процедура
+                                    №{{ protocol.procedureNumber }})</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p><strong>Место и дата подписания протокола:</strong> {{ protocol.place }}</p>
+                                <p><strong>Организатор торгов: </strong>{{ protocol.organizerInfo.fullName }}</p>
+                                <p><strong>Уполномоченный представитель Организатора торгов: </strong>{{ protocol.representativeOrganizer}}</p>
+                                <p><strong>Форма торгов: </strong>{{ protocol.biddingForm }}</p>
+                                <p><strong>Форма подачи предложений о
+                                        цене: </strong>{{ protocol.pricePresentationForm }}</p>
+                                {% for lot in protocol.lots %}
+                                    <p><strong>Место проведения торгов: </strong>{{ lot.tradingPlace }}</p>
+                                    <p><strong>Наименование отдела службы судебных
+                                            приставов: </strong>{{ lot.serviceDepartmentInfo.fullName }}</p>
+                                    <p><strong>Номер исполнительного
+                                            производства: </strong>№{{ lot.serviceDepartmentInfo.productionNumber }} от {{ date(lot.serviceDepartmentInfo.dateEnforcementProceedings) }}</p>
+                                    <p><strong>Основание для проведения торгов: </strong>{{ lot.groundsBidding }}</p>
+                                    <p><strong>Наименование должника: </strong>{{ lot.debtorInfo.fullName }}</p>
+                                    <p><strong>Предмет торгов: </strong>{{ lot.subjectBidding }}</p>
+                                {% endfor %}
+                                <p><strong>Победитель торгов: </strong>{{ protocol.winnerFullName }}</p>
+                                <p><strong>Общая стоимость имущества по итогам торгов: </strong>{{ protocol.finalCost }}
+                                </p>
+                                <p><strong>Порядок, срок и реквизиты счета для оплаты стоимости имущества:</strong>
+                                    {{ protocol.rulesPayProperty }}
+                                </p>
+                                <p><strong>Порядок и срок заключения договора купли-продажи:</strong>
+                                    {{ protocol.rulesBuyingSelling }}
+                                </p>
+                                <hr/>
+                                <p><strong>Реквизиты и подписи сторон</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>Продавец</b>
+                                <p>{{ protocol.organizerInfo.fullName }}<br>
+                                    ОГРН: {{ protocol.organizerInfo.ogrn }}, ИНН: {{ protocol.organizerInfo.inn }},
+                                    КПП: {{ protocol.organizerInfo.kpp }}, <br/>
+                                    Юридический адрес: {{ protocol.organizerInfo.legal_address }},</br>
+                                    Фактический адрес: {{ protocol.organizerInfo.fact_address }}
+                                </p>
+                                <b>Банковские реквизиты</b>
+                                <ul>
+                                    <li>Наименование банка: {{ protocol.organizerInfo.requisites.bankName }}</li>
+                                    <li>Расчетный счет: {{ protocol.organizerInfo.requisites.paymentAccount }}</li>
+                                    <li>БИК: {{ protocol.organizerInfo.requisites.bankBik }}</li>
+                                    <li>Корреспондентский
+                                        счет: {{ protocol.organizerInfo.requisites.correspondentAccount }}</li>
+                                </ul>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <b>Покупатель</b>
+                                {% if (protocol.participantInfo.incorporatedForm == 'LEGAL_ENTITY') %}
+                                <p>{{ protocol.winnerFullName }}<br>
+                                    ОГРН: {{ protocol.participantInfo.ogrn }},  ИНН: {{ protocol.participantInfo.inn }},
+                                    КПП: {{ protocol.participantInfo.kpp }}, <br/>
+                                    Юридический адрес: {{ protocol.participantInfo.legal_address }},<br/>
+                                    Фактический адрес:  {{ protocol.participantInfo.fact_address }}</p>
+                                <b>Банковские реквизиты</b>
+                                <ul>
+                                    <li>Наименование банка: {{ protocol.participantInfo.requisites.bankName }}</li>
+                                    <li>Расчетный счет: {{ protocol.participantInfo.requisites.paymentAccount }}</li>
+                                    <li>БИК: {{ protocol.participantInfo.requisites.bankBik }}</li>
+                                    <li>Корреспондентский
+                                        счет: {{ protocol.participantInfo.requisites.correspondentAccount }}</li>
+                                </ul>
+                                {% else %}
+                                    <p>{{ protocol.winnerFullName }}<br>
+                                        ИНН: {{ protocol.participantInfo.inn }},
+                                        Дата рождения: {{ date(protocol.participantInfo.birthDay, true) }},
+                                        Адрес постоянной регистрации: {{ protocol.participantInfo.legal_address }},<br/>
+                                        Адрес фактического места нахождения: {{ protocol.participantInfo.fact_address }}</p>
+                                    <b>Банковские реквизиты</b>
+                                    <ul>
+                                        <li>Наименование банка: {{ protocol.participantInfo.requisites.bankName }}</li>
+                                        <li>Расчетный счет: {{ protocol.participantInfo.requisites.paymentAccount }}</li>
+                                        <li>БИК: {{ protocol.participantInfo.requisites.bankBik }}</li>
+                                        <li>Корреспондентский
+                                            счет: {{ protocol.participantInfo.requisites.correspondentAccount }}</li>
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('protocol_sign') }}
+{% endblock %}

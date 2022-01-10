@@ -1,0 +1,11 @@
+{% if statusTactic == 'STATUS_PUBLISHED' %}
+    <span class="badge badge-info">Оправлен на модерацию</span>
+{% elseif statusTactic == 'STATUS_PROCESSING' %}
+    <span class="badge badge-info">На модерацию</span>
+{% elseif statusTactic == 'STATUS_RECALLED' %}
+    <span class="badge badge-danger">Отозван</span>
+{% elseif statusTactic == 'STATUS_APPROVED' %}
+    <span class="badge badge-primary">Одобрен</span>
+{% elseif statusTactic == 'STATUS_REJECTED' %}
+    <span class="badge badge-primary">Отклонен</span>
+{% endif %}

@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Подача заявки на лот №{{ lot.id_number }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': lot.procedure_id}) }}">Процедура №{{ procedure.id_number }}</a></li>
+{#        <li class="breadcrumb-item"><a href="{{ path('lot.show', {'lotId': lot.id}) }}">Лот №{{ lot.id_number }}</a></li>#}
+        <li class="breadcrumb-item active">Подача заявки</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in" style="display: none">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+
+                <div class="card">
+                    <div class="card-header">Подача заявки на лот №{{ lot.id_number }}</div>
+                    {{ form_start(form, {'attr': {'id': 'save'}}) }}
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <tbody>
+                            <tr>
+                                <td>Процедура</td>
+                                <td>№{{ procedure.id_number}}</td>
+                            </tr>
+                            <tr>
+                                <td>Лот</td>
+                                <td>№{{ lot.id_number }}</td>
+                            </tr>
+
+                            <tr>
+                                <td>Реквизит</td>
+                                <td>{{ form_widget(form.requisite, {'attr': {'placeholder': 'Реквизит', 'class':'form-control'}}) }}
+                                    {{ form_errors(form.requisite) }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-success" type="submit">Сохранить</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("save").submit();
+    </script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'mail.html.twig' %}
+
+{% block body %}
+    <p style="margin: 10px 0;">Вы опубликовали протокол о подведении итогов приема
+        и регистрации заявок по торговой процедуре №{{ procedure_number }}
+        <b>
+            По всем вопросам обращайтесь в <a href="{{ url('auth.sign.confirm',{'token': token}) }}" target="_blank" rel=" noopener noreferrer">службу поддержки.</a>
+        </b>
+    </p>
+{% endblock %}

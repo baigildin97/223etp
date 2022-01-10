@@ -1,0 +1,48 @@
+<?php
+declare(strict_types=1);
+
+use App\Model\User\Entity\Profile\Role\Permission;
+
+return [
+    Permission::CREATE_LOT => 'Добавление лотов',
+    Permission::CREATE_PROCEDURE =>'Добавление новой процедуры',
+    Permission::DELETE_FILE_TO_BID => 'Удаление файлов прикрекленных к заявке для участия в торгах',
+    Permission::DELETE_FILE_TO_PROCEDURE => 'Удаление файлов прикрепленных к процедуре',
+    Permission::CREATE_PROTOCOL_PROCEDURE => 'Создание протоколов процедуре',
+    Permission::CREATE_NOTIFICATIONS => 'Создание извещение в процедуре',
+    Permission::RECALL_NOTIFICATION => 'Отзыв извищения из модерации',
+    Permission::PUBLICATION_NOTIFICATION => 'Публикация извещения',
+    Permission::CREATE_BID => 'Создание заявок на участие в торгах',
+    Permission::DELETE_LOT => 'Удаление лотов',
+    Permission::EDIT_BID => 'Редактирование заявки на участие в торгах',
+    Permission::RECALL_BID => 'Отзыв заявки на участие в торгах',
+    Permission::EDIT_LOT => 'Редактирование лота',
+    Permission::UPLOAD_FILE_TO_LOT => 'Загрузка файлов к лоту',
+    Permission::SIGN_FILE_TO_LOT => 'Подписание файлов прикрепленных к лоту',
+    Permission::DELETE_FILE_TO_LOT => 'Удаление файлов в лоте',
+    Permission::EDIT_PROCEDURE => 'Редактирование процедуры',
+    Permission::SHOW_BID => 'Просмотр заявки на участие в торгах',
+    Permission::SHOW_PROCEDURE => 'Просмотр процедур',
+    Permission::SHOW_LOT => 'Просмотр лотов',
+    Permission::SIGN_XML_BID => 'Подписание XML документа заявки на участие в торгах',
+    Permission::SIGN_FILE_TO_BID => 'Подписание файлов прикрепленных к заявке на участие в торгах',
+    Permission::SIGN_FILE_TO_PROCEDURE => 'Подписание файлов прикрепленных к процедуре',
+    Permission::RECALL_PROCEDURE => 'Отзыв заявки о проведении процедуры из модерации',
+    Permission::UPLOAD_FILE_TO_BID => 'Загрузка файлов в заявках',
+    Permission::UPLOAD_FILE_TO_PROCEDURE => 'Загрузка файлов в процедуре',
+    Permission::SIGN_XML_PROCEDURE => 'Подписание XML документа процедуры',
+    Permission::PROFILE_ACCREDITATION_STATEMENT => 'Отправка заявки профиля на модерацию',
+    Permission::PROFILE_ACCREDITATION_RECALL => 'Отзыв заявки профиля на модерацию',
+    Permission::PROFILE_UPLOAD_FILE => 'Загрузка файлов в профиле',
+    Permission::PROFILE_INDEX => 'Просмотр профиля',
+    Permission::PROFILE_DELETE_FILE => 'Удаление файлов в профиле',
+    Permission::PAYMENT_INDEX => 'Просмотр страницы счета и транзакции',
+    Permission::PAYMENT_SHOW => 'Просмотр счета',
+    Permission::SHOW_AUCTION => 'Просмотр аукциона',
+    Permission::SHOW_AUCTION_OFFERS => 'Просмотр предложений в аукционе',
+    Permission::BET_OFFER_AUCTION => 'Может делать ставку в аукцион',
+    Permission::BIDS_FOR_LOT => 'Просмотр списка заявок у лота',
+    Permission::CERTIFICATE_SHOW => 'Просмотр сертификатов ЭЦП',
+    Permission::REVIEW_BIDS => 'Рассмотрение заявок на участие в торгах',
+    Permission::NOTIFICATION_SHOW => 'Просмотр уведомлений'
+];

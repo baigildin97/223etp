@@ -1,0 +1,215 @@
+{% extends 'base.html.twig' %}
+{% block title %}Отзыв заявки №{{ bid.number}}{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Мои процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': bid.procedure_id}) }}">Процедура №{{ bid.procedure_number }}</a></li>
+{#        <li class="breadcrumb-item"><a href="{{ path('lot.show', {'lotId': bid.lot_id}) }}">Лот №{{ bid.lot_number}}</a></li>#}
+        <li class="breadcrumb-item"><a href="{{ path('bid.show', {'bidId': bid.id}) }}">Заявка №{{ bid.number }}</a></li>
+        <li class="breadcrumb-item active">Отзыв заявки</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                {{ form_start(form) }}
+                {{ form_widget(form.sign) }}
+                {{ form_errors(form.sign) }}
+                <div class="card-footer">
+                    <button id="sign_bid" class="btn btn-sm btn-success" data-hash="{{hash}}" data-thumbprint="{{ bid.certificate_thumbprint }}" type="submit">Подписать и отозвать</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Заявка №{{ bid.number }}</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Номер заявки</td>
+                            <td>№{{ bid.number }}</td>
+                        </tr>
+                        <tr>
+                            <td>Процедура</td>
+                            <td>№{{ bid.procedure_number }}</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>Дата и время подписания</td>
+                            <td>{{ date(bid.signed_at) }} </td>
+                        </tr>
+                        <tr>
+                            <td>Статус</td>
+                            <td>{{ bid_status(bid.status) }} </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% if(profileAccess.canShowBidParticipant(bid.procedure_id)) %}
+            <div class="card">
+                <div class="card-header">Сведения о претенденте</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+
+                        {% if bid.isLegalEntity() %}
+                            <tr>
+                                <td style="width: 25%">ИНН</td>
+                                <td>{{ bid.inn_organization }} </td>
+                            </tr>
+                            <tr>
+                                <td>КПП</td>
+                                <td>{{ bid.kpp_organization }} </td>
+                            </tr>
+                            <tr>
+                                <td>ОГРН</td>
+                                <td>{{ bid.ogrn_organization }} </td>
+                            </tr>
+                            <tr>
+                                <td>Полное наименование</td>
+                                <td>{{ bid.full_title_organization }} </td>
+                            </tr>
+                            <tr>
+                                <td>Сокращенное наименование</td>
+                                <td>{{ bid.short_title_organization }}</td>
+                            </tr>
+                            <tr>
+                                <td>Юридический адрес</td>
+                                <td>{{ bid.getFullLegalAddressOrganization() }} </td>
+                            </tr>
+                            <tr>
+                                <td>Адрес места нахождения</td>
+                                <td>{{ bid.getFullFactAddressOrganization() }} </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>{{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                            </tr>
+                            <tr>
+                                <td>Контактное лицо</td>
+                                <td>{{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                            </tr>
+                            <tr>
+                                <td>Emil контактного лица</td>
+                                <td>{{ bid.email_organization }} </td>
+                            </tr>
+                        {% endif %}
+                        {% if (bid.isIndividualEntrepreneur) %}
+                            <tr>
+                                <td style="width: 25%">ИНН</td>
+                                <td>{{ bid.inn_organization }} </td>
+                            </tr>
+                            <tr>
+                                <td>СНИЛС</td>
+                                <td>{{ bid.passport_snils }}  </td>
+                            </tr>
+                            <tr>
+                                <td>ОГРНИП</td>
+                                <td>{{ bid.ogrn_organization }}</td>
+                            </tr>
+                            <tr>
+                                <td>Полное наименование</td>
+                                <td>Индивидуальный предприниматель {{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                            </tr>
+                            <tr>
+                                <td>Адрес регистрации</td>
+                                <td>{{ bid.getFullPassportLegalAddress() }} </td>
+                            </tr>
+                            <tr>
+                                <td>Адрес места нахождения</td>
+                                <td>{{ bid.getFullPassportFactAddress() }} </td>
+                            </tr>
+                            <tr>
+                                <td>Контактное лицо</td>
+                                <td>{{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                            </tr>
+                            <tr>
+                                <td>Emil контактного лица</td>
+                                <td>{{ bid.user_email }}</td>
+                            </tr>
+                            <tr>
+                                <td>Телефон контактного лица</td>
+                                <td>{{ bid.user_phone }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if (bid.isIndividual()) %}
+                            <tr>
+                                <td style="width: 25%">ИНН</td>
+                                <td>{{ bid.passport_inn }} </td>
+                            </tr>
+                            <tr>
+                                <td>СНИЛС</td>
+                                <td>{{ bid.passport_snils }}  </td>
+                            </tr>
+                            <tr>
+                                <td>Ф.И.О</td>
+                                <td>{{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                            </tr>
+                            <tr>
+                                <td>Адрес регистрации</td>
+                                <td>{{ bid.getFullPassportLegalAddress() }} </td>
+                            </tr>
+                            <tr>
+                                <td>Адрес места нахождения</td>
+                                <td>{{ bid.getFullPassportFactAddress() }} </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>{{ bid.user_email }}</td>
+                            </tr>
+                            <tr>
+                                <td>Телефон</td>
+                                <td>{{ bid.user_phone }} </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header">Документы</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Наименование</th>
+                            {% if profileAccess.canShowBidDocuments(bid.id) %}
+                            <th>Документ</th>
+                            {% endif %}
+                            <th>Дата и время загрузки</th>
+                            <th>Статус</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for document in documents %}
+                            <tr>
+                                <td>{{ document.document_name }}</td>
+                                {% if profileAccess.canShowBidDocuments(bid.id) %}
+                                <td><a target="_blank" href="{{ storage_path(document.file_path ~ '/' ~ document.file_name) }}">{{ document.file_real_name }}</a></td>
+                                {% endif %}
+                                <td>{{ document.created_at }}</td>
+                                <td><span class="badge badge-success">Подписан: {{ date(document.signed_at) }}</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('sign_xml_bid') }}
+{% endblock %}

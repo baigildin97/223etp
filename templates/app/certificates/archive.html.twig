@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Архив сертификатов ЭП{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('certificates') }}">Мои сертификаты ЭП</a></li>
+        <li class="breadcrumb-item active">Архив сертификатов ЭП</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-footer">
+                    <a href="{{ path('certificate.create') }}" >Добавить новый сертификат ЭП</a><br>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Архив сертификатов ЭП</div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.id, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.thumbprint, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form_widget(form.subject_name_owner, {'attr':{'class':'form-control'}}) }}
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Найти</button>
+                            <a href="{{ path('certificates') }}" class="btn btn-outline-secondary">Сбросить</a>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Отпечаток</th>
+                            <th>Владелец</th>
+                            {#                            <th>Издатель</th>#}
+                            <th>Выдан</th>
+                            <th>Действителен до</th>
+                            <th>Статус</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% set token = csrf_token('archive') %}
+                        {% for certificates in pagination %}
+                            <tr>
+                                {#                                <td><a href="{{ path('certificates.show', {'id':certificates.id}) }}">{{ certificates.id }}</a></td>#}
+                                <td><a href="{{ path('certificate.show', {'id':certificates.id}) }}">{{ certificates.thumbprint }}</a></td>
+                                <td>{{ certificates.subject_name_owner }}</td>
+                                <td>{{ certificates.valid_from }}</td>
+                                <td>{{ certificates.valid_to }}</td>
+                                <td>{{ certificate_status(certificates.status) }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

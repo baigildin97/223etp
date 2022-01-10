@@ -1,0 +1,7 @@
+{% extends 'mail.html.twig' %}
+
+{% block body %}
+    <p style="margin: 10px 0;">Мы отклонили профиль пользователя {{ user_name }} </br>
+        Причина: {{ cause }}
+    </p>
+{% endblock %}

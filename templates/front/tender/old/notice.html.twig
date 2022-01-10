@@ -1,0 +1,22 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Реестр процедур | Электронная торговая площадка РесТорг{% endblock %}
+
+{% block body %}
+<style>
+    .table>thead>tr>th {
+        padding: 1px 2px !important;
+    }
+
+    .table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+        padding: 1px 2px 1px !important;
+    }
+</style>
+<div class="container">
+    <div class="row m50" style="padding: 20px;">
+        <div class="col-xs-12">
+            {{ notic.text | raw }}
+        </div>
+    </div>
+</div>
+{% endblock %}

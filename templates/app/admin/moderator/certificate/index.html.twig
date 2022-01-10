@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Пользователи ожидающие модерацию сертификата ЭП{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item active">Пользователи ожидающие модерацию сертификата ЭП</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Пользователи ожидающие модерацию сертификата ЭП</div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.status, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Пользователь</th>
+                                <th>ИНН</th>
+                                <th>Email</th>
+                                <th>Телефон</th>
+                                <th>Организационно-правовая форма</th>
+                                <th>Роль</th>
+                                <th>IP</th>
+                                <th>Дата отправки заявления</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for profile in pagination %}
+                            <tr>
+                                <td>
+                                    <a target="_blank" href="{{ path('profile', {'profile_id':profile.id}) }}">
+                                        {% if profile.incorporated_form == 'LEGAL_ENTITY' %}
+                                            {{ profile.full_title_organization }}
+                                        {% elseif profile.incorporated_form == 'INDIVIDUAL_ENTREPRENEUR' %}
+                                            ИП {{ profile.user_name }}
+                                        {% else %}
+                                            {{ profile.user_name }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                {% if profile.incorporated_form == 'LEGAL_ENTITY' %}
+                                    <td>{{ filter_inn(profile.subject_name_inn) }}</td>
+                                {% else %}
+                                    <td>{{ profile.subject_name_inn ?? 'Нет ЭП' }}</td>
+                                {% endif %}
+                                <td>{{ profile.email }}</td>
+                                <td>{{ profile.phone }}</td>
+                                <td>{{ incorporation_form_profile(profile.incorporated_form) }}</td>
+                                <td>{{ profile.role_name }}</td>
+                                <td>{{ profile.client_ip }}</td>
+                                <td>{{ date(profile.created_at, false) }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

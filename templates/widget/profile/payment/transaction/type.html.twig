@@ -1,0 +1,11 @@
+{% if type == 'DEPOSIT' %}
+    Пополнение
+{% elseif type == 'WITHDRAW' %}
+    Вывод
+{% elseif type == 'SUBTRACT' %}
+    Списание
+{% elseif type == 'BLOCKING' %}
+    Блокировка
+{% elseif type == 'UNBLOCKING' %}
+    Разблокировка
+{% endif %}

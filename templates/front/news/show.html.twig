@@ -1,0 +1,31 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}{{ news.subject }} | Электронная торговая площадка РесТорг{% endblock %}
+
+{% block body %}
+    <style>
+        .digital{
+            width: 100%;
+            float: none;
+            clear: both;
+            border: dotted 1px #8F949C;
+            padding: 1px 1px 1px 20px;
+            vertical-align: middle;
+            margin: 10px 0 5px 0;
+            background-color: #f2f2f5;
+        }
+    </style>
+    <div class="container">
+        <div class="row m50">
+
+            <div class="col-xs-12">
+                <h6>{{ date(news.created_at) }}</h6>
+                <p>
+                    {{ news.text | raw }}
+                </p>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock %}

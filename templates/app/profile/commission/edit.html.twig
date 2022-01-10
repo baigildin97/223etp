@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактирование | {{ commission.title }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('profile') }}">Профиль</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('profile.commissions', {'profile_id':profile_id}) }}">Реестр комисий</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('profile.commission.show', {'profile_id':profile_id, 'commission_id': commission.id}) }}">{{ commission.title }}</a></li>
+        <li class="breadcrumb-item active">Редактирование</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+
+                <div class="card">
+                    <div class="card-header">Добавление комиссии</div>
+                    {{ form_start(form) }}
+                    <div class="card-body">
+                        <fieldset class="form-group">
+                            <label>Наименование</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+<svg class="c-icon">
+<use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+</svg></span></span>
+                                {{ form_widget(form.title, {'attr': {'placeholder': 'Наименование комиссии', 'class':'form-control'}}) }}
+                                {{ form_errors(form.title) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Статус</label>
+                            <div class="input-group"><span class="input-group-prepend"><span class="input-group-text">
+<svg class="c-icon">
+<use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+</svg></span></span>
+                                {{ form_widget(form.status, {'attr': {'placeholder': '25161684846516846165', 'class':'form-control'}}) }}
+                                {{ form_errors(form.status) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-success" type="submit">Сохранить</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

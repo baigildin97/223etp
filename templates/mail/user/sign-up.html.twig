@@ -1,0 +1,12 @@
+{% extends 'mail.html.twig' %}
+
+{% block body %}
+    <p style="margin: 10px 0;">
+        Ваш адрес электронной почты был использован для регистрации нового пользователя на ЭТП «{{ siteName }}».
+        Для подтверждения запроса на регистрацию перейдите по
+        <b>
+            <a href="{{ urlConfirm }}" target="_blank" rel=" noopener noreferrer">ссылке</a>
+        </b>
+    </p>
+    <p style="margin: 10px 0;">Код подтверждения действителен в течение 2 часов.</p>
+{% endblock %}

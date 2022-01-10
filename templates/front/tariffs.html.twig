@@ -1,0 +1,113 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Действующие тарифы | Электронная торговая площадка РесТорг{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <div class="row m50">
+            <div class="col-xs-12">
+                <h3 style="text-align: center">Действующие тарифы</h3>
+                <h5><span style="font-size:10pt"><span style="font-family:&quot;Times New Roman&quot;"><span style="color:black"><strong><span style="font-size:12.0pt">Тарифы для участников торгов</span></strong></span></span></span></h5>
+                <h5><span style="font-size:10pt"><span style="font-family:&quot;Times New Roman&quot;"><span style="color:black"><strong><span style="font-size:12.0pt">Тариф «Базовый»</span></strong></span></span></span></h5>
+
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Регистрация пользователей на электронной площадке осуществляется без взимания платы.</span></span></span></span></p>
+
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Средства гарантийного обеспечения перечисляются в порядке и сроки, указанные в п. 12 Регламента ЭТП «РесТорг».</span></span></span></span></p>
+
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Участник торгов уплачивает вознаграждение Оператору ЭТП только в случае признания участника торгов Победителем торгов.</span></span></span></span></p>
+
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Оплата вознаграждения Оператора ЭТП, взимаемая с Победителей торгов, тарифицируется в зависимости от начальной (минимальной) цены имущества, указанной в извещении о проведении торгов:</span></span></span></span></p>
+                <br>
+                <table cellspacing="0" border="" style="border-collapse:collapse; text-align: center;">
+                    <tbody>
+                    <tr>
+                        <td style="border-bottom:1px solid black; border-left:1px solid black; border-right:1px solid black; border-top:1px solid black; height:24px; width:35px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">№ </span></span><span style="font-size:8.0pt"><span style="font-family:&quot;Times New Roman&quot;">П/П</span></span></span></span></span></p>
+                        </td>
+                        <td colspan="2" style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:1px solid black; height:24px; width:602px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><strong><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">Для организатора торгов</span></span></strong></span></span></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:1px solid black; border-left:1px solid black; border-right:1px solid black; border-top:none; height:24px; width:35px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">1.</span></span></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:24px; width:295px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><strong><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">Начальная цена лота, руб.</span></span></strong></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:24px; width:307px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><strong><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">Размер вознаграждения Оператора ЭТП, %</span></span></strong></span></span></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:1px solid black; border-left:1px solid black; border-right:1px solid black; border-top:none; height:24px; width:35px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">2.</span></span></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:24px; width:295px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">Свыше 1,00</span></span></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:24px; width:307px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">вознаграждение не взимается</span></span></span></span></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:1px solid black; border-left:1px solid black; border-right:1px solid black; border-top:none; height:24px; width:35px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">3.</span></span></span></span></span></p>
+                        </td>
+                        <td colspan="2" style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:24px; width:602px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><strong><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">Для участника торгов</span></span></strong></span></span></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:1px solid black; border-left:1px solid black; border-right:1px solid black; border-top:none; height:15px; width:35px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">4.</span></span></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:15px; width:295px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><strong><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">Начальная цена лота, руб.</span></span></strong></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:15px; width:307px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><strong><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">Размер вознаграждения Оператора ЭТП, %</span></span></strong></span></span></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:1px solid black; border-left:1px solid black; border-right:1px solid black; border-top:none; height:15px; width:35px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">5.</span></span></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:15px; width:295px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">1,00 – 20 000 000,00</span></span></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:15px; width:307px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">4,0</span></span></span></span></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:1px solid black; border-left:1px solid black; border-right:1px solid black; border-top:none; height:22px; width:35px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">6.</span></span></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:22px; width:295px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">Свыше 20 000 000,01</span></span></span></span></span></p>
+                        </td>
+                        <td style="border-bottom:1px solid black; border-left:none; border-right:1px solid black; border-top:none; height:22px; width:307px">
+                            <p style="text-align:center"><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-size:10.0pt"><span style="font-family:&quot;Times New Roman&quot;">3,0</span></span></span></span></span></p>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                <br>
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Перечисление денежных средств с целью пополнения виртуального счёта может осуществляться только зарегистрированными пользователями, путём перечисления на расчётный счёт Оператора ЭТП. Перечисление денежных средств осуществляется по реквизитам, указанным в разделе «Контакты».</span></span></span></span></p>
+
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Назначение платежа: Внесение средств гарантийного обеспечения для участия в торгах. Номер виртуального счета №___, НДС не облагается.</span></span></span></span></p>
+
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Все платежи за услуги Оператора электронной торговой площадки НДС не облагаются.</span></span></span></span></p>
+
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Денежные средства, перечисленные Пользователем ЭТП на счет Оператора ЭТП, зачисляются на Виртуальный счёт в течение 1(одного) рабочего дня с момента поступления оплаты и отображения денежных средств на расчетном счете Оператора ООО <strong>«</strong>Единая торговая площадка Республики Башкортостан».</span></span></span></span></p>
+
+                <p><span style="font-size:12pt"><span style="font-family:Arial"><span style="color:black"><span style="font-family:&quot;Times New Roman&quot;">Денежные средства, перечисленные Пользователем ЭТП на счет Оператора ЭТП, возвращаются с Виртуального счета в течение 5(пяти) рабочих дней на основании заявки на вывод средств, <span style="color: #bc2c2c;">за вычетом банковской комиссии за перечисление денежных средств</span>.</span></span></span></span></p>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

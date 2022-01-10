@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ deserialize.protocolName }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': protocol.procedure_id}) }}">Процедура №{{ deserialize.procedureNumber }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('lot.protocols', {'lot_id':lot.id}) }}">Протоколы</a></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div id="printableArea" class="col-sm-12">
+                {% if(profileAccess.isParticipant() and certificateParticipant is null) %}
+                <div class="col-lg-12">
+                    <div class="card">
+                        {{ form_start(form) }}
+                        {{ form_widget(form.sign) }}
+                        {{ form_errors(form.sign) }}
+                        <div class="card-footer">
+                            <button id="sign_protocol" class="btn btn-sm btn-success" data-hash="{{ hash }}" data-thumbprint="{{ certificate_thumbprint }}" type="submit">Подписать и опубликовать</button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5 class="text-center">{{ deserialize.protocolName }} (торговая процедура
+                                    №{{ deserialize.procedureNumber }})</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p><strong>Место и дата подписания протокола:  </strong>{{ deserialize.place }}</p>
+                                <p><strong>Организатор торгов: </strong>{{ deserialize.organizerInfo.fullName }}</p>
+                                <p><strong>Уполномоченный представитель Организатора торгов: </strong>{{ deserialize.representativeOrganizer}}</p>
+                                <p><strong>Форма торгов: </strong>{{ deserialize.biddingForm }}</p>
+                                <p><strong>Форма подачи предложений о
+                                        цене: </strong>{{ deserialize.pricePresentationForm }}</p>
+                                {% for lot in deserialize.lots %}
+                                    <p><strong>Место проведения торгов: </strong>{{ lot.tradingPlace }}</p>
+                                    <p><strong>Наименование отдела службы судебных
+                                            приставов: </strong>{{ lot.serviceDepartmentInfo.fullName }}</p>
+                                    <p><strong>Номер исполнительного
+                                            производства: </strong>{{ lot.serviceDepartmentInfo.productionNumber }}</p>
+                                    <p><strong>Основание для проведения торгов: </strong>{{ lot.groundsBidding }}</p>
+                                    <p><strong>Наименование должника: </strong>{{ lot.debtorInfo.fullName }}</p>
+                                    <p><strong>Предмет торгов: </strong>{{ lot.subjectBidding }}</p>
+                                {% endfor %}
+                                <p><strong>Победитель торгов: </strong>{{ deserialize.winnerFullName }}</p>
+                                <p><strong>Общая стоимость имущества по итогам торгов: </strong>{{ deserialize.finalCost }}
+                                </p>
+                                <p><strong>Порядок, срок и реквизиты счета для оплаты стоимости имущества:</strong>
+                                    {{ deserialize.rulesPayProperty }}
+                                </p>
+                                <p><strong>Порядок и срок заключения договора купли-продажи:</strong>
+                                    {{ deserialize.rulesBuyingSelling }}
+                                </p>
+                                <hr/>
+                                <p><strong>Реквизиты и подписи сторон</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>Продавец</b>
+                                <p>{{ deserialize.organizerInfo.fullName }}<br>
+                                    ОГРН: {{ deserialize.organizerInfo.ogrn }}, ИНН: {{ deserialize.organizerInfo.inn }},
+                                    КПП: {{ deserialize.organizerInfo.kpp }}, Юр.
+                                    адресс: {{ deserialize.organizerInfo.legal_address }},
+                                    Факт. адресс: {{ deserialize.organizerInfo.fact_address }}
+                                </p>
+                                <b>Банковские реквизиты</b>
+                                <ul>
+                                    <li>Наименование банка: {{ deserialize.organizerInfo.requisites.bankName }}</li>
+                                    <li>Расчетный счет: {{ deserialize.organizerInfo.requisites.paymentAccount }}</li>
+                                    <li>БИК: {{ deserialize.organizerInfo.requisites.bankBik }}</li>
+                                    <li>Корреспондентский
+                                        счет: {{ deserialize.organizerInfo.requisites.correspondentAccount }}</li>
+                                </ul>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <b>Покупатель</b>
+
+                                {% if (deserialize.participantInfo.incorporatedForm == 'LEGAL_ENTITY') %}
+                                    <p>{{ deserialize.winnerFullName }}<br>
+                                        ОГРН: {{ deserialize.participantInfo.ogrn }},  ИНН: {{ deserialize.participantInfo.inn }},
+                                        КПП: {{ deserialize.participantInfo.kpp }}, <br/>
+                                        Юридический адрес: {{ deserialize.participantInfo.legal_address }},<br/>
+                                        Фактический адрес:  {{ deserialize.participantInfo.fact_address }}</p>
+                                    <b>Банковские реквизиты</b>
+                                    <ul>
+                                        <li>Наименование банка: {{ deserialize.participantInfo.requisites.bankName }}</li>
+                                        <li>Расчетный счет: {{ deserialize.participantInfo.requisites.paymentAccount }}</li>
+                                        <li>БИК: {{ deserialize.participantInfo.requisites.bankBik }}</li>
+                                        <li>Корреспондентский
+                                            счет: {{ deserialize.participantInfo.requisites.correspondentAccount }}</li>
+                                    </ul>
+                                {% else %}
+                                    <p>{{ deserialize.winnerFullName }}<br>
+                                        ИНН: {{ deserialize.participantInfo.inn }},
+                                        Дата рождения: {{ date(deserialize.participantInfo.birthDay, true) }},
+                                        Адрес постоянной регистрации: {{ deserialize.participantInfo.legal_address }},<br/>
+                                        Адрес фактического места нахождения: {{ deserialize.participantInfo.fact_address }}</p>
+                                    <b>Банковские реквизиты</b>
+                                    <ul>
+                                        <li>Наименование банка: {{ deserialize.participantInfo.requisites.bankName }}</li>
+                                        <li>Расчетный счет: {{ deserialize.participantInfo.requisites.paymentAccount }}</li>
+                                        <li>БИК: {{ deserialize.participantInfo.requisites.bankBik }}</li>
+                                        <li>Корреспондентский
+                                            счет: {{ deserialize.participantInfo.requisites.correspondentAccount }}</li>
+                                    </ul>
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>Подписан организатором</b>
+                                <ul>
+                                    <li>Владелец сертификата: {{ certificateOrganizer.subject_name_user_name }}</li>
+                                    <li>Отпечаток сертификата: {{ certificateOrganizer.thumbprint }}</li>
+                                    <li>Отпечаток подписи: {{ certificateOrganizer.sign | slice(0, 50)  }}...</li>
+                                </ul>
+                            </div>
+
+                            {% if certificateParticipant is not null %}
+                            <div class="col-md-6">
+                                <b>Подписан победителем</b>
+                                <ul>
+                                    <li>Владелец сертификата: {{ certificateParticipant.subject_name_user_name }}</li>
+                                    <li>Отпечаток сертификата: {{ certificateParticipant.thumbprint }}</li>
+                                    <li>Отпечаток подписи: {{ certificateParticipant.sign | slice(0, 50)  }}...</li>
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('protocol_sign') }}
+{% endblock %}

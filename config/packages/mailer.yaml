@@ -1,0 +1,5 @@
+framework:
+    mailer:
+        dsn: 'gmail+smtp://etp229@gmail.com:dlk2UIc5%\s8@default'
+        envelope:
+            sender: 'etp229@gmail.com'

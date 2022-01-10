@@ -1,0 +1,8 @@
+{% if payment is not null %}
+    {% if (payment.isNegativeAvailableAmount()) %}
+        <div class="alert alert-danger">
+            <b>Внимание!</b>
+            <p>У вас не оплаченный счет услуги оператора ЭТП!</p>
+        </div>
+    {% endif %}
+{% endif %}

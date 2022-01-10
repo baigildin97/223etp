@@ -1,0 +1,19 @@
+{% if type == 'TYPE_RECALL' %}
+      {% if status == 'STATUS_SIGNED' and statusTactic == 'STATUS_PUBLISHED' %}
+          <span class="badge badge-success">Утвержден оператором</span>
+      {% endif %}
+
+    {% else %}
+        {% if status == 'STATUS_SIGNED' and statusTactic == 'STATUS_PUBLISHED' %}
+            <span class="badge badge-warning">На модерации</span>
+        {% elseif status == 'STATUS_SIGNED' and statusTactic == 'STATUS_PROCESSING' %}
+           <span class="badge badge-warning">На модерации</span>
+        {% elseif status == 'STATUS_RECALLED' and statusTactic == 'STATUS_RECALLED' %}
+            <span class="badge badge-info">Отозван</span>
+        {% elseif status == 'STATUS_APPROVE' and statusTactic == 'STATUS_APPROVED'%}
+            <span class="badge badge-success">Утвержден оператором</span>
+        {% elseif status == 'STATUS_REJECTED' and statusTactic == 'STATUS_REJECTED' %}
+            <span class="badge badge-danger">Отклонен</span>
+        {% endif %}
+{% endif %}
+

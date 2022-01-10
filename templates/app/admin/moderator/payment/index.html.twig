@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Транзакции{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item">Транзакции</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header">Транзакции</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Пользователь</th>
+                            <th>№</th>
+                            <th>Тип</th>
+                            <th>Сумма</th>
+                            <th>Дата и время</th>
+                            <th>Статус</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% for transaction in transactions %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('admin.users.show', {'user_id': transaction.user_id}) }}">
+                                        {% if(transaction.user_name != null) %}
+                                            <span class="text-dark">[{{ transaction.user_name }}]</span>
+                                        {% endif %}
+                                        -
+                                        {{ transaction.email }}</a>
+                                </td>
+                                <td>{{ transaction.id_number }}</td>
+                                <td>{{ transaction_type(transaction.type) }}</td>
+                                <td>{{ money(transaction.money) }}</td>
+                                <td>{{ date(transaction.created_at) }}</td>
+                                <td>{{ transaction_status(transaction.status) }}</td>
+                                <td>
+                                    <a href="{{ path('payment.show', {'payment_id': transaction.payment_id}) }}">Открыть</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(transactions) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        fetcher:
+            id: App\Security\UserProvider
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            user_checker: App\Security\UserChecker
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+                    - App\Security\LoginCryptAuthenticator
+                entry_point: App\Security\LoginFormAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+            form_login: true
+            logout:
+                path:   app_logout
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_MODERATOR]
+        ROLE_MODERATOR: [ROLE_USER]
+        ROLE_USER:
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/sign-up, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/sign-confirm, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/password-reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/tender, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+         - { path: ^/contacts, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/get_ecp, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/verify-sign, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/documents, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+         - { path: ^/rates, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+         - { path: ^/requirements, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+         - { path: ^/news, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/privacy, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/, roles: [ROLE_USER, ROLE_MODERATOR, ROLE_ADMIN] }

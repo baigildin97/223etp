@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item active">Профиль</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">{{ user.name_last }} {{ user.name_first }} {{ user.name_middle }} Версия профиля:{{ user.id }}<div class="card-header-actions"><a class="card-header-action" href="" target="_blank"><small class="text-muted">Скачать подписанный документ профиля</small></a></div></div>
+        <div class="card-body">
+            <table class="table table-responsive-sm table-bordered">
+                <tbody>
+                <tr>
+                    <td>ID</td>
+                    <td>{{ user.id }}</td>
+                </tr>
+                <tr>
+                    <td>Статус</td>
+                    <td>{{ user_status(user.status) }}</td>
+                </tr>
+                <tr>
+                    <td>Роль</td>
+                    <td>{{ user_role(user.role) }}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>
+                        {{ user.email }}
+                        <a href="{{ path('profile.email') }}" class="btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Дата регистрации</td>
+                    <td>{{ user.created_at }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

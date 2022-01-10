@@ -1,0 +1,277 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Отзыв запроса модерации{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedure.id }) }}">Процедура №{{ procedure.id_number}}</a></li>
+        <li class="breadcrumb-item active">Отзыв запроса модерации</li>
+
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card">
+                {{ form_start(form) }}
+                {{ form_widget(form.sign) }}
+                {{ form_errors(form.sign) }}
+                <div class="card-footer">
+                    <button id="sign_procedure" class="btn btn-sm btn-success" data-hash="{{hash}}"
+                            data-thumbprint="{{ procedure.certificate_thumbprint }}"
+                            type="submit">Подписать и отозвать</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    Общие сведения о проведении торгов
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Номер</td>
+                            <td>№{{ procedure.id_number}}</td>
+                        </tr>
+                        <tr>
+                            <td>Наименование процедуры</td>
+                            <td>{{ procedure.title}}</td>
+                        </tr>
+                        <tr>
+                            <td>Тип процедуры</td>
+                            <td>{{ procedure_type(procedure.type) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Форма представления предложений о цене</td>
+                            <td>{{ presentation_type(procedure.price_presentation_form) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Состояние процедуры</td>
+                            <td>{{ statusProcedure(procedure.status) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    Сведения об организаторе торгов
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Полное наименование</td>
+                            <td>{{ procedure.organization_full_title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Краткое наименование</td>
+                            <td>{{ procedure.organization_short_title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Контактное лицо организатора</td>
+                            <td>{{ procedure.representative_first_name }}
+                                {{ procedure.representative_last_name }}
+                                {{ procedure.representative_middle_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Телефон контактного лица организатора</td>
+                            <td>{{ procedure.representative_phone}}</td>
+                        </tr>
+                        <tr>
+                            <td>Email контактного лица организатора</td>
+                            <td>{{ procedure.organization_email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Почтовый адрес</td>
+                            <td>{{ procedure.organization_fact_address }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Документы</div>
+                <div class="card-body">
+                    <div class="card-body" id="documentBlock">
+                        <div class="nav-tabs-boxed nav-tabs-boxed-left">
+                            <ul class="nav flex-column nav-tabs" style="max-width: 35%; min-width: 35%;" role="tablist">
+
+                                <li class="nav-item">
+                                    <a style="color: #005500" class="nav-link active" data-toggle="tab" href="#DRAFT_DEPOSIT_AGREEMENT" role="tab" aria-controls="home" aria-selected="true">
+                                        Проект договора о задатке*
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a style="color: #005500" class="nav-link" data-toggle="tab" href="#DRAFT_CONTRACT_OF_SALE" role="tab" aria-controls="home" aria-selected="true">
+                                        Проект договора купли-продажи*
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a style="color: #005500" class="nav-link" data-toggle="tab" href="#OTHER" role="tab" aria-controls="home" aria-selected="true">
+                                        Дополнительные документы
+                                    </a>
+                                </li>
+
+                            </ul>
+
+
+
+
+                            <div class="tab-content" style="width: 100%; overflow-y: scroll; max-height: 270px;">
+
+                                <div class="tab-pane active" id="DRAFT_DEPOSIT_AGREEMENT" role="tabpanel">
+                                    <table class="table table-responsive-sm table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th>Документ</th>
+                                            <th>Дата и время загрузки</th>
+                                            <th>Статус</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for file in files %}
+                                            {% if file.file_type == 'DEPOSIT_AGREEMENT' %}
+                                                <tr>
+                                                    <td>
+                                                        <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                                                            {{ file.file_real_name }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ file.created_at }}</td>
+                                                    <td>
+                                                        {% if file.status == 'STATUS_NEW' %}
+                                                            <a class="sign btn btn-sign btn-primary" data-file-type="{{ file.file_type }}"
+                                                               data-file-id="{{ file.id }}" href="">Подписать</a>
+                                                            <input type="hidden" readonly value="{{ file.file_hash }}">
+                                                        {% else %}
+                                                            <span class="badge badge-success">Подписан</span>
+                                                        {% endif %}
+                                                    </td>
+
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="tab-pane" id="DRAFT_CONTRACT_OF_SALE" role="tabpanel">
+                                    <table class="table table-responsive-sm table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th>Документ</th>
+                                            <th>Дата и время загрузки</th>
+                                            <th>Статус</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for file in files %}
+                                            {% if file.file_type == 'CONTRACT_OF_SALE' %}
+                                                <tr>
+                                                    <td>
+                                                        <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                                                            {{ file.file_real_name }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ file.created_at }}</td>
+                                                    <td>
+                                                        {% if file.status == 'STATUS_NEW' %}
+                                                            <a class="sign btn btn-sign btn-primary" data-file-type="{{ file.file_type }}"
+                                                               data-file-id="{{ file.id }}" href="">Подписать</a>
+                                                            <input type="hidden" readonly value="{{ file.file_hash }}">
+                                                        {% else %}
+                                                            <span class="badge badge-success">Подписан</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="tab-pane" id="OTHER" role="tabpanel">
+                                    <table class="table table-responsive-sm table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th>Документ</th>
+                                            <th>Дата и время загрузки</th>
+                                            <th>Статус</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for file in files %}
+                                            {% if file.file_type == 'OTHER' %}
+                                                <tr>
+                                                    <td>
+                                                        <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                                                            {{ file.file_real_name }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ file.created_at }}</td>
+                                                    <td>
+                                                        {% if file.status == 'STATUS_NEW' %}
+                                                            <a class="sign btn btn-sign btn-primary" data-file-type="{{ file.file_type }}"
+                                                               data-file-id="{{ file.id }}" href="">Подписать</a>
+                                                            <input type="hidden" readonly value="{{ file.file_hash }}">
+                                                        {% else %}
+                                                            <span class="badge badge-success">Подписан</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Лоты</div>
+                <div class="card-body"><table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Номер</th>
+                            <th>Наименование лота</th>
+                            <th>Тип арестованного имущества</th>
+                            <th>Стартовая цена</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% set token = csrf_token('archive') %}
+                        {% for lot in lots %}
+                            <tr>
+                                <td><a href="{{ path("lot.show", {'lotId': lot.id}) }}">№{{ lot.id_number }}</a> </td>
+                                <td>{{ lot.lot_name }}</td>
+                                <td>{{ arrested_type(lot.arrested_property_type) }}</td>
+                                <td>{{ money(lot.starting_price) }}</td>
+                             </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('sign_procedure_xml') }}
+    {% endblock %}

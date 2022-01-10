@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ deserialize.protocolName }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': protocol.procedure_id}) }}">Процедура №{{ deserialize.procedureNumber }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('lot.protocols', {'lot_id':lot.id}) }}">Протоколы</a></li>
+        <li class="breadcrumb-item active">{{ deserialize.protocolName }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div id="printableArea" class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5 class="text-center">{{ deserialize.protocolName }} (торговая процедура №{{ deserialize.procedureNumber }})</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p><strong>Организатор торгов: </strong>{{ deserialize.organizerInfo.fullName }}</p>
+                                <p><strong>Форма проведения торгов: </strong>{{ deserialize.biddingForm }}</p>
+                                <p><strong>Форма представления предложений о
+                                        цене: </strong>{{ deserialize.pricePresentationForm }}</p>
+                                {% for lot in deserialize.lots %}
+                                    <p><strong>Наименование отдела службы судебных
+                                            приставов: </strong>{{ lot.serviceDepartmentInfo.fullName }}</p>
+                                    <p><strong>Номер исполнительного
+                                            производства: </strong>{{ lot.serviceDepartmentInfo.productionNumber }}</p>
+                                    <p><strong>Основание для проведения торгов: </strong>{{ lot.groundsBidding }}</p>
+                                     <p><strong>Наименование должника: </strong>{{ lot.debtorInfo.fullName }}</p>
+                              {#      <p><strong>Предмет торгов: </strong>{{ lot.subjectBidding }}</p>#}
+                                {% endfor %}
+                                <p><strong>Основание аннулирования: </strong>{{ deserialize.organizerComment }}</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('protocol_sign') }}
+{% endblock %}

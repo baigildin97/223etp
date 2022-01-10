@@ -1,0 +1,277 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Новый лот{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedure_id}) }}">Процедура
+                №{{ procedure_id_number }}</a></li>
+        <li class="breadcrumb-item active">Новый лот</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <div class="fade-in">
+        <div class="row justify-content-center">
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><b>Общие сведения о торгах</b></div>
+                    {{ form_start(form) }}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">  <fieldset class="form-group">
+                                    <label>Торговая процедура повторная</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.reloadLot, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.reloadLot) }}
+                                    </div>
+                                </fieldset></div>
+                        </div>
+                        <fieldset class="form-group">
+                            <label>Наименование предмета торгов</label>
+                            <div class="input-group">
+                                {{ form_widget(form.lotName, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.lotName) }}
+                            </div>
+                        </fieldset>
+                        <div class="row">
+                            <div class="col-md-2">     <fieldset class="form-group">
+                                    <label>Начальная цена, руб</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.starting_price, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.starting_price) }}
+                                    </div>
+                                </fieldset></div>
+                            <div class="col-md-5">
+                                <fieldset class="form-group">
+                                    <label>Тип НДС</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.nds, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.nds) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-2">
+                                <fieldset class="form-group">
+                                    <label>Шаг аукциона, руб</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.auctionStep, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.auctionStep) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-3">
+                                <fieldset class="form-group">
+                                    <label>Время ожидание ценового предложения</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.offerAuctionTime, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.offerAuctionTime) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <fieldset class="form-group">
+                                    <label>Дата и время проведения торгов</label>
+                                    <div class="input-group">
+
+                                        {{ form_widget(form.startTradingDate) }}
+                                        {{ form_errors(form.startTradingDate) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-3">  <fieldset class="form-group">
+                                    <label>Дата и время начала подачи заявок</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.startDateOfApplications) }}
+                                        {{ form_errors(form.startDateOfApplications) }}
+                                    </div>
+                                </fieldset></div>
+                            <div class="col-md-3">  <fieldset class="form-group">
+                                    <label>Дата и время окончание подачи заявок</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.closingDateOfApplications) }}
+                                        {{ form_errors(form.closingDateOfApplications) }}
+                                    </div>
+                                </fieldset></div>
+                            <div class="col-md-3">
+                                <fieldset class="form-group">
+                                    <label>Дата и время подведения итогов приема заявок</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.summingUpApplications) }}
+                                        {{ form_errors(form.summingUpApplications) }}
+                                    </div>
+                                </fieldset></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><b>Информация о задатке</b></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <fieldset class="form-group">
+                                    <label>Размер задатка, руб</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.deposit_amount, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.deposit_amount) }}
+                                    </div>
+                                </fieldset></div>
+                            <div class="col-md-6">  <fieldset class="form-group">
+                                    <label>Дата внесения задатка, не позднее</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.advancePaymentTime) }}
+                                        {{ form_errors(form.advancePaymentTime) }}
+                                    </div>
+                                </fieldset></div>
+                        </div>
+                        <fieldset class="form-group">
+                            <label>Реквизиты для внесения задатка</label>
+                            <div class="input-group">
+                                {{ form_widget(form.requisite, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.requisite) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Порядок внесения задатка</label>
+                            <div class="input-group">
+                                {{ form_widget(form.depositPolicy, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.depositPolicy) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><b>Сведения о должнике и его имуществе</b></div>
+                    {{ form_start(form) }}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">                        <fieldset class="form-group">
+                                    <label>Наименование (в именительном падеже)</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.debtorFullName, {'attr': {'placeholder': 'ФИО / название организации'}}) }}
+                                        {{ form_errors(form.debtorFullName) }}
+                                    </div>
+                                </fieldset></div>
+                            <div class="col-md-4">                      <fieldset class="form-group">
+                                    <label>Наименование (в дательном падеже)</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.debtorFullNameDateCase, {'attr': {'placeholder': 'ФИО / название организации'}}) }}
+                                        {{ form_errors(form.debtorFullNameDateCase) }}
+                                    </div>
+                                </fieldset></div>
+                            <div class="col-md-4">      <fieldset class="form-group">
+                                    <label>Тип арестованного имущества</label>
+                                    <div class="input-group">
+
+                                        {{ form_widget(form.arrestedPropertyType, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.arrestedPropertyType) }}
+                                    </div>
+                                </fieldset></div>
+                        </div>
+                        <fieldset class="form-group">
+                            <label>Регион</label>
+                            <div class="input-group">
+
+                                {{ form_widget(form.region, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.region) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Местонахождение предмета торгов</label>
+                            <div class="input-group">
+                                {{ form_widget(form.location_object, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.location_object) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Залогодержатель</label>
+                            <div class="input-group">
+                                {{ form_widget(form.pledgeer, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.pledgeer) }}
+                            </div>
+                        </fieldset>
+                        {#                        <fieldset class="form-group">#}
+                        {#                            <label>Дополнительные характеристики объекта</label>#}
+                        {#                            <div class="input-group">#}
+
+                        {#                                {{ form_widget(form.additional_object_characteristics, {'attr': {'class':'form-control'}}) }}#}
+                        {#                                {{ form_errors(form.additional_object_characteristics) }}#}
+                        {#                            </div>#}
+                        {#                        </fieldset>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><b>Основание для проведения торгов</b></div>
+                    {{ form_start(form) }}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">   <fieldset class="form-group">
+                                    <label>Номер исполнительного производства</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.executiveProductionNumber, {'attr': {'class':'form-control'}}) }}
+                                        {{ form_errors(form.executiveProductionNumber) }}
+                                    </div>
+                                </fieldset></div>
+                            <div class="col-md-6">      <fieldset class="form-group">
+                                    <label>Дата исполнительного производства</label>
+                                    <div class="input-group">
+                                        {{ form_widget(form.dateEnforcementProceedings , {'attr': {'placeholder': 'дд.мм.гггг', 'class':'form-control'}}) }}
+                                        {{ form_errors(form.dateEnforcementProceedings) }}
+                                    </div>
+                                </fieldset></div>
+                        </div>
+                        <fieldset class="form-group">
+                            <label>Основание для проведения торгов</label>
+                            <div class="input-group">
+                                {{ form_widget(form.tenderBasic, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.tenderBasic) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Наименование отдела службы судебных приставов(в именительном падеже)</label>
+                            <div class="input-group">
+                                {{ form_widget(form.bailiffsNameDativeCase, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.bailiffsNameDativeCase) }}
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label>Наименование отдела службы судебных приставов(в творительном падеже)</label>
+                            <div class="input-group">
+                                {{ form_widget(form.bailiffsName, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.bailiffsName) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-success" type="submit">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('create_procedure') }}
+    {% endblock %}

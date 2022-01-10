@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Подписание{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedure.id }) }}">Процедура №{{ procedure.id_number}}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.notifications', {'procedure_id': procedure.id}) }}">Извещения</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.notification.create', {'procedure_id': procedure.id}) }}">Создание извещения</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.notification.generate', {'procedure_id': procedure.id, 'notification_type': notificationType }) }}">{{ notificationName }}</a></li>
+        <li class="breadcrumb-item active">Подписание</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-footer">
+                        {{ form_start(form, {'attr': {'id': 'form_organizer'}}) }}
+                        <button id="sign_procedure_notification" class="btn btn-sm btn-success" data-hash="{{ hash }}" data-thumbprint="{{ procedure.certificate_thumbprint }}" type="submit">Подписать и опубликовать</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+            <div id="printableArea" class="col-sm-12">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h5>{{ xml.documentName }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p><strong>Форма проведения торгов: </strong>{{ xml.procedureType }}</p>
+                                <p><strong>Форма подачи предложений о цене: </strong>{{ xml.pricePresentationForm }}</p>
+                                <p><strong>Оператор электронной торговой площадки: </strong>{{ xml.nameOrganization }}</p>
+                                <p><strong>Организатор торгов: </strong>{{ xml.organizerFullName }}</p>
+                                {% for lot in xml.lots %}
+                                    <p><strong>Процедура №{{ procedure.id_number }}: </strong>{{ lot.name }}</p>
+                                    <p><strong>Начальная цена лота: </strong>{{ lot.startingPrice }}, {{ lot.nds }}</p>
+                                    <p><strong>Размер задатка: </strong>{{ lot.depositAmount }}</p>
+                                    <p><strong>Шаг аукциона: </strong>{{ lot.auctionStep }}</p>
+                                {% endfor %}
+                                <p><strong>Основание: </strong>{{ xml.organizerComment }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('sign_procedure_xml') }}
+    {% endblock %}

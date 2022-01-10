@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Пользователь - {{ user.email }} {% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('admin.users') }}">Все пользователи</a></li>
+        <li class="breadcrumb-item active">Пользователь - {{ user.email }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <a {% if(certificates == null) %}class="btn btn-sm link-disabled"
+                       {% else %}class="btn btn-dark btn-sm"{% endif %}
+                       href="{{ path('certificates', {'user_id': user.id}) }}">Сертификаты пользователя</a>
+                    <a {% if(user.profile_id == null) %}class="btn btn-sm link-disabled"
+                       {% else %}class="btn btn-dark btn-sm"{% endif %}
+                       href="{{ path('profile', {'profile_id': user.profile_id}) }}">Профиль</a>
+                    <a class="btn btn-dark btn-sm"
+                       href="{{ path('notifications', {'user_id': user.id}) }}">Уведомления</a>
+                    <a {% if not (user.isOrganizer()) %}class="btn btn-sm link-disabled"
+                       {% else %}class="btn btn-dark btn-sm"{% endif %}
+                       href="{{ path('procedures.my', {'profile_id': user.profile_id}) }}">Процедуры</a>
+                    <a {% if not (user.isParticipant()) %}class="btn btn-sm link-disabled"
+                       {% else %}class="btn btn-dark btn-sm"{% endif %}
+                       href="{{ path('bids', {'profile_id': user.profile_id}) }}">Заявки</a>
+                    <a {% if(user.profile_id == null) %}class="btn btn-sm link-disabled"
+                       {% else %}class="btn btn-dark btn-sm"{% endif %}
+                       href="{{ path('payments', {'profile_id': user.profile_id}) }}">Счета</a>
+                    <a class="btn btn-dark btn-sm" href="{{ path('admin.users.send', {'user_id': user.id}) }}">Отправить
+                        сообщения</a>
+                    {% if (user.role_constant == 'ROLE_ORGANIZER') %}
+                        <a class="btn btn-dark btn-sm" href="{{ path('admin.users.contract', {'user_id': user.id}) }}">Подписать
+                            договор</a>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Общие сведения</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Статус</td>
+                            <td>{{ user_status(user.status, user.profile_status, user.profile_id) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Роль</td>
+                            <td>{{ user_role(user.role) }} {% if(profileAccess.isAdmin()) %}<a
+                                    href="{{ path('admin.users.edit', {'user_id': user.id}) }}">
+                                        <svg class="c-icon">
+                                            <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                        </svg></a> {% endif %}</td>
+                        </tr>
+                        {% if(user.profile_id != null) %}
+                            <tr>
+                                <td>Тип пользователя</td>
+                                <td>{{ incorporation_form_profile(user.incorporated_form) }}</td>
+                            </tr>
+                            {% if (user.registration_date != null) %}
+                            <tr>
+                                <td>Дата регистрации</td>
+                                <td>{{ date(user.created_at) }}</td>
+                            </tr>
+                            {% endif %}
+                        {% endif %}
+                        <tr>
+                            <td>Email адрес</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>IP адрес при регистрации</td>
+                            <td><span class="badge badge-dark">{{ user.client_ip }}</span></td>
+                        </tr>
+                        {% if (user.role_constant == 'ROLE_ORGANIZER') %}
+                            <tr>
+                                <td>Договор</td>
+                                {% if (user.contract_period == null) %}
+                                    <td><span class="badge badge-danger">Договор с этп не подписан</span></td>
+                                {% else %}
+                                    <td>
+                                        <span class="badge badge-success">Договор с этп подписан до {{ date(user.contract_period, true) }}</span>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endif %}
+
+                        <tr>
+                            {% if(profileAccess.isAdmin()) %}
+                                <td colspan="2">
+                                    {% if(user.status == 'blocked') %}
+                                    <a href="{{ path('admin.users.lock', {'user_id': user.id, 'type': 'unlocked'}) }}">
+                                            <button onclick="return confirm('Вы действительно хотите разблокировать этого пользователя?');"
+                                                    class="btn btn-sm btn-success" type="submit">
+                                                Разблокировать пользователя на ЭТП
+                                            </button>
+                                        </a>
+                                    {% endif %}
+
+                                    {% if(user.status == 'active' or user.status == 'wait' or user.status == 'new') %}
+                                        <a href="{{ path('admin.users.lock', {'user_id': user.id, 'type': 'locked'}) }}">
+                                            <button onclick="return confirm('Вы действительно хотите заблокировать этого пользователя?');"
+                                                    class="btn btn-sm btn-danger" type="submit">
+                                                Заблокировать пользователя на ЭТП
+                                            </button>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

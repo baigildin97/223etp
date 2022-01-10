@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Счета и транзакции{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item active">Счета и транзакции</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Счета компании</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Номер счета</th>
+                                <th>Свободная сумма</th>
+                                <th>Заблокированная сумма</th>
+                                <th>Сумма на вывод</th>
+                            </tr>
+                        </thead>
+                        {% for payment in payments %}
+                        <tbody class="mini-table-body">
+                            <tr>
+                                <td><a href="{{ path('payment.show', {'payment_id': payment.id}) }}">№{{ payment.invoice_number }}</a></td>
+                                <td>{{ money(payment.available_amount) }}</td>
+                                <td>{{ money(payment.blocked_amount) }}</td>
+                                <td>{{ money(payment.withdrawal_amount) }}</td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

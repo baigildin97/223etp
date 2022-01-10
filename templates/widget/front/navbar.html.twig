@@ -1,0 +1,32 @@
+{% set route = app.request.get('_route') %}
+<div class="rd-navbar-nav-wrap">
+    <div class="rd-navbar-nav-wrap-inner">
+        <ul class="rd-navbar-nav">
+            <li><a href="{{ path("front") }}">Главная</a></li>
+            <li class="rd-navbar--has-dropdown rd-navbar-submenu">
+                <a href="{{ path("front.tender") }}">Торги</a>
+                <ul class="rd-navbar-dropdown">
+                    <li><a href="{{ path("tender.old") }}">Торги до 06.04.2021</a></li>
+                </ul>
+            </li>
+            <li {{ 'front.contacts' in route ? 'class="active"' }}><a href="{{ path("front.contacts") }}">Контакты</a></li>
+            <li class="rd-navbar--has-dropdown rd-navbar-submenu">
+                <a href="#">Электронная подпись</a>
+                <ul class="rd-navbar-dropdown">
+                    <li><a href="{{ path("front.get.ecp") }}">Получение и настройка ЭП</a></li>
+                    <li><a href="{{ path("front.verify.sign") }}">Проверка ЭП</a></li>
+                </ul>
+            </li>
+            </li>
+            <li class="rd-navbar--has-dropdown rd-navbar-submenu">
+                <a href="#">Информация</a>
+                <ul class="rd-navbar-dropdown">
+                    <li><a href="{{ path("front.documents") }}">Нормативные документы</a></li>
+                    <li><a href="{{ path("front.tariffs") }}">Действующие тарифы</a></li>
+                    <li><a href="{{ path("front.requirement") }}">Требования</a></li>
+                </ul>
+            </li>
+            <li {{ 'front.news' in route ? 'class="active"' }}><a href="{{ path("front.news") }}">Новости</a></li>
+        </ul>
+    </div>
+</div>

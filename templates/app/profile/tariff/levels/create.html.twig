@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Добавление уровня{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('tariffs') }}">Тарифы</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('tariff.show', {'tariff_id': tariff.id}) }}">Тариф - {{ tariff.title }}</a> </li>
+        <li class="breadcrumb-item active">Добавление уровня</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">Добавление тарифа</div>
+                    {{ form_start(form) }}
+                    <div class="card-body">
+
+                        <fieldset class="form-group">
+                            <label>Приоритет</label>
+                            <div class="input-group">
+                                {{ form_widget(form.priority, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.priority) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>Стоимость</label>
+                            <div class="input-group">
+                                {{ form_widget(form.amount, {'attr': {'placeholder': 'Стоимость', 'class':'form-control'}}) }}
+                                {{ form_errors(form.amount) }}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>Стандартный процент снятия</label>
+                            <div class="input-group">
+                                {{ form_widget(form.percent, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.percent) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-success" type="submit">Сохранить</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

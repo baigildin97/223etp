@@ -1,0 +1,9 @@
+{% if type ==  'WINNER_PROTOCOL'%}
+    Протокол заседания комиссии об определении победителя торгов в электронной форме
+{% elseif type ==  'TYPE_SUMMARIZING_RESULTS_RECEIVING_BIDS'%}
+    Протокол о подведении итогов приема и регистрации заявок
+{% elseif type ==  'RESULT_PROTOCOL'%}
+    Протокол о результатах торгов
+{% elseif type ==  'CANCELLATION_PROTOCOL_RESULT'%}
+    Протокол об аннулировании результатах торгов
+{% endif %}

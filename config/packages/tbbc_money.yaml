@@ -1,0 +1,8 @@
+tbbc_money:
+    currencies: ["RUB"]
+    reference_currency: "RUB"
+    decimals: 2
+
+twig:
+    form_themes:
+        - '@TbbcMoney/Form/fields.html.twig'

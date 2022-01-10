@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Новости{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item active">Новости</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="btn btn-sm btn-dark" href="{{ path("admin.news.create") }}">Добавить новость</a>
+
+                    <a class="btn btn-sm btn-danger" href="{{ path("admin.news.archived") }}">Архив</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Новости</div>
+
+                <div class="card-body">
+
+
+
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Тема</th>
+                            <th>Дата публикации</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for news in pagination %}
+                            <tr>
+                                <td>{{ news.subject }}</td>
+                                <td>{{ date(news.created_at) }}</td>
+                                <td>
+                                    <a href="{{ path('admin.news.edit', {'news_id': news.id}) }}"><svg class="c-icon">
+                                            <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                        </svg></a>
+
+                                    <a href="{{ path('admin.news.delete', {'news_id': news.id}) }}"><svg class="c-icon text-danger">
+                                            <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                        </svg></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

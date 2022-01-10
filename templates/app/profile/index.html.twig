@@ -1,0 +1,445 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Мой профиль{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item active">{{ profile.certificate_owner }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="btn btn-sm btn-dark"
+                       href="{{ path('profile.xml_documents', {'profile_id': profile.id}) }}">Список заявлений
+                        пользователя</a>
+                    {% if not profileAccess.isModeratorOrAdmin() %}
+                        <a class="btn btn-sm btn-dark
+{% if profileAccess.issetModerateProcessingXmlDocProfile() %}
+                    link-disabled
+{% endif %}
+" href="{{ path('profile.accreditation', {'profile_id': profile.id }) }}">Отправить заявление</a>
+                    {% endif %}
+                    {% if not profileAccess.isModeratorOrAdmin() %}
+                    {{ link_change_profile(profile.incorporated_form, profile.status, profile.id) }}
+                    {% endif %}
+                    {% if profileAccess.canConfirmResetEP(profile.id) %}
+                        <a class="btn btn-sm btn-dark" href="{{ path('profile.change.certificate', {'profile_id': profile.id}) }}">Подтвердить замену ЭП</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            {% if profile %}
+                <div class="card">
+                    <div class="card-header">
+                        Общие сведения
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <tbody>
+                            <tr>
+                                <td style="width: 25%;">Статус</td>
+                                <td>{{ status_profile(profile.status) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Роль</td>
+                                <td>{{ profile.role_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Тип пользователя</td>
+                                <td>{{ incorporation_form_profile(profile.incorporated_form) }}</td>
+                            </tr>
+                            {% if (profile.isActive()) %}
+                                <tr>
+                                    <td>Дата регистрации</td>
+                                    <td>{{ date(profile.created_at) }}</td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {% if profile.isLegalEntity() %}
+                    <div class="card">
+                        <div class="card-header">Данные организации</div>
+                        <div class="card-body">
+                            <table class="table table-responsive-sm table-bordered">
+                                <tbody>
+
+                                    <tr>
+                                        <td  style="width: 25%;">Краткое наименование организации</td>
+                                        <td>{{ profile.short_title_organization }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Полное наименование организации</td>
+                                        <td>{{ profile.full_title_organization }}</td>
+                                    </tr>
+                                <tr>
+                                    <td style="width: 25%;">ИНН</td>
+                                    <td>{{ profile.getInn() }}</td>
+                                </tr>
+                                    <tr>
+                                        <td>КПП</td>
+                                        <td>{{ profile.kpp }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ОГРН</td>
+                                        <td>{{ profile.ogrn }}</td>
+                                    </tr>
+
+                                <tr>
+                                    <td>
+                                        {% if profile.isLegalEntity() %}
+                                            Юридический адрес
+                                        {% else %}
+                                            Адрес регистрации
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ profile.legal_index }},
+                                        {{ country(profile.legal_country) }},
+                                        {{ profile.legal_region }},
+                                        {{ profile.legal_city }},
+                                        {{ profile.legal_street }},
+                                        {{ profile.legal_house }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Адрес фактического места нахождения</td>
+                                    <td>
+                                        {{ profile.fact_index }},
+                                        {{ country(profile.fact_country) }},
+                                        {{ profile.fact_region }},
+                                        {{ profile.fact_city }},
+                                        {{ profile.fact_street }},
+                                        {{ profile.fact_house }}
+
+                                    </td>
+                                </tr>
+                                {% if not profile.web_site is empty %}
+                                    <tr>
+                                        <td>Адрес сайта</td>
+                                        <td>{{ profile.web_site }}</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="card">
+                    <div class="card-header">
+                        {% if profile.isIndividualEntrepreneur() %}
+                            Данные индивидуального предпринимателя
+                        {% elseif (profile.isIndividual()) %}
+                            Данные физического лица
+                        {% elseif (profile.isLegalEntity()) %}
+                            Данные пользователя
+                        {% endif %}
+
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <tbody>
+                            <tr>
+                                <td style="width: 25%;">ФИО</td>
+                                <td>{% if profile.isIndividualEntrepreneur() %}Индивидуальный предприниматель{% endif %} {{ profile.repr_passport_last_name }} {{ profile.repr_passport_first_name }} {{ profile.repr_passport_middle_name }} </td>
+                            </tr>
+
+                            <tr>
+                                <td>ИНН</td>
+                                {% if profile.isLegalEntity() %}
+                                    <td>{{ profile.passport_inn }}</td>
+                                {% else %}
+                                <td>{{ profile.certificate_subject_name_inn }}</td>
+                                {% endif %}
+                            </tr>
+
+                            <tr>
+                                <td>СНИЛС</td>
+                                <td>{{ profile.passport_snils }}</td>
+                            </tr>
+
+                            {% if profile.isIndividualEntrepreneur() %}
+                                <tr>
+                                    <td>ОГРНИП</td>
+                                    <td>{{ profile.ogrn }}</td>
+                                </tr>
+                            {% endif %}
+
+                            {% if not profile.position is empty %}
+                                <tr>
+                                    <td>Должность</td>
+                                    <td>{{ profile.position }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if profile.isLegalEntity() %}
+                                <tr>
+                                    <td>Документ(ы), подтверждающие полномочия представителя/руководителя юридического лица</td>
+                                    <td>{{ profile.confirming_document }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if profile.isIndividualOrIndividualEntrepreneur() %}
+
+                                <tr>
+                                    <td>Дата рождения</td>
+                                    <td>{{ date(profile.passport_birth_day, true) }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Серия и номер паспорта</td>
+                                    <td>{{ profile.passport_series }} {{ profile.passport_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Кем выдан паспорт</td>
+                                    <td>{{ profile.passport_issuer }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Дата выдачи</td>
+                                    <td>{{ date(profile.passport_issuance_date, true) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Код подразделения</td>
+                                    <td>{{ profile.passport_unit_code }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Гражданство</td>
+                                    <td>
+                                        {{ country(profile.passport_citizenship) }}
+                                    </td>
+                                </tr>
+
+
+                                {% if profile.isIndividualOrIndividualEntrepreneur() %}
+                                    <tr>
+                                        <td>
+                                            Адрес регистрации
+
+                                        </td>
+                                        <td>
+                                            {{ profile.passport_legal_index }},
+                                            {{ country(profile.passport_legal_country) }},
+                                            {{ profile.passport_legal_region }},
+                                            {{ profile.passport_legal_city }},
+                                            {{ profile.passport_legal_street }},
+                                            {{ profile.passport_legal_house }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Адрес фактического места нахождения</td>
+                                        <td>
+                                            {{ profile.passport_fact_index }},
+                                            {{ country(profile.passport_fact_country) }},
+                                            {{ profile.passport_fact_region }},
+                                            {{ profile.passport_fact_city }},
+                                            {{ profile.passport_fact_street }},
+                                            {{ profile.passport_fact_house }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+
+                                <tr>
+                                    <td>Email</td>
+                                    <td>
+                                        {% if profile.isLegalEntity() %}
+                                            {{ profile.org_email }}
+                                        {% else %}
+                                            {{ profile.user_email }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+
+                            {% endif %}
+
+
+                            <tr>
+                                <td>Контактный телефон</td>
+                                <td>{{ profile.phone }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Документы
+                    </div>
+                    <div class="card-body" id="documentBlock" data-profile="{{ profile.id }}"
+                         data-certificate="{{ certificate_thumbprint }}">
+                        <div class="nav-tabs-boxed nav-tabs-boxed-left tabs-profile-files">
+                            <ul id="tab-profile-files" class="nav flex-column nav-tabs"
+                                style="max-width: 35%; min-width: 35%;" role="tablist">
+                                {% for type, count in filesCount %}
+                                    <li class="nav-item" {% if type == 'QUESTIONNAIRE' %}
+                                        style="display: flex"
+                                    {% endif %}
+                                            {% if count.2 is defined %}
+                                        tabindex="0" data-placement="top"
+                                        data-toggle="popover" data-trigger="focus" data-content="{{ count.2 }}"
+                                            {% endif %}>
+                                        <a {% if type == 'OTHER' %}
+
+                                            {% if files[type][0] is defined %}
+                                                style="color: #005500"
+                                            {% else %}
+                                                style="color: #333333"
+                                            {% endif %}
+
+                                        {% elseif (count.0 != count.1 or count.1 == 0) %}
+                                            style="color: #ff0000"
+                                            {% else %}style="color: #005500"{% endif %}
+                                                class="nav-link"
+                                                data-toggle="tab" href="#{{ type }}" role="tab" aria-controls="home">
+                                            <span class="files-signed">{{ count.0 }}</span>/<span
+                                                    class="files-all">{{ count.1 }}</span> {{ typesNames[type] }}*
+                                        </a>
+                                        {% if type == 'QUESTIONNAIRE' %}
+                                            {% if profileAccess.canDownloadQuest(profile.id) %}
+                                            <a style="padding: .5rem 1rem;" href="https://229etp.ru/files/opros_2021.doc">Скачать</a>
+                                                {% endif %}
+                                        {% endif %}
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content" style="width: 100%; overflow-y: scroll; max-height: 100%;">
+                                {% for key, value in files %}
+                                    <div class="tab-pane" id="{{ key }}" role="tabpanel">
+                                        <table class="table table-responsive-sm table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th>Документ</th>
+                                                <th>Дата и время загрузки</th>
+                                                <th>Статус</th>
+                                                {% if profileAccess.canDeleteFileProfile(profile.id) %}
+                                                <th>
+                                                    <a href="{{ path('profile.upload.file', {'profile_id': profile.id,'fileType': key}) }}"
+                                                       style="float: right; margin-right: 30px;">
+                                                        <svg class="c-icon">
+                                                            <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                                                        </svg>
+                                                    </a>
+                                                </th>
+                                                {% endif %}
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for file in value %}
+                                                <tr>
+                                                    <td>
+                                                        {% if (profileAccess.isModeratorOrAdmin()) %}
+
+                                                            <a target="_blank" href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+
+                                                                {{ file.file_real_name }}
+                                                            </a>
+                                                        {% else %}
+                                                            <a href="{{ path('profile.download', {'file_id': file.id}) }}">
+                                                                {{ file.file_real_name }}
+                                                            </a>
+                                                        {% endif %}
+                                                    </td>
+
+
+                                                    <td>{{ date(file.created_at) }}</td>
+                                                    <td>
+                                                        {% if file.status == 'STATUS_NEW' %}
+                                                            <span class="badge badge-danger" style="display: none">Не подписан</span>
+                                                            <button data-file-type="{{ file.file_type }}"
+                                                                    data-file-id="{{ file.id }}"
+                                                                    class="sign btn-sign btn btn-sm btn-primary btn-ladda ladda-button"
+                                                                    data-style="expand-right"><span class="ladda-label">Подписать</span>
+                                                                <span class="ladda-spinner"></span></button>
+                                                            <input type="hidden" readonly value="{{ file.file_hash }}">
+                                                        {% else %}
+                                                            <span class="badge badge-success">Подписан: {{ date(file.file_sign_at) }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                        {% if profileAccess.canDeleteFileProfile(profile.id) %}
+                                                    <td>
+                                                        {% set token = csrf_token('index') %}
+                                                        <form action="{{ path('profile.delete-file', {'profile_id': profile.id, 'fileId': file.id}) }}"
+                                                              method="post"
+                                                              onsubmit="{% if profile.getStatus().isActive() %}return confirm('При удалении регистрационных документов необходимо отправить заявление оператору на модерацию. Личный кабинет будет заблокирован до решения Администратора системы.'){% else %} return confirm('Вы действительно хотите удалить данный файл.. ?') {% endif %}">
+                                                            <input type="hidden" name="token" value="{{ token }}"/>
+                                                            <button type="submit" class="btn btn-danger mini-btn">
+                                                                <svg class="c-icon">
+                                                                    <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    Профиль не заполнен
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">ЭЦП
+                    <div class="card-header-actions">
+
+                        {{ link_change_eds(profile.incorporated_form, profile.status, profile.id) }}
+
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><a
+                                    href="{{ path('certificate.show', {'id':profile.certificate_id}) }}">{{ profile.certificate_owner }}</a>
+                        </li>
+                        <li class="list-group-item">Выдан: <strong>{{ date(profile.certificate_valid_from) }}</strong>
+                        </li>
+                        <li class="list-group-item">Действителен до:
+                            <strong>{{ date(profile.certificate_valid_to) }}</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Электронная почта
+                    {% if profile.status != 'STATUS_MODERATE' %}
+                        <div class="card-header-actions">
+                            <a class="card-header-action"
+                               href="{{ path('profile.email', {'profile_id': profile.id}) }}"><small class="text-muted">Сменить
+                                    почту</small></a>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>{{ profile.user_email }}</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('sign_profile_file') }}
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Счета и транзакции{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item active">Банковские реквизиты</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-footer">
+                    <a href="{{ path('payment.requisite.add', {'payment_id': payment.id}) }}">Добавить</a><br>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Реквизиты</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Расчетный счет</th>
+                            <th>Наименование банка</th>
+                            <th>БИК Банка</th>
+                            <th>Корреспондентский счет</th>
+                            <th>Статус</th>
+                            <th>Дата добавления</th>
+                            <th>Лицевой счет</th>
+                            <th>Адрес банка</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        {% for requisite in requisites %}
+                            <tbody class="mini-table-body">
+                            <tr>
+                                <td>{{ requisite.payment_account }}</td>
+                                <td>{{ requisite.bank_name }}</td>
+                                <td>{{ requisite.bank_bik }}</td>
+                                <td>{{ requisite.correspondent_account }}</td>
+                                <td>{{ requisite_status(requisite.status) }}</td>
+                                <td>{{ requisite.created_at }}</td>
+                                <td>
+                                    {% if (requisite.personal_account) is empty %}
+                                        Не указано
+                                    {% else %}
+                                        {{ requisite.personal_account }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if (requisite.bank_address) is empty %}
+                                        Не указано
+                                    {% else %}
+                                        {{ requisite.bank_address }}
+                                    {% endif %}
+                                </td>
+                                <td>{% if requisite.status == 'STATUS_ACTIVE' %}
+                                        {% set token = csrf_token('index') %}
+                                        <div id="actions">
+                                            <form class="action-form"
+                                                  action="{{ path('payment.requisite.archived', {'payment_id': payment.id, 'requisite_id': requisite.id}) }}"
+                                                  method="post"
+                                                  onsubmit="return confirm('Вы действительно хотите удалить реквизиты ?')">
+                                                <input type="hidden" name="token" value="{{ token }}"/>
+                                                <button title="Удалить" type="submit" class="btn btn-danger mini-btn">
+                                                    <svg class="c-icon">
+                                                        <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                            <a title="Редактировать" class="btn btn-success mini-btn"
+                                               href="{{ path('payment.requisite.edit', {'payment_id':payment.id, 'requisite_id':requisite.id}) }}">
+                                                <svg class="c-icon">
+                                                    <use xlink:href="/assets/svg/free.svg#cil-pencil"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

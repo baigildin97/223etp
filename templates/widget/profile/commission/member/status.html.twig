@@ -1,0 +1,15 @@
+{% if status == 'STATUS_ACTIVE' %}
+    <span class="badge badge-success">Активный</span>
+{% elseif status == 'STATUS_DRAFT' %}
+    <span class="badge badge-light">Черновик</span>
+{% elseif status == 'STATUS_WAIT' %}
+    <span class="badge badge-info">Не подписан</span>
+{% elseif status == 'STATUS_MODERATE' %}
+    <span class="badge badge-light">На модерации</span>
+{% elseif status == 'STATUS_ARCHIVE' %}
+    <span class="badge badge-dark">Архивирован</span>
+{% elseif status == 'STATUS_REJECT' %}
+    <span class="badge badge-warning">Отклонен</span>
+{% elseif status == 'STATUS_BLOCK' %}
+    <span class="badge badge-danger">Заблокирован</span>
+{% endif %}

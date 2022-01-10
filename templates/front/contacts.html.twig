@@ -1,0 +1,104 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Контакты | Электронная торговая площадка РесТорг{% endblock %}
+
+{% block body %}
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+
+    <style>
+        .form-group + .form-group {
+            margin-top: 2px !important;
+        }
+
+        .digital-signature {
+            width: 83.5%;
+            float: none;
+            clear: both;
+            border: dotted 1px #8F949C;
+            padding: 1px 1px 1px 20px;
+            vertical-align: middle;
+            margin: 10px auto;
+            background-color: #f2f2f5;
+        }
+    </style>
+
+    <section class="section-top-55 section-bottom-85">
+        <div class="shell">
+            <div class="range">
+                <div class="cell-xs-12 cell-sm-7 cell-md-8">
+                    <div class="inset-md-left-30 inset-md-right-30 inset-lg-left-70">
+                        <h3>Контакты</h3>
+                        <p><strong>Для оформления официальных запросов на имя оператора площадки «РесТорг» используйте
+                                следующие контактные данные:</strong></p>
+
+                        <p>Полное наименование: Общество с ограниченной ответственностью «Единая торговая площадка
+                            Республики Башкортостан»</p>
+
+                        <p>Сокращенное наименование: ООО «ЕТП РБ»</p>
+
+                        <p>Юридический адрес: 450005, Республика Башкортостан, г. Уфа,&nbsp;ул. 50-летия Октября, д.
+                            11/2, офис&nbsp;316</p>
+
+                        <p>Почтовый адрес: 450077, Республика Башкортостан, г. Уфа,&nbsp;ул. 50-летия Октября, д. 11/2,
+                            офис&nbsp;316</p>
+
+                        <p>Электронный адрес: support@229etp.ru, etorg-rb@yandex.ru</p>
+
+                        <p>Генеральный директор: Галяутдинов Ринат Рамилевич</p>
+
+                        <p><strong>Банковские реквизиты:</strong></p>
+
+                        <p>Банк: АО "ТИНЬКОФФ БАНК"</p>
+
+                        <p>БИК Банка: 044525974</p>
+
+                        <p>Расчетный счет: 40702810810000558654</p>
+
+                        <p>Корреспондентский счет: 30101810145250000974</p>
+
+                    </div>
+                </div>
+                <div class="cell-xs-12 cell-sm-5 cell-md-4 offset-top-60 offset-sm-top-0">
+
+                    <h3>Обратная связь</h3>
+                    {{ form_start(form) }}
+                    <div class="range">
+                        <div class="cell-xs-12">
+                            <div class="form-group">
+                                <label for="contact-name" class="form-label-outside">Ваше имя</label>
+                                {{ form_widget(form.name, {'attr': {'class':'form-control form-control-has-validation form-control-last-child'}}) }}
+                                {{ form_errors(form.name) }}
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message" class="form-label-outside">Email</label>
+                                {{ form_widget(form.email, {'attr': {'class':'form-control form-control-has-validation form-control-last-child'}}) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message" class="form-label-outside">Телефон</label>
+                                {{ form_widget(form.phone, {'attr': {'class':'form-control form-control-has-validation form-control-last-child'}}) }}
+                                {{ form_errors(form.phone) }}
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message" class="form-label-outside">Сообщение</label>
+                                {{ form_widget(form.text, {'attr': {'class':'form-control form-control-has-validation form-control-last-child'}}) }}
+                                {{ form_errors(form.text) }}
+                            </div>
+
+                            <div class="form-group">
+                            {{ form_widget(form.captcha, {'attr': {'id': 'form_captcha'}}) }}
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-sm btn-curious-blue">Отправить</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

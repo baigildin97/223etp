@@ -1,0 +1,256 @@
+<html class="wide wow-animation desktop landscape rd-navbar-static-linked" lang="en">
+<head>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900,300italic">
+    <link rel="stylesheet" href="/assets/front/style.css">
+    <!--[if lt IE 10]>
+    <div style="background: #212121; padding: 10px 0; box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3); clear: both; text-align:center; position: relative; z-index:1;"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="/images/ie8-panel/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
+    <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="data:text/css;charset=utf-8;base64,Y2xvdWRmbGFyZS1hcHBbYXBwLWlkPSJhLWJldHRlci1icm93c2VyIl0gewogIGRpc3BsYXk6IGJsb2NrOwogIGJhY2tncm91bmQ6ICM0NTQ4NGQ7CiAgY29sb3I6ICNmZmY7CiAgbGluZS1oZWlnaHQ6IDEuNDU7CiAgcG9zaXRpb246IGZpeGVkOwogIHotaW5kZXg6IDkwMDAwMDAwOwogIHRvcDogMDsKICBsZWZ0OiAwOwogIHJpZ2h0OiAwOwogIHBhZGRpbmc6IC41ZW0gMWVtOwogIHRleHQtYWxpZ246IGNlbnRlcjsKICAtd2Via2l0LXVzZXItc2VsZWN0OiBub25lOwogICAgIC1tb3otdXNlci1zZWxlY3Q6IG5vbmU7CiAgICAgIC1tcy11c2VyLXNlbGVjdDogbm9uZTsKICAgICAgICAgIHVzZXItc2VsZWN0OiBub25lOwp9CgpjbG91ZGZsYXJlLWFwcFthcHAtaWQ9ImEtYmV0dGVyLWJyb3dzZXIiXVtkYXRhLXZpc2liaWxpdHk9ImhpZGRlbiJdIHsKICBkaXNwbGF5OiBub25lOwp9CgpjbG91ZGZsYXJlLWFwcFthcHAtaWQ9ImEtYmV0dGVyLWJyb3dzZXIiXSBjbG91ZGZsYXJlLWFwcC1tZXNzYWdlIHsKICBkaXNwbGF5OiBibG9jazsKfQoKY2xvdWRmbGFyZS1hcHBbYXBwLWlkPSJhLWJldHRlci1icm93c2VyIl0gYSB7CiAgdGV4dC1kZWNvcmF0aW9uOiB1bmRlcmxpbmU7CiAgY29sb3I6ICNlYmViZjQ7Cn0KCmNsb3VkZmxhcmUtYXBwW2FwcC1pZD0iYS1iZXR0ZXItYnJvd3NlciJdIGE6aG92ZXIsCmNsb3VkZmxhcmUtYXBwW2FwcC1pZD0iYS1iZXR0ZXItYnJvd3NlciJdIGE6YWN0aXZlIHsKICBjb2xvcjogI2RiZGJlYjsKfQoKY2xvdWRmbGFyZS1hcHBbYXBwLWlkPSJhLWJldHRlci1icm93c2VyIl0gY2xvdWRmbGFyZS1hcHAtY2xvc2UgewogIGRpc3BsYXk6IGJsb2NrOwogIGN1cnNvcjogcG9pbnRlcjsKICBmb250LXNpemU6IDEuNWVtOwogIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICByaWdodDogLjRlbTsKICB0b3A6IC4zNWVtOwogIGhlaWdodDogMWVtOwogIHdpZHRoOiAxZW07CiAgbGluZS1oZWlnaHQ6IDE7Cn0KCmNsb3VkZmxhcmUtYXBwW2FwcC1pZD0iYS1iZXR0ZXItYnJvd3NlciJdIGNsb3VkZmxhcmUtYXBwLWNsb3NlOmFjdGl2ZSB7CiAgLXdlYmtpdC10cmFuc2Zvcm06IHRyYW5zbGF0ZVkoMXB4KTsKICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpOwp9CgpjbG91ZGZsYXJlLWFwcFthcHAtaWQ9ImEtYmV0dGVyLWJyb3dzZXIiXSBjbG91ZGZsYXJlLWFwcC1jbG9zZTpob3ZlciB7CiAgb3BhY2l0eTogLjllbTsKICBjb2xvcjogI2ZmZjsKfQo=">
+    <link rel="stylesheet" href="/assets/front/owl/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/assets/front/owl/owl.carousel.min.css">
+
+    <script src="/assets/front/js/jquery-3.6.0.slim.min.js"></script>
+    <link rel="shortcut icon" href="/assets/front/favicon.ico" type="image/x-icon">
+    <!-- Добавил js для криптопро -->
+ {#   <script src="{{ admin_asset ("/cryptopro/es6-promise.min.js") }}"></script>
+    <script src="{{ admin_asset ("/cryptopro/cadesplugin_api.js") }}"></script>
+    <script src="{{ admin_asset ("/cryptopro/Code.js") }}"></script>
+    <script src="{{ admin_asset ("/cryptopro/async_code.js") }}"></script>
+    <script src="{{ admin_asset ("/cryptopro/createSignSelectCert.js") }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>#}
+
+{#    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(56483539, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>#}
+    <noscript><div><img src="https://mc.yandex.ru/watch/56483539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</head>
+<body class="">
+
+<div class="page">
+    <div class="page-loader">
+        <div class="cssload-container">
+            <div class="cssload-speeding-wheel"></div>
+            <p class="loader-header">Загрузка</p>
+        </div>
+    </div>
+
+    <header class="page-head">
+
+        <div class="rd-navbar-wrap">
+            <nav class="rd-navbar rd-navbar-default" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-static" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-lg-stick-up-clone="true" data-md-stick-up-offset="157px" data-lg-stick-up-offset="157px" data-stick-up="true" data-sm-stick-up="true" data-md-stick-up="true" data-lg-stick-up="true">
+                <div class="rd-navbar-aside-outer">
+                    <div class="rd-navbar-panel-outer">
+                        <div class="rd-navbar-panel">
+                            <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
+                            <a class="rd-navbar-brand" href="/"><img src="/assets/front/images/logo-158x40.png" alt="" width="158" height="40"/></a>
+                        </div>
+                    </div>
+                    <div class="rd-navbar-aside">
+                        <div class="rd-navbar-aside-toggle" data-rd-navbar-toggle=".rd-navbar-aside"><span></span></div>
+                        <div class="rd-navbar-aside-content">
+                            <div class="rd-navbar-aside-item bg-athens-gray bg-wrap novi-background">
+                                <div class="block-container">
+                                    <div class="block-left">
+                                        <p class="rd-navbar-fixed--hidden small">Добро пожаловать электронную торговую площадку «РесТорг»!</p>
+                                    </div>
+                                    <div class="block-right">
+                                        <ul class="list-inline">
+                                            <li><a href="{{ path("auth.sign.up") }}" style="margin-right: 20px;" class="registration">Регистрация</a></li>
+                                            <li><a href="{{ path("app_login") }}" class="" id="login">Вход</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-wrap-container novi-background">
+                                <ul class="block-wrap-list">
+                                    <li class="block-wrap">
+                                        <div class="unit unit-sm-horizontal unit-align-center unit-middle unit-spacing-sm">
+                                            <div class="unit-left">
+                                                <div class="icon novi-icon fl-bigmug-line-alarm31"></div>
+                                            </div>
+                                            <div class="unit-body">
+                                                <address class="contact-info"><span class="text-bold text-gray-base">Пн. - Вс. 24/7</span><span>Круглосуточно</span></address>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="block-wrap">
+                                        <div class="unit unit-sm-horizontal unit-align-center unit-middle unit-spacing-sm">
+                                            <div class="unit-left">
+                                                <div class="icon novi-icon fl-bigmug-line-big104"></div>
+                                            </div>
+                                            <div class="unit-body">
+                                                <address class="contact-info"><span class="text-bold text-gray-base">ул. 50-летия Октября, д. 11/2, офис 316</span><span>Уфа</span></address>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="block-wrap">
+                                        <div class="unit unit-sm-horizontal unit-align-center unit-middle unit-spacing-sm">
+                                            <div class="unit-left">
+                                                <div class="icon novi-icon fl-bigmug-line-phone351"></div>
+                                            </div>
+                                            <div class="unit-body">
+                                                <address class="contact-info">
+                                                <span class="text-bold">
+                                                    <a class="text-gray-base" href="tel:8 800 350 65 79">Пн. - Пт</a>
+                                                </span>
+                                                    <span><span class="__cf_email__">09-00 - 18-00 мск</span></span>
+                                                </address>
+                                            </div>
+                                            <div class="unit-body" style="padding-left: 20px">
+                                                <address class="contact-info">
+                                                <span class="text-bold">
+                                                    <a class="text-gray-base" href="tel:8 800 350 65 79">8 800 350 65 79</a>
+                                                </span>
+                                                    <span><span class="__cf_email__">support@229etp.ru</span></span>
+                                                </address>
+                                            </div>
+                                        </div>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rd-navbar-inner rd-navbar-nav-dark novi-background">
+                    {{ navbar() }}
+                </div>
+            </nav>
+        </div>
+    </header>
+    <style>
+        .m50 {
+            margin: 50px 0;
+        }
+        .digital-signature1 {
+            width: 83.5%;
+            float: none;
+            clear: both;
+            border: dotted 1px #8F949C;
+            padding: 1px 1px 1px 20px;
+            vertical-align: middle;
+            margin: 10px auto;
+            background-color: #f2f2f5;
+        }
+    </style>
+    <div id="checkSign_block" class="digital-signature1">
+        <span style="color: red; font-size:12px">Вниманию пользователей электронной площадки</span>
+        <p style="margin-top: auto;font-size: 12px;">Уважаемые Пользователи!<br>
+
+            В связи с доработками программно-аппаратного комплекса электронной площадки «РесТорг» (https://229etp.ru/) и утверждением новой версии Регламента электронной площадки, ранее зарегистрированные учетные записи всех Пользователей 06.04.2021 года в 00 часов 00 минут 01 секунду времени сервера электронной торговой площадки подлежат удалению.
+            <br>
+            Ранее зарегистрированным Пользователям предлагается пройти процедуру перерегистрации согласно требованиям новой редакции Регламента ЭТП, начиная с 06.04.2021года.
+            <br>
+            Для возврата остатков денежных средств с виртуальных счетов Пользователей ЭТП необходимо через личный кабинет сформировать заявки на вывод денежных средств до 06.04.2021 года. Остатки денежных средств на виртуальных счетах удаленных Пользователей будут возвращены в сроки, установленные Регламентом ЭТП.
+            <br>
+            Опубликовано 29.03.2021 00:00
+        </p>
+    </div>
+    <main class="content">
+        {% include '_flashes.html.twig' %}
+        {% block body %}
+        {% endblock %}
+    </main>
+
+    <footer class="page-foot" data-preset="{&quot;title&quot;:&quot;Футер: стандартный&quot;,&quot;category&quot;:&quot;футеры&quot;,&quot;reload&quot;:true,&quot;id&quot;:&quot;footer-default&quot;}">
+        <div class="section-45 section-sm-75 bg-river-bed novi-background bg-cover">
+            <div class="shell text-center text-sm-left">
+                <div class="range range-45 range-xs-center">
+                    <div class="cell-xs-12 cell-sm-6 cell-lg-3">
+                        <p class="offset-sm-top-34">Добро пожаловать на электронную торговую площадку «РесТорг», сочетающую качество, надежность и соответствие требованиям!</p>
+
+                    </div>
+                    <div class="cell-xs-12 cell-sm-6 cell-lg-4">
+                        <h4>Навигация</h4>
+                        <hr class="hr-variant-1">
+                        <nav class="footer-nav-wrap text-xs-left">
+                            <div class="footer-nav-column">
+                                <ul class="footer-nav">
+                                    <li><a href="{{ path("front") }}">Главная</a></li>
+                                    <li><a href="{{ path("front.tender") }}">Торги</a></li>
+                                    <li><a href="{{ path("front.contacts") }}">Контакты</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-nav-column">
+                                <ul class="footer-nav">
+                                    <li><a href="{{ path("front.get.ecp") }}">Электронная подпись</a></li>
+                                    <li><a href="{{ path("front.tariffs") }}">Действующие тарифы</a></li>
+                                    <li><a href="{{ path("front.documents") }}">Нормативные документы</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="cell-xs-12 cell-sm-6 cell-lg-4">
+                        <h4>Контакты</h4>
+                        <hr class="hr-variant-1">
+                        <address class="contact-info reveal-inline-block">
+                            <ul class="contact-info-list">
+                                <li class="unit unit-horizontal unit-spacing-md">
+                                    <div class="unit-left"><span class="icon icon-sm icon-picton-blue fa-phone novi-icon"></span></div>
+                                    <div class="unit-body"><span class="text-bold"><a href="tel:8 800 350 65 79">8 800 350 65 79</a></span></div>
+                                </li>
+                                <li class="unit unit-horizontal unit-spacing-md">
+                                    <div class="unit-left"><span class="icon icon-sm icon-picton-blue fa-envelope-o novi-icon"></span></div>
+                                    <div class="unit-body"><span><a href="mailto:#">support@229etp.ru</a></span></div>
+                                </li>
+                                <li class="unit unit-horizontal unit-spacing-md">
+                                    <div class="unit-left"><span class="icon icon-sm icon-picton-blue fa-clock-o novi-icon"></span></div>
+                                    <div class="unit-body"><span>Пн. - Вс.: 24/7</span></div>
+                                </li>
+                                <li class="unit unit-horizontal unit-spacing-md">
+                                    <div class="unit-left"><span class="icon icon-sm icon-picton-blue fa-map-marker novi-icon"></span></div>
+                                    <div class="unit-body"><span><a href="#"><span class="text-bold">ул. 50-летия Октября, д. 11/2, офис 316</span><span>Уфа</span></a></span></div>
+                                </li>
+                            </ul>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-14 bg-ebony-clay novi-background bg-cover">
+            <div class="shell text-center">
+                <p class="rights">©&nbsp;<span class="copyright-year">{{ date('Y') }}</span>&nbsp;РесТорг<a href="/privacy">Политика конфиденциальности</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- Javascript-->
+
+<script src="/assets/front/owl/owl.carousel.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".owl-carousel").owlCarousel({
+            dots: true,
+            autoplay: true,
+            loop: true,
+            nav: false,
+            items: 1
+        });
+    });
+</script>
+
+<script src="/assets/front/js/core.min.js"></script>
+<script src="/assets/front/js/script.js"></script>
+
+<a href="#" id="ui-to-top" class="ui-to-top fa fa-angle-up"></a>
+</body><!-- Google Tag Manager -->
+</html>

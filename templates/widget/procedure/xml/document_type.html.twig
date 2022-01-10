@@ -1,0 +1,9 @@
+{% if type ==  'TYPE_NOTIFY_DOCUMENT'%}
+    Извещение о проведении торговой процедуры
+{% elseif type == 'TYPE_NOTIFY_PAUSE' %}
+Извещение о приостановлении торговой процедуры
+{% elseif type == 'TYPE_NOTIFY_RESUME' %}
+Извещение о возобновлении торговой процедуры
+{% elseif type == 'TYPE_NOTIFY_CANCEL' %}
+Извещение об отмене торговой процедуры
+{% endif %}

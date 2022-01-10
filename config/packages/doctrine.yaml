@@ -1,0 +1,136 @@
+doctrine:
+    dbal:
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '5.7'
+        driver: 'pdo_pgsql'
+        server_version: '11.2'
+        charset: utf8
+        default_table_options:
+            charset: utf8
+            collate: -
+
+        url: '%env(resolve:DATABASE_URL)%'
+
+        types:
+            money: 'Tbbc\MoneyBundle\Type\MoneyType'
+            certificate_id: 'App\Model\User\Entity\Certificate\IdType'
+            certificate_status: 'App\Model\User\Entity\Certificate\StatusType'
+            user_user_id: 'App\Model\User\Entity\User\IdType'
+            user_user_email: 'App\Model\User\Entity\User\EmailType'
+            user_status_type: 'App\Model\User\Entity\User\StatusType'
+            user_user_role: 'App\Model\User\Entity\User\RoleType'
+            member_id: 'App\Model\User\Entity\Commission\Members\IdType'
+            member_status: 'App\Model\User\Entity\Commission\Members\StatusType'
+            commission_id: 'App\Model\User\Entity\Commission\Commission\IdType'
+            commission_status: 'App\Model\User\Entity\Commission\Commission\StatusType'
+            profile_profile_id: 'App\Model\User\Entity\Profile\IdType'
+            profile_status_type: 'App\Model\User\Entity\Profile\StatusType'
+            profile_organization_incorporation_form: 'App\Model\User\Entity\Profile\Organization\IncorporationFormType'
+            payment_transaction_id: 'App\Model\User\Entity\Profile\Payment\Transaction\IdType'
+            payment_transaction_id_number: 'App\Model\User\Entity\Profile\Payment\Transaction\IdNumberType'
+            profile_payment_id: 'App\Model\User\Entity\Profile\Payment\IdType'
+            profile_organization_id: 'App\Model\User\Entity\Profile\Organization\IdType'
+            profile_requisite_id: 'App\Model\User\Entity\Profile\Requisite\IdType'
+            profile_representative_id: 'App\Model\User\Entity\Profile\Representative\IdType'
+            tariff_id: 'App\Model\User\Entity\Profile\Tariff\IdType'
+            tariff_status_type: 'App\Model\User\Entity\Profile\Tariff\StatusType'
+            subscribe_tariff_id: 'App\Model\User\Entity\Profile\SubscribeTariff\IdType'
+            level_id: 'App\Model\User\Entity\Profile\Tariff\Levels\IdType'
+            notification_id: 'App\Model\User\Entity\User\Notification\IdType'
+            notification_category_type: 'App\Model\User\Entity\User\Notification\CategoryType'
+            notification_type: 'App\Model\User\Entity\User\Notification\NotificationTypeType'
+            profile_requisite_status_type: 'App\Model\User\Entity\Profile\Requisite\StatusType'
+            transaction_status_type: 'App\Model\User\Entity\Profile\Payment\Transaction\StatusType'
+            transaction_type: 'App\Model\User\Entity\Profile\Payment\Transaction\TransactionTypeType'
+            settings_id: 'App\Model\Admin\Entity\Settings\IdType'
+            settings_key_type: 'App\Model\Admin\Entity\Settings\KeyType'
+            transaction_documents_id: 'App\Model\User\Entity\Profile\Payment\Transaction\Document\IdType'
+            procedure_id: 'App\Model\Work\Procedure\Entity\IdType'
+            procedure_contract_type: 'App\Model\Work\Procedure\Entity\ContractType'
+            procedure_status: 'App\Model\Work\Procedure\Entity\StatusType'
+            procedure_type: 'App\Model\Work\Procedure\Entity\TypeType'
+            lot_id: 'App\Model\Work\Procedure\Entity\Lot\IdType'
+            nds_type: 'App\Model\Work\Procedure\Entity\Lot\NdsType'
+            procedure_document_id: 'App\Model\Work\Procedure\Entity\Document\IdType'
+            procedure_document_status_type: 'App\Model\Work\Procedure\Entity\Document\StatusType'
+            procedure_document_type: 'App\Model\Work\Procedure\Entity\Document\FileTypeType'
+            procedure_xml_document_id: 'App\Model\Work\Procedure\Entity\XmlDocument\IdType'
+            procedure_xml_document_status: 'App\Model\Work\Procedure\Entity\XmlDocument\StatusType'
+            procedure_xml_document_status_tactic: 'App\Model\Work\Procedure\Entity\XmlDocument\StatusTacticType'
+            auction_id: 'App\Model\Work\Procedure\Entity\Lot\Auction\IdType'
+            auction_status_type: 'App\Model\Work\Procedure\Entity\Lot\Auction\StatusType'
+            offer_id: 'App\Model\Work\Procedure\Entity\Lot\Auction\Offer\IdType'
+            bid_id: 'App\Model\Work\Procedure\Entity\Lot\Bid\IdType'
+            bid_document_id: 'App\Model\Work\Procedure\Entity\Lot\Bid\Document\IdType'
+            bid_document_status: 'App\Model\Work\Procedure\Entity\Lot\Bid\Document\StatusType'
+            bid_status: 'App\Model\Work\Procedure\Entity\Lot\Bid\StatusType'
+            bid_temp_status: 'App\Model\Work\Procedure\Entity\Lot\Bid\TempStatusType'
+            bid_xml_document_id: 'App\Model\Work\Procedure\Entity\Lot\Bid\XmlDocument\IdType'
+            bid_xml_document_status: 'App\Model\Work\Procedure\Entity\Lot\Bid\XmlDocument\StatusType'
+            bid_xml_document_category: 'App\Model\Work\Procedure\Entity\Lot\Bid\XmlDocument\CategoryType'
+            profile_document_status_type: 'App\Model\User\Entity\Profile\Document\StatusType'
+            profile_document_type: 'App\Model\User\Entity\Profile\Document\FileTypeType'
+            profile_document_id: 'App\Model\User\Entity\Profile\Document\IdType'
+            profile_xml_document_id: 'App\Model\User\Entity\Profile\XmlDocument\IdType'
+            profile_xml_number_type: 'App\Model\User\Entity\Profile\XmlDocument\IdNumberType'
+            profile_xml_document_status: 'App\Model\User\Entity\Profile\XmlDocument\StatusType'
+            profile_xml_document_status_tactic: 'App\Model\User\Entity\Profile\XmlDocument\StatusTacticType'
+            profile_xml_document_history_id: 'App\Model\User\Entity\Profile\XmlDocument\History\IdType'
+            profile_xml_document_history_action_type: 'App\Model\User\Entity\Profile\XmlDocument\History\ActionType'
+            lot_status: 'App\Model\Work\Procedure\Entity\Lot\StatusType'
+            lot_document_id: 'App\Model\Work\Procedure\Entity\Lot\Document\IdType'
+            lot_document_status: 'App\Model\Work\Procedure\Entity\Lot\Document\StatusType'
+            role_id: 'App\Model\User\Entity\Profile\Role\IdType'
+            role_permissions: 'App\Model\User\Entity\Profile\Role\PermissionType'
+            protocol_status: 'App\Model\Work\Procedure\Entity\Protocol\StatusType'
+            protocol_id: 'App\Model\Work\Procedure\Entity\Protocol\IdType'
+            protocol_type: 'App\Model\Work\Procedure\Entity\Protocol\TypeType'
+            protocol_number_id: 'App\Model\Work\Procedure\Entity\Protocol\IdNumberType'
+            procedure_price_form: 'App\Model\Work\Procedure\Entity\PriceFormType'
+            protocol_reason_type: 'App\Model\Work\Procedure\Entity\Protocol\ReasonType'
+            reload_lot_type: 'App\Model\Work\Procedure\Entity\Lot\ReloadType'
+            procedure_xml_document_type: 'App\Model\Work\Procedure\Entity\XmlDocument\TypeType'
+            procedure_xml_number_type: 'App\Model\Work\Procedure\Entity\XmlDocument\NumberType'
+            tasks_id: 'App\Model\Admin\Entity\Tasks\IdType'
+            tasks_category_type: 'App\Model\Admin\Entity\Tasks\CategoryType'
+            profile_xml_document_statement_type: 'App\Model\User\Entity\Profile\XmlDocument\TypeStatementType'
+            news_id: 'App\Model\Admin\Entity\News\IdType'
+            news_status: 'App\Model\Admin\Entity\News\StatusType'
+            holidays_id: 'App\Model\Admin\Entity\Holidays\IdType'
+            holidays_status: 'App\Model\Admin\Entity\Holidays\StatusType'
+
+            old_procedure_id: 'App\Model\Front\Entity\OldProcedure\IdType'
+            old_document_id: 'App\Model\Front\Entity\OldProcedure\Document\IdType'
+            old_notice_id: 'App\Model\Front\Entity\OldProcedure\Notice\IdType'
+            old_protocol_id: 'App\Model\Front\Entity\OldProcedure\Protocols\IdType'
+            conducting_type: 'App\Model\Work\Procedure\Entity\ConductingTypeType'
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        mappings:
+            User:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Model/User/Entity'
+                prefix: 'App\Model\User\Entity'
+                alias: User
+            Procedure:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Model/Work/Procedure'
+                prefix: 'App\Model\Work\Procedure'
+                alias: Procedure
+            Admin:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Model/Admin/Entity'
+                prefix: 'App\Model\Admin\Entity'
+                alias: Admin
+            Front:
+                    is_bundle: false
+                    type: annotation
+                    dir: '%kernel.project_dir%/src/Model/Front'
+                    prefix: 'App\Model\Front\Entity'
+                    alias: Front

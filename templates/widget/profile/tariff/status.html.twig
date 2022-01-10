@@ -1,0 +1,7 @@
+{% if status == 'STATUS_ACTIVE' %}
+    <span class="badge badge-success">Активный</span>
+{% elseif status == 'STATUS_DRAFT' %}
+    <span class="badge badge-light">Черновик</span>
+{% elseif status == 'STATUS_ARCHIVE' %}
+    <span class="badge badge-dark">Архивирован</span>
+{% endif %}

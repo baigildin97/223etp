@@ -1,0 +1,18 @@
+{% if current is same as("1") %}
+    <button title="Текущий профиль" type="submit" class="btn btn-danger mini-btn">
+        <svg class="c-icon">
+            <use xlink:href="/assets/svg/free.svg#cil-media-stop"></use>
+        </svg>
+    </button>
+{% else %}
+    <form action="
+{#{{ path('certificates.archived', {'certificateId': certificates.id}) }}#}
+" method="post">
+        <input type="hidden" name="token" value="{{ token }}" />
+        <button title="Включить" type="submit" class="btn btn-primary mini-btn">
+            <svg class="c-icon">
+                <use xlink:href="/assets/svg/free.svg#cil-media-play"></use>
+            </svg>
+        </button>
+    </form>
+{% endif %}

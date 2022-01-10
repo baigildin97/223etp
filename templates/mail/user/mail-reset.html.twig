@@ -1,0 +1,11 @@
+{% extends 'mail.html.twig' %}
+
+{% block body %}
+    <p style="margin: 10px 0;">Уважаемый, {{ full_name }}</p>
+    <p style="margin: 10px 0;">Для подтверждения запроса на смену email с IP {{ client_ip}} перейдите по
+        <b>
+            <a href="{{ url('profile.email.confirm', {'token': token}) }}" target="_blank">ссылке</a>
+        </b>
+    </p>
+    <p style="margin: 10px 0;">Запрос будет аннулирован в течение 2 часов.</p>
+{% endblock %}

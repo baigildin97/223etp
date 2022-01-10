@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ deserialize.protocolName }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': protocol.procedure_id}) }}">Процедура №{{ deserialize.procedureNumber }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('lot.protocols', {'lot_id':lot.id}) }}">Протоколы</a></li>
+        <li class="breadcrumb-item active">{{ deserialize.protocolName }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div id="printableArea" class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <a class="btn btn-sm btn-secondary mfs-auto mfe-1 d-print-none" href="#" onclick="printDiv('printableArea');">
+                            <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-print"></use>
+                            </svg> Печать</a></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5 class="text-center">{{ deserialize.protocolName }} (торговая процедура №{{ deserialize.procedureNumber }})</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for lot in deserialize.lots %}
+                                <div class="col-lg-12">
+                                    <p>{{ lot.statementText }}</p>
+                                    <p><strong>1. Форма представления предложений о цене: </strong>{{ lot.pricePresentationForm }}</p>
+                                    <p><strong>2. Место и дата проведения аукциона: </strong>{{ lot.tradingPlace }}</p>
+                                    <p><strong>3. Начальная цена лота: </strong>{{ lot.initialLotPrice }}</p>
+                                    <p><strong>4. Поступившие ценовые предложения:</strong></p>
+                                    <div class="table-responsive-sm">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Номер заявки</th>
+                                                <th>Дата и время ценового предложения</th>
+                                                <th>Участник</th>
+                                                <th>Ценовое предложение</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for offer in lot.offers %}
+                                                <tr>
+                                                    <td class="left">{{ offer.bidNumber }}</td>
+                                                    <td class="left">{{ offer.offerCreatedAt }}</td>
+                                                    <td class="left">{{ offer.owner }}</td>
+                                                    <td class="left">{{ offer.price }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <p><strong>5. Постановили:</strong></p>
+                                    <p>{{ lot.resolution }}</p>
+                                    <p><strong>6. Цена продажи имущества составляет: </strong>{{ lot.salePrice }}</p>
+                                    <p><strong>7. {{ lot.commission }}</strong></p>
+                                    <p><strong>8. Срок подписания Протокола о результатах торгов.</strong></p>
+                                    <p>{{ lot.deadlineSign }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('protocol_sign') }}
+{% endblock %}

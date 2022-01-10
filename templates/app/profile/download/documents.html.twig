@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Просмотр документов{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="accordion" id="documentsAccordion">
+                {% for document in documents %}
+                    <div class="card" style="overflow: initial">
+                        <div class="card-header" style="background-color: #DDDDDD;" id="heading{{ loop.index0 }}">
+                            <span class="font-weight-bold">Создан: </span>
+                            {{ document.created_at }}
+                            <span class="font-weight-bold ml-3">Статус: </span>
+                            {% if document.status == 'STATUS_NEW' %}
+                                <span class="badge badge-info">В обработке</span>
+                            {% elseif document.status == 'STATUS_ACCEPT' %}
+                                <span class="badge badge-success">Аккредитован</span>
+                            {% else %}
+                                <span class="badge badge-danger">В аккредитации отказано</span>
+                            {% endif %}
+                            <a href="{{ path('profile.documents.download', {'document_id': document.id}) }}">
+                                <button class="btn btn-sm btn-light float-right">Скачать документ</button>
+                            </a>
+                            <button class="btn btn-sm btn-light float-right document-details" type="button"
+                                    data-toggle="collapse" data-target="#collapse{{ loop.index0 }}"
+                                    aria-expanded="true" aria-controls="collapse{{ loop.index0 }}"
+                                    data-document-url="{{ path('profile.documents.show', {'document_id': document.id}) }}"
+                                    data-status="false">
+                                Показать подробности
+                            </button>
+                            {% if document.commentary %}
+                                <div class="float-right">
+                                    <button class="btn btn-sm btn-light show-commentary" type="button">
+                                        Комментарий модератора
+                                    </button>
+                                    <div class="commentary-popover position-absolute">
+                                            {{ document.commentary }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="collapse" id="collapse{{ loop.index0 }}" aria-labelledby="heading{{ loop.index0 }}">
+                            Загрузка...
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('document_show_details') }}
+{% endblock %}
+

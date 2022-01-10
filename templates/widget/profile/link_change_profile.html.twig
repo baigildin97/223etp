@@ -1,0 +1,9 @@
+{% if status != 'STATUS_MODERATE' %}
+    {% if incorporationForm == 'INDIVIDUAL' %}
+        <a class="btn btn-sm btn-dark" href="{{ path("profile.edit.individual", {'profile_id': profile_id}) }}">Редактировать профиль</a>
+    {% elseif(incorporationForm) == 'INDIVIDUAL_ENTREPRENEUR' %}
+        <a class="btn btn-sm btn-dark" href="{{ path("profile.edit.individual.entrepreneur", {'profile_id': profile_id}) }}">Редактировать профиль</a>
+    {% elseif(incorporationForm) == 'LEGAL_ENTITY' %}
+        <a class="btn btn-sm btn-dark" href="{{ path("profile.edit.legal.entity", {'profile_id': profile_id}) }}">Редактировать профиль</a>
+    {% endif %}
+{% endif %}

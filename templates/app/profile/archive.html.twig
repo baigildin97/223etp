@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Архив профилей{% endblock %}
+{% block meta %}
+    {#    <meta name="description" content="Page {{ pagination.currentPage }}">#}
+{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('profile') }}">Мои профили</a></li>
+        <li class="breadcrumb-item active">Архив профилей</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-footer">
+                    <a href="{{ path('profile.create') }}" >Добавить новый профиль</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Архив профилей</div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.id, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        {#                        <div class="col-md-2">#}
+                        {#                            <div class="form-group">#}
+                        {#                                {{ form_widget(form.thumbprint, {'attr':{'class':'form-control'}}) }}#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        {#                        <div class="form-group col-md-2">#}
+                        {#                            {{ form_widget(form.subject_name_owner, {'attr':{'class':'form-control'}}) }}#}
+                        {#                        </div>#}
+                                                <div class="col-md-2">
+                                                    <button type="submit" class="btn btn-primary">Найти</button>
+                                                    <a href="{{ path('certificates') }}" class="btn btn-outline-secondary">Сбросить</a>
+                                                </div>
+                    </div>
+                    {{ form_end(form) }}
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Тип профиля</th>
+                            <th>Организационно-правовая форма</th>
+                            <th>Наименование</th>
+                            <th>Статус</th>
+                            <th>Дата добавления</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% for profile in pagination %}
+                            <tr>
+                                <td><a href="{{ path('certificates.show', {'id':profile.id}) }}">{{ profile.id }}</a></td>
+                                <td>{{ profile.role_name }}</td>
+                                <td>{{ incorporation_form_profile(profile.incorporation_form) }}</td>
+                                <td>{{ profile.short_title_organization }}</td>
+                                <td>{{ status_profile(profile.status) }}</td>
+                                <td>{{ profile.created_at }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

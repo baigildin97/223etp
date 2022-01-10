@@ -1,0 +1,198 @@
+<div class="card-body" id="documentBlock" data-certificate="{{ certificate_thumbprint }}">
+    <div class="nav-tabs-boxed nav-tabs-boxed-left">
+        <ul class="nav flex-column nav-tabs" style="max-width: 35%; min-width: 35%;" role="tablist">
+
+            <li class="nav-item">
+                <a style="color: #005500" class="nav-link active" data-toggle="tab" href="#DRAFT_DEPOSIT_AGREEMENT" role="tab" aria-controls="home" aria-selected="true">
+                     Проект договора о задатке*
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a style="color: #005500" class="nav-link" data-toggle="tab" href="#DRAFT_CONTRACT_OF_SALE" role="tab" aria-controls="home" aria-selected="true">
+                    Проект договора купли-продажи*
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a style="color: #005500" class="nav-link" data-toggle="tab" href="#OTHER" role="tab" aria-controls="home" aria-selected="true">
+                 Дополнительные документы
+                </a>
+            </li>
+
+        </ul>
+
+
+
+
+<div class="tab-content" style="width: 100%; overflow-y: scroll; max-height: 270px;">
+
+    <div class="tab-pane active" id="DRAFT_DEPOSIT_AGREEMENT" role="tabpanel">
+        <table class="table table-responsive-sm table-sm">
+            <thead>
+            <tr>
+                <th>Документ</th>
+                <th>Дата и время загрузки</th>
+                <th>Статус</th>
+                <th>
+                    <a href="{{ path("procedure.file.upload", {'procedureId': procedure_id, 'fileType': 'DRAFT_DEPOSIT_AGREEMENT'}) }}" style="float: right; margin-right: 30px;">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                    </svg>
+                    </a>
+
+
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for file in files %}
+                {% if file.file_type == 'DRAFT_DEPOSIT_AGREEMENT' %}
+            <tr>
+                <td>
+                    <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                        {{ file.file_real_name }}
+                    </a>
+                </td>
+                <td>{{ file.created_at }}</td>
+                <td>
+                    {% if file.status == 'STATUS_NEW' %}
+                        <span class="badge badge-danger" style="display: none">Не подписан</span>
+                        <button data-file-type="{{ file.file_type }}" data-file-id="{{ file.id }}" class="sign btn-sign btn btn-sm btn-primary btn-ladda ladda-button" data-style="expand-right"><span class="ladda-label">Подписать</span><span class="ladda-spinner"></span></button>
+                        <input type="hidden" readonly value="{{ file.file_hash }}">
+                    {% else %}
+                        <span class="badge badge-success">Подписан</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% set token = csrf_token('index') %}
+                    <form action={{ path("procedure.delete-file", {'procedureId': procedure_id, 'fileId': file.id})}} method="post" onsubmit="return confirm('Вы действительно хотите удалить данный файл ?')">
+                        <input type="hidden" name="token" value="{{ token }}">
+                        <button type="submit" class="btn btn-danger mini-btn">
+                            <svg class="c-icon">
+                                <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                            </svg>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-pane" id="DRAFT_CONTRACT_OF_SALE" role="tabpanel">
+        <table class="table table-responsive-sm table-sm">
+            <thead>
+            <tr>
+                <th>Документ</th>
+                <th>Дата и время загрузки</th>
+                <th>Статус</th>
+                <th>
+                    <a href="{{ path("procedure.file.upload", {'procedureId': procedure_id, 'fileType': 'DRAFT_CONTRACT_OF_SALE'}) }}" style="float: right; margin-right: 30px;">
+                        <svg class="c-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                        </svg>
+                    </a>
+
+
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for file in files %}
+                {% if file.file_type == 'DRAFT_CONTRACT_OF_SALE' %}
+                <tr>
+                    <td>
+                        <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                            {{ file.file_real_name }}
+                        </a>
+                    </td>
+                    <td>{{ file.created_at }}</td>
+                    <td>
+                        {% if file.status == 'STATUS_NEW' %}
+                            <span class="badge badge-danger" style="display: none">Не подписан</span>
+                            <button data-file-type="{{ file.file_type }}" data-file-id="{{ file.id }}" class="sign btn-sign btn btn-sm btn-primary btn-ladda ladda-button" data-style="expand-right"><span class="ladda-label">Подписать</span><span class="ladda-spinner"></span></button>
+                            <input type="hidden" readonly value="{{ file.file_hash }}">
+                        {% else %}
+                            <span class="badge badge-success">Подписан</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% set token = csrf_token('index') %}
+                        <form action={{ path("procedure.delete-file", {'procedureId': procedure_id, 'fileId': file.id})}} method="post" onsubmit="return confirm('Вы действительно хотите удалить данный файл ?')">
+                            <input type="hidden" name="token" value="{{ token }}">
+                            <button type="submit" class="btn btn-danger mini-btn">
+                                <svg class="c-icon">
+                                    <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                </svg>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-pane" id="OTHER" role="tabpanel">
+        <table class="table table-responsive-sm table-sm">
+            <thead>
+            <tr>
+                <th>Документ</th>
+                <th>Дата и время загрузки</th>
+                <th>Статус</th>
+                <th>
+                    <a href="{{ path("procedure.file.upload", {'procedureId': procedure_id, 'fileType': 'OTHER'}) }}" style="float: right; margin-right: 30px;">
+                        <svg class="c-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                        </svg>
+                    </a>
+
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for file in files %}
+                {% if file.file_type == 'OTHER' %}
+                <tr>
+                    <td>
+                        <a href={{ storage_path(file.file_path~"/"~file.file_name) }}>
+                            {{ file.file_real_name }}
+                        </a>
+                    </td>
+                    <td>{{ file.created_at }}</td>
+                    <td>
+                        {% if file.status == 'STATUS_NEW' %}
+                            <span class="badge badge-danger" style="display: none">Не подписан</span>
+                            <button data-file-type="{{ file.file_type }}" data-file-id="{{ file.id }}" class="sign btn-sign btn btn-sm btn-primary btn-ladda ladda-button" data-style="expand-right"><span class="ladda-label">Подписать</span><span class="ladda-spinner"></span></button>
+                            <input type="hidden" readonly value="{{ file.file_hash }}">
+                        {% else %}
+                            <span class="badge badge-success">Подписан</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% set token = csrf_token('index') %}
+                        <form action={{ path("procedure.delete-file", {'procedureId': procedure_id, 'fileId': file.id})}} method="post" onsubmit="return confirm('Вы действительно хотите удалить данный файл ?')">
+                            <input type="hidden" name="token" value="{{ token }}">
+                            <button type="submit" class="btn btn-danger mini-btn">
+                                <svg class="c-icon">
+                                    <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                </svg>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+</div>
+</div>
+</div>

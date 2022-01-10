@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% block title %}Заявка №{{ bid.number}}{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': bid.procedure_id}) }}">Процедура №{{ bid.procedure_number }}</a></li>
+{#        <li class="breadcrumb-item"><a href="{{ path('lot.show', {'lotId': bid.lot_id}) }}">Лот №{{ bid.lot_number}}</a></li>#}
+        <li class="breadcrumb-item"><a href="{{ path('bid.show', {'bidId': bid.id}) }}">Заявка №{{ bid.number }}</a></li>
+        <li class="breadcrumb-item active">Подписание и отправка заявки №{{ bid.number }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                {{ form_start(form) }}
+                {{ form_widget(form.sign) }}
+                {{ form_errors(form.sign) }}
+                <div class="card-footer">
+                    <button id="sign_bid" class="btn btn-sm btn-success" data-hash="{{hash}}" data-thumbprint="{{ bid.certificate_thumbprint }}" type="submit">Подписать и отправить</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header text-center p-2"><h5>Заявка на участие в электронных торгах</h5></div>
+                <div class="card-body">
+                    <p><strong>1.</strong> {{ xmlDeserialize.firstPoint }}</p>
+                    <p><strong>2.</strong> {{ xmlDeserialize.secondPoint }}</p>
+                    <p><strong>3.</strong> {{ xmlDeserialize.thirdPoint }}</p>
+                    <p><strong>4.</strong> {{ xmlDeserialize.fourthPoint | raw }}</p>
+                    <p><strong>5.</strong> {{ xmlDeserialize.fifthPoint | raw}}</p>
+                    <p><strong>6.</strong> {{ xmlDeserialize.sixthPoint | raw }}</p>
+                    {% if profileAccess.canShowBidDocuments(bid.id) %}
+                    <p><strong>Приложения</strong></p>
+                    <ul>
+                        {% for xmlDoc in xmlDeserialize.documents %}
+                        <li><a href="{{ xmlDoc.url }}">{{ xmlDoc.documentName }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('sign_xml_bid') }}
+{% endblock %}

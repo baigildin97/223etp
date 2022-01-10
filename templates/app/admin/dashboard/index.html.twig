@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item active">Статистика</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header"><b>Статистика пользователей</b></div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">Всего пользователей: <span class="badge badge-primary badge-pill">{{ count_all_users | number_format  }}</span></li>
+                        <li class="list-group-item">Аккредитованных: <span class="badge badge-success badge-pill">{{ count_active_profile_users | number_format  }}</span></li>
+                        <li class="list-group-item">На модерации: <span class="badge badge-warning badge-pill">{{ count_moderate_profile_users | number_format  }}</span></li>
+                        <li class="list-group-item">Заблокированных: <span class="badge badge-danger badge-pill">{{ count_blocked_profile_users | number_format  }}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header"><b>Средства</b></div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            Всего свободных средст пользователей: <span class="badge badge-primary badge-pill">{{ sum_available_amount }}</span></li>
+                        <li class="list-group-item">
+                            Всего заблокированных средст пользователей: <span class="badge badge-primary badge-pill">{{ sum_blocked_amount }}</span></li>
+                        <li class="list-group-item">
+                            Всего сумм на снятие: <span class="badge badge-primary badge-pill">{{ sum_withdrawal_amount }}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header"><b>Статистика процедур</b></div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            Всего процедур: <span class="badge badge-primary badge-pill">{{ count_all_procedures | number_format }}</span></li>
+                        <li class="list-group-item">
+                            На модерации <span class="badge badge-warning badge-pill">{{ count_moderate_procedures | number_format }}</span></li>
+                        <li class="list-group-item">
+                            Несостоявшихся: <span class="badge badge-danger badge-pill">{{ count_failed_procedures | number_format }}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header"><b>Заявки</b></div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            Всего заявок: <span class="badge badge-primary badge-pill">{{ count_all_bids | number_format }}</span></li>
+                        <li class="list-group-item">
+                            На модерации <span class="badge badge-warning badge-pill">{{ count_sent_bids | number_format }}</span></li>
+                        <li class="list-group-item">
+                            Допущено <span class="badge badge-success badge-pill">{{ count_approved_bids | number_format }}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

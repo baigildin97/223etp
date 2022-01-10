@@ -1,0 +1,9 @@
+{% if arrested_type == 'IMMOVABLE_PROPERTY' %}
+    Недвижимое имущество
+{% elseif arrested_type == 'MOVABLE_PROPERTY' %}
+    Движимое имущество>
+{% elseif arrested_type == 'PLEDGED_REAL_ESTATE' %}
+    Залоговое недвижимое имущество
+{% elseif arrested_type == 'COLLATERALIZED_MOVABLE_PROPERTY' %}
+    Залоговое движимое имущество
+{% endif %}

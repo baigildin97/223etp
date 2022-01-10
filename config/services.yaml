@@ -1,0 +1,99 @@
+# This file is the entry point to configure your own services.
+# ProfileFiles in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'ru-RU'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    App\Model\User\Service\ResetTokenGenerator:
+        factory: 'App\Container\Model\User\Service\ResetTokenGeneratorFactory::create'
+        arguments: ['PT1H']
+
+    App\Model\User\Service\NewEmailTokenGenerator:
+        factory: 'App\Container\Model\User\Service\NewEmailResetTokenGeneratorFactory::create'
+        arguments: ['PT1H']
+
+    Finesse\SwiftMailerDefaultsPlugin\SwiftMailerDefaultsPlugin:
+        arguments:
+            $defaults:
+                from:
+                    '%env(MAILER_FROM_EMAIL)%': '%env(MAILER_FROM_NAME)%'
+        tags:
+            - { name: swiftmailer.default.plugin }
+
+    App\Model\EventDispatcher:
+        class: App\Event\Dispatcher\MessengerEventDispatcher
+
+    Predis\Client:
+        arguments:
+            - '%env(REDIS_URL)%'
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            - '@Predis\Client'
+            - {prefix: 'dev_'}
+
+    App\Widget\:
+        resource: '../src/Widget'
+        tags: ['twig.extension']
+
+    App\Services\Uploader\FileUploader:
+        arguments: ['@default.storage', '%env(STORAGE_BASE_URL)%', '%env(STORAGE_FTP_ROOT_DIRECTORY)%', '%env(HASH_ALGORITHM)%']
+
+    App\Container\Model\SubscribeTariff\SubscribeTariffFactory:
+        arguments:
+            $defaultTariffId:
+                     '%env(DEFAULT_TARIFF_ID)%'
+
+    App\Services\Notification\EmailMessageHandler:
+        tags:
+            -
+                  name: messenger.email_message_handler
+                  handles: App\Services\Notification\EmailMessageInterface
+
+    ReCaptcha\ReCaptcha:
+        arguments:
+            $secret:
+                '%env(GOOGLE_RECAPTCHA_SECRET)%'
+
+    App\Container\Model\Certificate\CertificateService:
+        arguments:
+            $hash:
+                '%env(CRYPT_LOGIN_HASH)%'
+            $captchaPubKey:
+                '%env(RECAPTCHA3_KEY)%'
+
+    App\Container\Model\User\Service\EmailEnvService:
+        arguments:
+            $mailFrom:
+                '%env(MAILER_FROM_EMAIL)%'
+            $mailerTlsCert:
+                '%env(MAILER_TLS_CERT)%'
+            $mailerTlsKey:
+                '%env(MAILER_TLS_KEY)%'
+
+    App\Container\Model\HostService:
+        arguments:
+            $baseUrl:
+                '%env(BASE_URL)%'

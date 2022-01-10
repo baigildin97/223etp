@@ -1,0 +1,126 @@
+<div class="d-flex">
+    <div class="card">
+        <div class="card-header">Данные организации</div>
+        <div class="card-body">
+            <table class="table table-responsive-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td>Полное наименование организации</td>
+                        <td>{{ profile.full_title_organization }}</td>
+                    </tr>
+                    <tr>
+                        <td>Краткое наименование организации</td>
+                        <td>{{ profile.short_title_organization }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ profile.org_email }}</td>
+                    </tr>
+                    <tr>
+                        <td>КПП</td>
+                        <td>{{ profile.kpp }}</td>
+                    </tr>
+                    <tr>
+                        <td>ОГРНИП</td>
+                        <td>{{ profile.ogrn }}</td>
+                    </tr>
+                <tr>
+                    <td>ИНН</td>
+                    <td>{{ profile.inn }}</td>
+                </tr>
+                <tr>
+                    <td>Адрес постоянной регистрации</td>
+                    <td>{{ profile.legal_address }}</td>
+                </tr>
+                <tr>
+                    <td>Адрес фактического места нахождения</td>
+                    <td>{{ profile.fact_address }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            Данные представителя
+        </div>
+        <div class="card-body">
+            <table class="table table-responsive-sm table-bordered">
+                <tbody>
+                <tr>
+                    <td>ФИО</td>
+                    <td>{{ profile.repr_name }}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{ profile.repr_email }}</td>
+                </tr>
+                <tr>
+                    <td>Контактный телефон</td>
+                    <td>{{ profile.repr_phone }}</td>
+                </tr>
+                <tr>
+                    <td>Должность</td>
+                    <td>{{ profile.position }}</td>
+                </tr>
+                <tr>
+                    <td>Документ(ы), подтверждающие полномочия представителя Юридического лица</td>
+                    <td>{{ profile.confirming_document }}</td>
+                </tr>
+                <tr>
+                    <td>Серия и номер паспорта</td>
+                    <td>{{ profile.passport_series }} {{ profile.passport_number }}</td>
+                </tr>
+                <tr>
+                    <td>Кем выдан</td>
+                    <td>{{ profile.passport_issuer }}</td>
+                </tr>
+                <tr>
+                    <td>Дата выдачи</td>
+                    <td>{{ profile.passport_issuance_date }}</td>
+                </tr>
+                <tr>
+                    <td>Код подразделения</td>
+                    <td>{{ profile.passport_unit_code }}</td>
+                </tr>
+                <tr>
+                    <td>Гражданство</td>
+                    <td>{{ profile.passport_citizenship }}</td>
+                </tr>
+                <tr>
+                    <td>Дата рождения</td>
+                    <td>{{ profile.passport_birth_day }}</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-center">
+    <div class="card">
+        <div class="card-header">
+            Банковские реквизиты
+        </div>
+        <div class="card-body">
+            <table class="table table-responsive-sm table-bordered">
+                <thead>
+                <th>Банк</th>
+                <th>БИК</th>
+                <th>Корр. счет</th>
+                <th>Расчетный счет</th>
+                </thead>
+                <tbody>
+                {% for requisite in profile.requisites %}
+                    <tr>
+                        <td style="width: 22%">{{ requisite['bank_name'] }}</td>
+                        <td style="width: 10%">{{ requisite['bank_bik'] }}</td>
+                        <td style="width: 30%">{{ requisite['correspondent_account'] }}</td>
+                        <td style="width: 30%">{{ requisite['payment_account'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

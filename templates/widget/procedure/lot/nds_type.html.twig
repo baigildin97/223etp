@@ -1,0 +1,7 @@
+{% if nds_type == 'NO_NDS' %}
+    Без ндс
+{% elseif nds_type == 'INCLUDING_NDS' %}
+    В том числе НДС
+{% elseif nds_type == 'NDS_IS_EXEMPT' %}
+    НДС не облагается
+{% endif %}

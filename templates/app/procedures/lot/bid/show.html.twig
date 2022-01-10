@@ -1,0 +1,323 @@
+{% extends 'base.html.twig' %}
+{% block title %}Заявка №{{ bid.number }}{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': bid.procedure_id}) }}">Процедура
+                №{{ bid.procedure_number }}</a></li>
+        {#        <li class="breadcrumb-item"><a href="{{ path('lot.show', {'lotId': bid.lot_id}) }}">Лот#}
+        {#                №{{ bid.lot_number }}</a></li>#}
+        <li class="breadcrumb-item"><a href="{{ path('lot.bids', {'lotId': bid.lot_id}) }}">Заявки</a></li>
+        <li class="breadcrumb-item active">Заявка №{{ bid.number }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            {% if profileAccess.isParticipant() %}
+                <div class="card">
+                    <div class="card-header">
+                        <a {% if bid.isNotNew() or profileAccess.isNotParticipant() %} class="btn btn-sm btn-dark link-disabled"
+                                {% else %} class="btn btn-sm btn-dark" {% endif %}href="{{ path('bid.sign', {'id': bid.id}) }}">Перейти
+                            к подписанию</a>
+                        {# <a class="btn btn-sm btn-dark" href="{{ path('bid.history', {'bidId': bid.id}) }}">История изменений</a>#}
+                        <a {% if not profileAccess.canBidRecall(bid.id) %} class="btn btn-sm btn-dark link-disabled"
+                        {% else %} class="btn btn-sm btn-dark" {% endif %}
+                                href="{{ path('bid.recall', {'bidId': bid.id}) }}">Отозвать заявку</a>
+                        <a {% if not profileAccess.canShowAuction(bid.auction_id) %}  class="btn btn-sm btn-dark link-disabled"
+                        {% else %} class="btn btn-sm btn-dark" {% endif %}
+                                href="{{ path('auction.show', {'lotId': bid.lot_id, 'auctionId': bid.auction_id }) }}">Перейти
+                            в аукционный зал</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% if bid.status == 'STATUS_REJECT' %}
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <strong>Заявка отклонена: </strong>{{ bid.organizer_comment }}
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Заявка (входящий №{{ bid.number }}) на участие в процедуре №{{ bid.procedure_number }}</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td style="width: 25%">Предмет торгов</td>
+                            <td>{{ bid.procedure_title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Статус заявки</td>
+                            <td>{{ bid_status(bid.status) }} </td>
+                        </tr>
+                        <tr>
+                            <td>Номер заявки</td>
+                            <td>№{{ bid.number }}</td>
+                        </tr>
+                        {% if bid.signed_at  %}
+                            <tr>
+                                <td>Дата и время подачи заявки</td>
+                                <td>{{ date(bid.signed_at) }} </td>
+                            </tr>
+                        {% endif %}
+                        {% if(profileAccess.canShowBidParticipant(bid.procedure_id)) %}
+                            <tr>
+                                <td>Содержание заявки</td>
+                                <td><a href="#"
+                                       id="bidStatement"
+                                       type="button"
+                                       data-toggle="modal"
+                                       data-target="#bidStatementModal"
+                                       data-request-url="{{ path('bid.history.ajax_load', {'bidId': bid.id}) }}">Посмотреть</a></td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% if(profileAccess.canShowBidParticipant(bid.procedure_id)) %}
+ 
+                <div class="card">
+                    <div class="card-header">Сведения о претенденте</div>
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <tbody>
+
+                            {% if bid.isLegalEntity() %}
+                                <tr>
+                                    <td style="width: 25%">ИНН</td>
+                                    <td>{{ bid.inn_organization }} </td>
+                                </tr>
+                                <tr>
+                                    <td>КПП</td>
+                                    <td>{{ bid.kpp_organization }} </td>
+                                </tr>
+                                <tr>
+                                    <td>ОГРН</td>
+                                    <td>{{ bid.ogrn_organization }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Полное наименование</td>
+                                    <td>{{ bid.full_title_organization }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Сокращенное наименование</td>
+                                    <td>{{ bid.short_title_organization }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Юридический адрес</td>
+                                    <td>{{ bid.getFullLegalAddressOrganization() }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Адрес места нахождения</td>
+                                    <td>{{ bid.getFullFactAddressOrganization() }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>{{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Контактное лицо</td>
+                                    <td>{{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Emil контактного лица</td>
+                                    <td>{{ bid.email_organization }} </td>
+                                </tr>
+                            {% endif %}
+                            {% if (bid.isIndividualEntrepreneur) %}
+                                <tr>
+                                    <td style="width: 25%">ИНН</td>
+                                    <td>{{ bid.inn_organization }} </td>
+                                </tr>
+                                <tr>
+                                    <td>СНИЛС</td>
+                                    <td>{{ bid.passport_snils }}  </td>
+                                </tr>
+                                <tr>
+                                    <td>ОГРНИП</td>
+                                    <td>{{ bid.ogrn_organization }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Полное наименование</td>
+                                    <td>Индивидуальный предприниматель {{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Адрес регистрации</td>
+                                    <td>{{ bid.getFullPassportLegalAddress() }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Адрес места нахождения</td>
+                                    <td>{{ bid.getFullPassportFactAddress() }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Контактное лицо</td>
+                                    <td>{{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Emil контактного лица</td>
+                                    <td>{{ bid.user_email }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Телефон контактного лица</td>
+                                    <td>{{ bid.user_phone }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if (bid.isIndividual()) %}
+                                <tr>
+                                    <td style="width: 25%">ИНН</td>
+                                    <td>{{ bid.passport_inn }} </td>
+                                </tr>
+                                <tr>
+                                    <td>СНИЛС</td>
+                                    <td>{{ bid.passport_snils }}  </td>
+                                </tr>
+                                <tr>
+                                    <td>Ф.И.О</td>
+                                    <td>{{ bid.last_name }} {{ bid.first_name }} {{ bid.middle_name }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Адрес регистрации</td>
+                                    <td>{{ bid.getFullPassportLegalAddress() }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Адрес места нахождения</td>
+                                    <td>{{ bid.getFullPassportFactAddress() }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>{{ bid.user_email }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Телефон</td>
+                                    <td>{{ bid.user_phone }} </td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+            {% endif %}
+
+
+            {% if(profileAccess.canShowBidParticipant(bid.procedure_id)) %}
+                <div class="card">
+                    <div class="card-header">Документы</div>
+                    <div class="card-body" id="documentBlock" data-certificate="{{ bid.certificate_thumbprint }}">
+                        <table class="table table-responsive-sm table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Наименование</th>
+                                {% if profileAccess.canShowBidDocuments(bid.id) %}
+                                <th>Документ</th>
+                                {% endif %}
+                                <th>Дата и время загрузки</th>
+                                <th>Статус</th>
+                                {% if bid.status == 'STATUS_NEW' %}
+                                    <th>
+                                        <a href="{{ path('bid.file.upload',{'bidId': bid.id}) }}"
+                                           style="float: right; margin-right: 30px;">
+                                            <svg class="c-icon">
+                                                <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                                            </svg>
+                                        </a>
+                                    </th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for document in documents %}
+                                <tr>
+                                    <td>{{ document.document_name }}</td>
+                                    {% if profileAccess.canShowBidDocuments(bid.id) %}
+                                    <td>
+                                        <a target="_blank"
+                                           href="{{ storage_path(document.file_path~"/"~document.file_name) }}">{{ document.file_real_name }}</a>
+                                    </td>
+                                    {% endif %}
+                                    <td>{{ date(document.created_at) }}</td>
+                                    <td>
+                                        {% if document.status == 'STATUS_SIGNED' %}
+                                            <span class="badge badge-success">Подписан: {{ date(document.signed_at) }}</span>
+                                        {% else %}
+                                            <a class="sign_bid_file btn btn-sign btn-primary"
+                                               data-bid-id="{{ document.bid_id }}" data-file-hash="{{ document.file_hash }}"
+                                               data-file-id="{{ document.id }}" href="">Подписать</a>
+                                        {% endif %}
+                                    </td>
+                                    {% if bid.status == 'STATUS_NEW' %}
+                                        <td>
+                                            {% set token = csrf_token('index') %}
+                                            <form action="{{ path('bid.document.delete', {'bidId': bid.id, 'documentId': document.id}) }}"
+                                                  method="post"
+                                                  onsubmit="return confirm('Вы действительно хотите удалить данный файл ?')">
+                                                <input type="hidden" name="token" value="{{ token }}">
+                                                <button type="submit" class="btn btn-danger mini-btn">
+                                                    <svg class="c-icon">
+                                                        <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+        {% if(profileAccess.canReviewBid(bid.id)) %}
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">Решение организатора</div>
+                    {{ form_start(form) }}
+                    <div class="card-body">
+                        <fieldset class="form-group">
+                            <div class="input-group">
+                                {{ form_widget(form.cause, {'attr': {'class':'form-control'}}) }}
+                                {{ form_errors(form.cause) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="card-footer">
+                        {{ form_widget(form.approved, {'label': 'Допустить заявку', 'attr': {'class': 'btn btn-success btn-sm'}}) }}
+                        {{ form_widget(form.reject, {'label': 'Отклонить заявку', 'attr': {'class': 'btn btn-danger btn-sm'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="modal fade" id="bidStatementModal" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Содержание заявки</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('sign_xml_bid') }}
+{% endblock %}

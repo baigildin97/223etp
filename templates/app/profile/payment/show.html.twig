@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Счет: {{ payment.invoice_number }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('payments', {'profile_id': payment.profile_id }) }}">Счета и транзакции</a></li>
+        <li class="breadcrumb-item">Счет: №{{ payment.invoice_number }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-9 mb-4">
+            <div class="card">
+                <div class="card-header">Счет: №{{ payment.invoice_number }}</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Номер счета</th>
+                                <th>Свободная сумма</th>
+                                <th>Заблокированная сумма</th>
+                                <th>Сумма на вывод</th>
+                            </tr>
+                        </thead>
+                            <tbody class="mini-table-body">
+                                <tr>
+                                    <td>№{{ payment.invoice_number }}</td>
+                                    <td>{{ money(payment.available_amount) }}</td>
+                                    <td>{{ money(payment.blocked_amount) }}</td>
+                                    <td>{{ money(payment.withdrawal_amount) }}</td>
+                                </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Транзакции</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Тип</th>
+                                <th>Сумма</th>
+                                <th>Дата и время</th>
+                                <th>Статус</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction.id_number }}</td>
+                            <td>{{ transaction_type(transaction.type) }}</td>
+                            <td>{{ money(transaction.money) }}</td>
+                            <td>{{ date(transaction.created_at) }}</td>
+                            <td>{{ transaction_status(transaction.status) }}</td>
+                            <td>
+                                {% if transaction.status == 'STATUS_PENDING' and transaction.type == 'DEPOSIT'%}
+                                <a href="{{ path('payment.invoice', {'payment_id': payment.id, 'transaction_id': transaction.id}) }}">Платежное поручение</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if transaction.status == 'STATUS_PENDING' %}
+                                {% set token = csrf_token('index') %}
+                                <div id="actions">
+                                    <form class="action-form" action="{{ path('transaction.cancel', {'transaction_id': transaction.id, 'payment_id': payment.id}) }}" method="post" onsubmit="return confirm('Вы действительно отменить ?')">
+                                        <input type="hidden" name="token" value="{{ token }}" />
+                                        <button type="submit" class="btn btn-danger mini-btn"><svg class="c-icon">
+                                                <use xlink:href="/assets/svg/free.svg#cil-x"></use>
+                                            </svg></button>
+                                    </form>
+                                    {% if(profileAccess.isModerator() or profileAccess.isAdmin()) %}
+                                    <form action="{{ path('transaction.confirm', {'transaction_id': transaction.id, 'payment_id': transaction.payment_id}) }}" method="post" {% if transaction.type == 'DEPOSIT' %}onsubmit="return confirm('Подтверждаете поступление средств на счет ЭТП ?')" {% elseif transaction.type == 'WITHDRAW'%}onsubmit="return confirm('Подтверждаете вывод средств ?')"{% endif %}>
+                                        <input type="hidden" name="token" value="{{ token }}" />
+                                        <button type="submit" class="btn btn-success mini-btn"><svg class="c-icon">
+                                                <use xlink:href="/assets/svg/free.svg#cil-check"></use>
+                                            </svg></button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(transactions) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">Профиль</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><a href="{{ path('profile', {'profile_id':payment.profile_id}) }}">{{ payment.user_full_name }}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Операции</div>
+                <div class="card-body">
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="{{ path('payment.requisites', {'payment_id': payment.id}) }}">Банковские реквизиты</a>
+                    </nav>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="{{ path('payment.deposit', {'payment_id': payment.id}) }}">Пополнить баланс</a>
+                    </nav>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="{{ path('payment.withdraw', {'payment_id': payment.id }) }}">Вывод средств</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

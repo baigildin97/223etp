@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заявки{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item active">Заявки</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Заявки</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Заявка</th>
+                            <th>Процедура</th>
+                            <th>Дата и время создания</th>
+                            <th>Статус</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% set token = csrf_token('archive') %}
+                        {% for bid in bids %}
+                            <tr>
+                                <td><a href="{{ path("bid.show", {'bidId': bid.id }) }}">№{{ bid.number }}</a> </td>
+                                <td><a href="{{ path('procedure.show',{'procedureId': bid.procedure_id}) }}">Процедура №{{ bid.procedure_number}}</a></td>
+                                <td>{{ date(bid.created_at) }}</td>
+                                <td>{{ bid_status(bid.status) }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(bids) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

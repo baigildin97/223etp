@@ -1,0 +1,301 @@
+{% extends 'base.html.twig' %}
+{% block title %}Лот №{{ lot.id_number }}{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedure.id}) }}">Процедура
+                №{{ procedure.id_number }}</a></li>
+        <li class="breadcrumb-item active">Лот №{{ lot.id_number }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                {% if profileAccess.isOrganizer() %}
+                    <a {% if not (profileAccess.canEditLot(lot.id)) %}
+                            class="btn btn-dark btn-sm link-disabled" {% else %} class="btn btn-sm btn-dark"
+                            {% endif %}href="{{ path('lot.edit', {'lot_id': lot.id}) }}">Редактировать</a>
+                {% endif %}
+                <a class="btn btn-sm btn-dark" href="{{ path('lot.protocols', {'lot_id': lot.id}) }}">Протоколы</a>
+                {% if profileAccess.isParticipant() %}
+                    <a {% if not (profileAccess.canCreateBidToLot(lot.id)) %}
+                            class="btn btn-dark btn-sm link-disabled" {% else %} class="btn btn-sm btn-dark"
+                            {% endif %}href="{{ path('bid.apply', {'lotId': lot.id}) }}">Подать заявку</a>
+                {% endif %}
+                <a {% if not profileAccess.canShowAuction(lot.auction_id) %}
+                        class="btn btn-dark btn-sm link-disabled" {% else %} class="btn btn-sm btn-dark"
+                        {% endif %}href="{{ path('auction.show', {'lotId': lot.id, 'auctionId': lot.auction_id }) }}">Перейти
+                    в аукционный зал</a>
+            </div>
+        </div>
+
+        {% if(lot.status == 'STATUS_SIGNED_PROTOCOL_RESULT') %}
+            {% if not (lot.isPaymentWinnerConfirm()) %}
+                <div class="card">
+                    <div class="card-header">
+                        {{ form_start(form) }}
+                        {{ form_widget(form.approved, {'label': 'Подтвердить оплату имущество победитилем', 'attr': {'class': 'btn btn-sm btn-info'}}) }}
+                        {{ form_widget(form.reject, {'label': 'Победитель не оплатил в отведенный срок сумму по имуществу', 'attr': {'class': 'btn btn-sm btn-warning text-white'}}) }}
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if(profileAccess.canReviewBids(lot.id)) %}
+    <div class="col-md-9 mb-4">
+        {% else %}
+        <div class="col-md-12 mb-4">
+            {% endif %}
+            <div class="card">
+                <div class="card-header">Общее сведения лота №{{ lot.id_number }}</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Наименование лота</td>
+                            <td>{{ lot.lot_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Состояние лота</td>
+                            <td>{{ status(lot.status) }}</td>
+                        </tr>
+                        {% if (lot.status == 'STATUS_FAILED' and lot.payment_winner_confirm != false) %}
+                            <tr class="text-danger">
+                                <td>Причина</td>
+                                <td>
+                                    Победитель не оплатил в отведенный срок сумму по имуществу, указанную в протоколе о
+                                    результатах торгов
+                                </td>
+                            </tr>
+
+                        {% endif %}
+                        {% if not lot.additional_object_characteristics is empty %}
+                            <tr>
+                                <td>Дополнительные характеристики объекта</td>
+                                <td>{{ lot.additional_object_characteristics }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>Начальная цена</td>
+                            <td>{{ money(lot.starting_price) }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Тип НДС</td>
+                            <td>{{ ndsType(lot.nds) }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Размер задатка</td>
+                            <td>{{ money(lot.deposit_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Торговая лот повторная</td>
+                            <td>{{ reloadLot(lot.reload_lot) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Основание для проведения лотов</td>
+                            <td>{{ lot.tender_basic }}</td>
+                        </tr>
+                        <tr>
+                            <td>Шаг аукциона</td>
+                            <td>{{ money(lot.auction_step) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Сведения о предмете торгов</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Тип арестованного имущества</td>
+                            <td>{{ arrested_type(lot.arrested_property_type) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Регион</td>
+                            <td>{{ lot.region }}</td>
+                        </tr>
+                        <tr>
+                            <td>Местонахождение объекта</td>
+                            <td>{{ lot.location_object }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Сведения о должнике</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>Наименование (Ф.И.О)</td>
+                            <td>{{ lot.debtor_full_name }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Наименование (Ф.И.О) в дат. падеже</td>
+                            <td>{{ lot.debtor_full_name_date_case }}</td>
+                        </tr>
+                        <tr>
+                            <td>Наименование отдела службы судебных приставов</td>
+                            <td>{{ lot.bailiffs_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Номер исполнительного производства</td>
+                            <td>{{ lot.executive_production_number }}</td>
+                        </tr>
+                        <tr>
+                            <td>Дата исполнительного производства</td>
+                            <td>{{ lot.date_enforcement_proceedings }}</td>
+                        </tr>
+                        <tr>
+                            <td>Залогодержатель</td>
+                            <td>{{ lot.pledgeer }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Сведения о проведения торгов</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tr>
+                            <td>Дата начала подачи заявок</td>
+                            <td>{{ date(lot.start_date_of_applications) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Дата окончание подачи заявок</td>
+                            <td>{{ date(lot.closing_date_of_applications) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Подведение итогов приема заявок</td>
+                            <td>{{ date(lot.summing_up_applications) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Начало торгов</td>
+                            <td>{{ date(lot.start_trading_date) }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Место представления заявок</td>
+                            <td>{{ lot.info_point_entry }}</td>
+                        </tr>
+                        <tr>
+                            <td>Место проведения торгов</td>
+                            <td>{{ lot.info_trading_venue }}</td>
+                        </tr>
+                        <tr>
+                            <td>Участие в торгах и порядок их проведения</td>
+                            <td>{{ lot.info_bidding_process }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header">Документы</div>
+                <div class="card-body" id="documentBlock" data-certificate="{{ certificate_thumbprint }}">
+                    <table class="table table-responsive-sm table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Документ</th>
+                            <th>Дата и время загрузки</th>
+                            <th>Статус</th>
+                            {% if(profileAccess.canUploadFileLot()) %}
+                                <th>
+                                    <a href="{{ path('lot.upload.file', {'lotId': lot.id}) }}"
+                                       style="float: right; margin-right: 30px;">
+                                        <svg class="c-icon">
+                                            <use xlink:href="/assets/svg/free.svg#cil-cloud-upload"></use>
+                                        </svg>
+                                    </a>
+                                </th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for document in documents %}
+                            <tr>
+                                <td>{{ document.document_name }}</td>
+                                <td><a target="_blank"
+                                       href="{{ storage_path(document.file_path ~ '/' ~ document.file_name) }}">{{ document.file_real_name }}</a>
+                                </td>
+                                <td>{{ document.created_at }}</td>
+                                <td>
+                                    {% if document.status == 'STATUS_SIGNED' %}
+                                        <span class="badge badge-success">Подписан</span>
+                                    {% else %}
+                                        {% if(profileAccess.canSignFileLot()) %}
+                                            <a class="sign_lot_file btn btn-sign btn-primary"
+                                               data-lot-id="{{ document.lot_id }}"
+                                               data-file-hash="{{ document.file_hash }}"
+                                               data-file-id="{{ document.id }}" href="">Подписать</a>
+                                        {% else %}
+                                            <span class="badge badge-danger">Не подписан</span>
+                                        {% endif %}
+
+                                    {% endif %}
+                                </td>
+
+                                {% if lot.status == 'STATUS_NEW' %}
+                                    {% if(profileAccess.canDeleteFileLot()) %}
+                                        <td class="text-center">
+                                            {% set token = csrf_token('index') %}
+                                            <form action="{{ path("lot.document.delete", {'lotId': lot.id, 'documentId': document.id}) }}"
+                                                  method="post"
+                                                  onsubmit="return confirm('Вы действительно хотите удалить данный файл ?')">
+                                                <input type="hidden" name="token" value="{{ token }}">
+                                                <button type="submit" class="btn btn-danger mini-btn">
+                                                    <svg class="c-icon">
+                                                        <use xlink:href="/assets/svg/free.svg#cil-trash"></use>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    {% endif %}
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        {% if(profileAccess.canReviewBids(lot.id)) %}
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-header">Меню</div>
+                    <div class="card-body">
+                        <nav class="nav flex-column">
+                            <a class="nav-link" href="{{ path('lot.bids', {'lotId': lot.id}) }}">Смотреть все заявки</a>
+                        </nav>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+    {% endblock %}
+
+    {% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('sign_lot_file') }}
+{% endblock %}

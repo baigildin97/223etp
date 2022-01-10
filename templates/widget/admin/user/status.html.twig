@@ -1,0 +1,31 @@
+{% if status == 'wait' %}
+    {% if profile_status == '' %}
+        <span class="badge badge-warning">Не подтвержден</span>
+    {% else %}
+        <span class="badge badge-warning">Профиль не заполнен</span>
+    {% endif %}
+
+{% elseif status == 'blocked' %}
+    <span class="badge badge-danger">Заблокированный</span>
+{% elseif status == 'active' %}
+     {% if profile_status == 'STATUS_ACTIVE' %}
+         <span class="badge badge-success">Активный</span>
+     {% elseif profile_status == 'STATUS_MODERATE' %}
+         {% if (count_xml_documents >= 1) %}
+             <span class="badge badge-warning">Повторная модерация</span>
+         {% else %}
+             <span class="badge badge-warning">На модерации</span>
+         {% endif %}
+
+
+     {% elseif profile_status == 'STATUS_REPLACING_EP' %}
+         <span class="badge badge-warning">Замена ЭП</span>
+     {% elseif profile_status == 'STATUS_WAIT' %}
+         <span class="badge badge-info">Черновик</span>
+     {% elseif profile_status == 'STATUS_REJECT' %}
+         <span class="badge badge-danger">Отклонен</span>
+         {% else %}
+             <span class="badge badge-warning">Профиль не заполнен</span>
+     {% endif %}
+
+{% endif %}

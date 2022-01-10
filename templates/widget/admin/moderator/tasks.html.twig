@@ -1,0 +1,86 @@
+<li class="c-sidebar-nav-dropdown"><a class="c-sidebar-nav-dropdown-toggle" href="#">
+        <svg class="c-sidebar-nav-icon {% if count_moderate_procedures != 0 or count_moderator_processing_procedures != 0 %}text-warning{% endif %}">
+            <use xlink:href="/assets/svg/free.svg#cil-folder"></use>
+        </svg>
+        Процедуры</a>
+    <ul class="c-sidebar-nav-dropdown-items">
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("moderate.procedures") }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use>
+                </svg>
+                На модерации
+                {% if count_moderate_procedures != 0 %}
+                    <span class="badge badge-warning" title="Процедуры ожидающие модерацию"
+                          id="count_unread_notification">{{ count_moderate_procedures }}</span>
+                {% endif %}
+            </a>
+        </li>
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("moderate.procedures.processing", {'moderator_id': userId}) }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-loop-circular"></use>
+                </svg>
+                В обработке
+                {% if count_moderator_processing_procedures != 0 %}
+                    <span class="badge badge-warning" title="Процедуры ожидающие модерацию"
+                          id="count_unread_notification">{{ count_moderator_processing_procedures }}</span>
+                {% endif %}
+            </a></li>
+    </ul>
+</li>
+<li class="c-sidebar-nav-dropdown"><a class="c-sidebar-nav-dropdown-toggle" href="#">
+        <svg class="c-sidebar-nav-icon {% if count_moderate_profiles%}text-warning{% endif %}">
+            <use xlink:href="/assets/svg/free.svg#cil-folder"></use>
+        </svg>
+        Пользователи</a>
+    <ul class="c-sidebar-nav-dropdown-items">
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("moderate.users") }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use>
+                </svg>
+                На модерации
+                {% if count_moderate_profiles != 0 %}
+                    <span class="badge badge-warning" title="Пользователи ожидающие модерацию"
+                          id="count_unread_notification">{{ count_moderate_profiles }}</span>
+                {% endif %}
+            </a>
+        </li>
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("moderate.users.processing", {'moderator_id': userId}) }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-loop-circular"></use>
+                </svg>
+                В обработке
+                {% if count_moderator_processing_profile != 0 %}
+                    <span class="badge badge-warning" title="Пользователи ожидающие модерацию"
+                          id="count_unread_notification">{{ count_moderator_processing_profile }}</span>
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="c-sidebar-nav-dropdown"><a class="c-sidebar-nav-dropdown-toggle" href="#">
+        <svg class="c-sidebar-nav-icon {% if count_pending_transactions != 0 %}text-warning{% endif %}">
+            <use xlink:href="/assets/svg/free.svg#cil-folder"></use>
+        </svg>
+        Транзакции</a>
+    <ul class="c-sidebar-nav-dropdown-items">
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("payment.moderator") }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use>
+                </svg>
+                Транзакции
+                {% if count_pending_transactions != 0 %}
+                    <span class="badge badge-warning" title="Транцакзии"
+                          id="count_unread_notification">{{ count_pending_transactions }}</span>
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="c-sidebar-nav-item">
+    <a class="c-sidebar-nav-link" href="{{ path('moderate.certificates') }}">
+        <svg class="c-sidebar-nav-icon">
+            <use xlink:href="/assets/svg/free.svg#cil-fingerprint"></use>
+        </svg>
+        Замена ЭП</a>
+</li>

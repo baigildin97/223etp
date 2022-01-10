@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Счет для оплаты тарифов{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('payments', {'profile_id': payment.profile_id}) }}">Счета и транзакции</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('payment.show', {'payment_id': payment.id}) }}">Счет: №{{ payment.invoice_number }}</a></li>
+        <li class="breadcrumb-item active">Счет для оплаты тарифов</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div id="printableArea">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">Платежное поручение
+                    <a class="btn btn-sm btn-secondary mfs-auto mfe-1 d-print-none" href="#" onclick="printDiv('printableArea');">
+                        <svg class="c-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-print"></use>
+                        </svg> Печать</a>
+                </div>
+                <div class="card-body">
+
+                        <table style="width: 100%" class="tg">
+                            <tr>
+                                <td>
+                                    Сумма прописью
+                                </td>
+                                <td colspan="3">
+                                    {{ string_money(transaction.money) }}
+                                </td>
+                                <td>Сумма</td>
+                                <td>{{ money(transaction.money) }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" rowspan="2">
+                                    <span style="font-weight:bold"></span><br><span style="font-weight:bold"> </span>
+                                    <br>Банк плательщика</td>
+                                <td>БИК</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Р.Сч. №</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ИНН</td>
+                                <td></td>
+                                <td>КПП</td>
+                                <td><span style="font-weight:700"></span></td>
+                                <td rowspan="2">К.Сч. №</td>
+                                <td rowspan="2"><span style="font-weight:700"></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><span style="font-weight:bold"></span><br><span style="font-weight:bold">
+                                    </span><br>Плательщик</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" rowspan="2">
+                                    <span style="font-weight:bold">{{ setting.KEY_BANK_NAME_ORGANIZATION }}</span><br><span style="font-weight:bold"> </span><br>Банк получателя</td>
+                                <td>БИК</td>
+                                <td>{{ setting.KEY_BANK_BIK_ORGANIZATION }}</td>
+                            </tr>
+                            <tr>
+                                <td>Р.Сч. №</td>
+                                <td>{{ setting.KEY_BANK_CHECKING_ACCOUNT_ORGANIZATION }}</td>
+                            </tr>
+                            <tr>
+                                <td>ИНН</td>
+                                <td>{{ setting.KEY_INN_ORGANIZATION }}</td>
+                                <td>КПП</td>
+                                <td><span style="font-weight:700">{{ setting.KEY_KPP_ORGANIZATION }}</span></td>
+                                <td rowspan="2">К.Сч. №</td>
+                                <td rowspan="2"><span style="font-weight:700">{{ setting.KEY_CORRESPONDENT_ACCOUNT_ORGANIZATION }}</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><span style="font-weight:bold">{{ setting.KEY_FULL_NAME_ORGANIZATION }}</span><br><span style="font-weight:bold"> </span><br>Получатель</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Назначение платежа
+                                </td>
+                                <td colspan="5">
+                                    Внесение средств гарантийного обеспечения для участия в торгах.
+                                    <br>
+                                    Лицевой счет №{{ payment.invoice_number }}
+                                    <br>
+                                    <span style="color: red;">НДС не облагается.</span></p>
+                                </td>
+                            </tr>
+                        </table>
+
+                    <div>
+                        <h4>Важно:</h4>
+                        <p>1.  В назначении платежа обязательно  указывать: Без НДС либо НДС не облагается.</p>
+                        <p>2.  При перечислении обеспечения участия в нескольких электронных процедурах можно заполнять
+                            одно платежное поручение на общую сумму.</p>
+                        <h4>ВНИМАНИЕ!</h4>
+                        <p>Реквизиты, указанные в платежном поручении, предназначены для перечисления денежных средств в качестве
+                            обеспечения заявки и депозита  участия в торговых процедурах.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <style>
+                .tg  {border-collapse:collapse;border-spacing:0;border-color:#aabcfe;}
+                .tg td{font-size:14px;padding:10px 18px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+                .tg th{font-size:14px;font-weight:normal;padding:10px 18px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal}
+            </style>
+        </div>
+    </div>
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('sign_profile_file') }}
+{% endblock %}

@@ -1,0 +1,401 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заявление №{{ xml_document.id_number }} от {{ date(xml_document.created_at) }}{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('profile', {'profile_id': profile.id }) }}">{{ profile.certificate_owner }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('profile.xml_documents', {'profile_id': profile.id }) }}">Список заявлений пользователя</a></li>
+        <li class="breadcrumb-item active">Заявление №{{ xml_document.id_number }} от {{ date(xml_document.created_at) }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {% if xml_document.type != 'TYPE_RECALL' %}
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        {% if profileAccess.canRecallStatementRegistration(xml_document) %}
+                            <a class="btn btn-sm btn-dark"
+                               href="{{ path('profile.accreditation.recall', {'profile_id': profile.id, 'xml_document_id': xml_document.id }) }}">Отозвать
+                                заявление</a>
+                        {% endif %}
+                        <a class="btn btn-sm btn-dark"
+                           href="{{ path('profile_xml_document.history', {'profile_id':xml_document.profile_id, 'profile_xml_document_id': xml_document.id }) }}">История
+                            изменений</a>
+                        {% if profileAccess.isModeratorOrAdmin() %}
+                            <a class="{% if xml_document.status_tactic != 'STATUS_PUBLISHED' %}link-disabled{% endif %} btn btn-sm btn-dark"
+                               href="{{ path('moderate.processing.profile.start', {'xml_document_id': xml_document.id, 'profile_id': xml_document.profile_id}) }}">Начать
+                                обработку</a>
+                            <a class="{% if xml_document.status_tactic != 'STATUS_PROCESSING' %}link-disabled{% endif %} btn btn-sm btn-dark"
+                               href="{{ path('moderate.processing.profile.return', {'xml_document_id': xml_document.id, 'profile_id': xml_document.profile_id}) }}">Отменить
+                                обработку</a>
+                            <a class="{% if xml_document.status_tactic != 'STATUS_PROCESSING' %}link-disabled{% endif %} btn btn-sm btn-dark"
+                               href="{{ path('moderate.processing.profile.confirm', {'xml_document_id': xml_document.id, 'profile_id': xml_document.profile_id}) }}">Принять
+                                решение</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+
+        {% if xml_document.moderator_comment is not empty %}
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <strong>Причина отклонения: </strong>{{ xml_document.moderator_comment }}
+                </div>
+            </div>
+        {% endif %}
+
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ xml.generalInformation.statementText.title | raw }}
+                </div>
+                <div class="card-body">
+                    {{ xml.generalInformation.statementText.text | raw }}
+
+                </div>
+            </div>
+
+            {% if xml_document.type != 'TYPE_RECALL' %}
+                <div class="card">
+                    <div class="card-header">
+                        Общие сведения
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <tbody>
+                            <tr>
+                                <td style="width: 25%;">Роль</td>
+                                <td>{{ xml.generalInformation.typeProfile }}</td>
+                            </tr>
+                            <tr>
+                                <td>Тип пользователя</td>
+                                <td>{{ xml.generalInformation.incorporatedForm }}</td>
+                            </tr>
+                            {# <tr>
+                        <td>Дата регистрации</td>
+                        <td>{{ date(xml.createdAt) }}</td>
+                    </tr> #}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {% if profile.isLegalEntity() %}
+                    <div class="card">
+                        <div class="card-header">Данные организации</div>
+                        <div class="card-body">
+                            <table class="table table-responsive-sm table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <td style="width: 25%;">Краткое наименование организации</td>
+                                    <td>{{ xml.organizationInfo.shortTitleOrganization }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Полное наименование организации</td>
+                                    <td>{{ xml.organizationInfo.fullTitleOrganization }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>ИНН</td>
+                                    <td>{{ xml.organizationInfo.inn }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>КПП</td>
+                                    <td>{{ xml.organizationInfo.kpp }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>ОГРН</td>
+                                    <td>{{ xml.organizationInfo.ogrn }}</td>
+                                </tr>
+
+
+                                <tr>
+                                    <td>Юридический адрес</td>
+                                    <td>
+                                        {{ xml.organizationInfo.legalIndex }},
+                                        {{ country(xml.organizationInfo.legalCountry) }},
+                                        {{ xml.organizationInfo.legalRegion }},
+                                        {{ xml.organizationInfo.legalCity }},
+                                        {{ xml.organizationInfo.legalStreet }},
+                                        {{ xml.organizationInfo.legalHouse }}
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Адрес фактического места нахождения</td>
+                                    <td>
+                                        {{ xml.organizationInfo.factIndex }},
+                                        {{ country(xml.organizationInfo.factCountry) }},
+                                        {{ xml.organizationInfo.factRegion }},
+                                        {{ xml.organizationInfo.factCity }},
+                                        {{ xml.organizationInfo.factStreet }},
+                                        {{ xml.organizationInfo.factHouse }}
+                                    </td>
+                                </tr>
+
+                                {% if xml.organizationInfo.webSite is not defined  %}
+                                    {% if not xml.organizationInfo.webSite is empty %}
+                                        <tr>
+                                            <td>Адрес сайта</td>
+                                            <td>{{ xml.organizationInfo.webSite }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <div class="card">
+                    <div class="card-header">
+                        {% if profile.isIndividualEntrepreneur() %}
+                            Данные индивидуального предпринимателя
+                        {% elseif (profile.isIndividual()) %}
+                            Данные физического лица
+                        {% elseif (profile.isLegalEntity()) %}
+                            Данные представителя юридического лица
+                        {% endif %}
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <tbody>
+                            <tr>
+                                <td style="width: 25%;">ФИО</td>
+                                <td>{% if profile.isIndividualEntrepreneur() %}Индивидуальный предприниматель{% endif %} {{ xml.representativeInfo.reprPassportLastName }}
+                                    {{ xml.representativeInfo.reprPassportFirstName }}
+                                    {{ xml.representativeInfo.reprPassportMiddleName }} </td>
+                            </tr>
+
+
+
+
+
+                            <tr>
+                              <td>ИНН</td>
+                                {% if 'reprPassportInn' in xml.representativeInfo|keys %}
+                                    {% if xml.representativeInfo.reprPassportInn != ' ' %}
+                                <td>{{ xml.representativeInfo.reprPassportInn }}</td>
+                                        {% else %}
+                                            <td>{{ xml.organizationInfo.inn }}</td>
+                                            {% endif %}
+                                {% else %}
+                                <td>{{ xml.organizationInfo.inn }}</td>
+                                {% endif %}
+                            </tr>
+
+                                                        
+                        
+
+                            <tr>
+                                <td>СНИЛС</td>
+                                <td> {{ xml.representativeInfo.snils }}</td>
+                            </tr>
+
+
+                            {% if profile.isIndividualEntrepreneur() %}
+                                <tr>
+                                    <td>ОГРНИП</td>
+                                    <td>{{ xml.organizationInfo.ogrn }}</td>
+                                </tr>
+                            {% endif %}
+
+
+                            {% if xml.isLegalEntity() %}
+                                <tr>
+                                    <td>Должность</td>
+                                    <td>{{ xml.representativeInfo.position }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Документ(ы), подтверждающие полномочия представителя/руководителя юридического лица</td>
+                                    <td>{{ xml.representativeInfo.confirmingDocument }}</td>
+                                </tr>
+                            {% endif %}
+                            
+                            {% if xml.isIndividualOrIndividualEntrepreneur() %}
+
+                                <tr>
+                                    <td>Дата рождения</td>
+                                    <td>{{ date(xml.representativeInfo.passportBirthDay, true) }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Серия и номер паспорта</td>
+                                    <td>{{ xml.representativeInfo.passportSeries }}
+                                        {{ xml.representativeInfo.passportNumber }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Кем выдан паспорт</td>
+                                    <td>{{ xml.representativeInfo.passportIssuer }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Дата выдачи</td>
+                                    <td>{{ date(xml.representativeInfo.passportIssuanceDate, true) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Код подразделения</td>
+                                    <td>{{ xml.representativeInfo.passportUnitCode }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Гражданство</td>
+                                    <td>{{ country(xml.representativeInfo.passportCitizenship) }}</td>
+                                </tr>
+
+
+                                {% if profile.isIndividualOrIndividualEntrepreneur() %}
+                                    <tr>
+                                        <td>
+                                            Адрес регистрации
+
+                                        </td>
+                                        <td>
+                                            {{ profile.passport_legal_index }},
+                                            {{ country(profile.passport_legal_country) }},
+                                            {{ profile.passport_legal_region }},
+                                            {{ profile.passport_legal_city }},
+                                            {{ profile.passport_legal_street }},
+                                            {{ profile.passport_legal_house }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Адрес фактического места нахождения</td>
+                                        <td>
+                                            {{ profile.passport_fact_index }},
+                                            {{ country(profile.passport_fact_country) }},
+                                            {{ profile.passport_fact_region }},
+                                            {{ profile.passport_fact_city }},
+                                            {{ profile.passport_fact_street }},
+                                            {{ profile.passport_fact_house }}
+                                        </td>
+                                    </tr>
+
+                                {% endif %}
+
+
+                                <tr>
+                                    <td>Email</td>
+                                    <td> {% if profile.isLegalEntity() %}
+                                            {{ xml.organizationInfo.orgEmail }}
+                                        {% else %}
+                                            {{ xml.representativeInfo.email }}
+                                        {% endif %}</td>
+                                </tr>
+
+
+                            {% endif %}
+
+
+
+
+                            <tr>
+                                <td>Контактный телефон</td>
+                                <td>{{ xml.representativeInfo.phone }}</td>
+                            </tr>
+
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Документы
+                    </div>
+                    <div class="card-body" id="documentBlock">
+                        <div class="nav-tabs-boxed nav-tabs-boxed-left">
+                            <ul class="nav flex-column nav-tabs" style="max-width: 35%; min-width: 35%;" role="tablist">
+                                {% for type, count in filesCount %}
+                                    <li class="nav-item">
+                                        <a {% if files[type][0] is defined %}
+                                            style="color: #005500"
+                                        {% else %}
+                                            style="color: #333333"
+                                        {% endif %}
+                                                class="nav-link {% if (type == 'CONSTITUENT_DOCUMENTS' or type == 'IDENTITY_DOCUMENT') %}active{% endif %}"
+                                                data-toggle="tab" href="#{{ type }}" role="tab"
+                                                aria-controls="home">
+                                            {{ typesNames[type] }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content" style="width: 100%; overflow-y: scroll; max-height: 270px;">
+                                {% for key, value in files %}
+                                    <div class="tab-pane {% if (key == 'CONSTITUENT_DOCUMENTS' or key == 'IDENTITY_DOCUMENT') %}active{% endif %}"
+                                         id="{{ key }}" role="tabpanel">
+                                        <table class="table table-responsive-sm table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th>Документ</th>
+                                                <th>Дата и время загрузки</th>
+                                                <th>Статус</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for file in value %}
+                                                <tr>
+
+
+
+                                                    <td>
+                                                        {% if (profileAccess.isModeratorOrAdmin()) %}
+                                                            <a target="_blank" href={{ file.url }}>
+                                                                {{ file.fileRealName }}
+                                                            </a>
+                                                        {% else %}
+                                                            <a href="{{ path('profile.download', {'file_id': file.id}) }}">
+                                                                {{ file.fileRealName }}
+                                                            </a>
+                                                        {% endif %}
+                                                    </td>
+
+                                                    <td>{{ file.createdAt }}</td>
+                                                    <td>
+                                                        {% if file.fileStatus == 'STATUS_NEW' %}
+                                                            <span class="badge badge-danger" style="display: none">Не подписан</span>
+                                                            <button data-file-type="{{ file.fileType }}"
+                                                                    data-file-id="{{ file.id }}"
+                                                                    class="sign btn-sign btn btn-sm btn-primary btn-ladda ladda-button"
+                                                                    data-style="expand-right"><span class="ladda-label">Подписать</span><span
+                                                                        class="ladda-spinner"></span></button>
+                                                            <input type="hidden" readonly value="{{ file.fileHash }}">
+                                                        {% else %}
+                                                            <span class="badge badge-success">Подписан: {{ date(file.fileSignAt) }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+{% endblock %}
+

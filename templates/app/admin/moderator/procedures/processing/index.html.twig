@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Извещения в обработке{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item active">Извещения в обработке</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Извещения в обработке</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Дата и время создания</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% set token = csrf_token('archive') %}
+                        {% for notification in pagination %}
+                            <tr>
+                                <td><a target="_blank" href="{{ path("procedure.notification.show", {'procedure_id': notification.procedure_id , 'notification_id': notification.id }) }}">{{ procedureXmlDocumentType(notification.type) }}№{{ notification.number }}</a> </td>
+                                <td>{{ date(notification.created_at) }}</td>
+                                <td><a target="_blank" href="{{ path("procedure.notification.show", {'procedure_id': notification.procedure_id , 'notification_id': notification.id }) }}">Открыть документ</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Добавление нового сертификата ЭП{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('certificates', {'user_id': profileAccess.getIdUser()}) }}">Мои сертификаты ЭП</a></li>
+        <li class="breadcrumb-item active">Добавление нового сертификата ЭП</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="fade-in">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-accent-danger">
+                    <div class="card-header">ВНИМАНИЕ!!!!</div>
+                    <div class="card-body">
+                        Если Вы не видите свой сертификат в списке ниже,
+                        то Вам необходимо на Ваше устройство вставить носитель сертификатов,
+                        сбросить кэш браузера, обновить страницу.
+                        Если после выполнения всех перечисленных действий, Ваш сертификат не отобразился в списке,
+                        рекомендуем проверить корректность настроек ПО CryptoPRO по ссылке
+                        <a href="">Проверка ЭП для работы с ЭТП</a> и прочитать <a href="">Требования к ПО для работы с ЭТП</a>.
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Выберите из списка сертификат который вы хотите добавить</div>
+                    <div class="card-body">
+                        <div class="list-group cert-list"></div>
+                    </div>
+                    {{ form_start(form) }}
+                    <input type="hidden" id="form_dataHash" name="form_dataHash" value="{{ form_data_hash }}">
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-success" id="add-certificate" type="submit" disabled>Добавить</button>
+                    </div>
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('cryptopro') }}
+{% endblock %}
+

@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Тариф {{ tariff.title }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('tariffs') }}">Тарифы</a></li>
+        <li class="breadcrumb-item">{{ tariff.title }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    {% if(profileAccess.isAdmin() or profileAccess.isModerator()) %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-actions">
+                            {% set token = csrf_token('index') %}
+                            <form action="" method="post"
+                                  onsubmit="return confirm('Вы действительно хотите отправить в архив ?')">
+                                <input type="hidden" name="token" value="{{ token }}"/>
+                                <button class="btn-link-css btn-link" type="submit">Архивировать</button>
+                            </form>
+                        </div>
+                        <a href="{{ path('tariff.edit', {'tariff_id': tariff.id}) }}">Редактировать</a> |
+                        <a href="{{ path('tariff.levels', {'tariff_id': tariff.id}) }}">Уровни</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ tariff.title }}
+                </div>
+                <div class="card-body">
+                    <div class="nav-tabs-boxed nav-tabs-boxed-top-right">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="home-2" role="tabpanel">
+                                <table class="table table-responsive-sm table-sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>Наименование</td>
+                                        <td>{{ tariff.title }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Стоимость</td>
+                                        <td>{{ money(tariff.cost) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Период (месяц)</td>
+                                        <td>{{ tariff.period }} мес</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Статус</td>
+                                        <td>{{ tariff_status(tariff.status) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Дата и время создания</td>
+                                        <td>{{ tariff.created_at }}</td>
+                                    </tr>
+                                    {% if tariff.archived %}
+                                        <tr>
+                                            <td>Дата и время архивации</td>
+                                            <td>{{ commission.changed_at }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if(profileAccess.isUser()) %}
+                <div class="card-footer">
+                    {% set token = csrf_token('buy') %}
+                    <form action="{{ path('tariff.buy', {'tariff_id':tariff.id}) }}" method="post"
+                          onsubmit="return confirm('Подтверждаете покупку ?')">
+                        <input type="hidden" name="token" value="{{ token }}"/>
+                        <button class="btn btn-sm btn-success" type="submit">Купить</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}

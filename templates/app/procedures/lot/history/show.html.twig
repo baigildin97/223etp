@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+{% block title %}Просмотр истории{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Мои процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedure.id}) }}">Процедура №{{ procedure.id_number }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('lot.show', {'lotId': lot.id}) }}">Лот №{{ lot.idNumber }}</a></li>
+        <li class="breadcrumb-item active">Просмотр истории</li>
+    </ol>
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">Общее сведения лота №{{ lot.idNumber}}</div>
+            <div class="card-body">
+                <table class="table table-responsive-sm table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>Тип арестованного имущества</td>
+                        <td>{{ arrested_type(lot.arrestedPropertyType) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Наименование должника</td>
+                        <td>{{ lot.debtorFullName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Наименование лота</td>
+                        <td>{{ lot.lotName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Состояние лота</td>
+                        <td>{{status(lot.status) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Регион</td>
+                        <td>{{ lot.region }}</td>
+                    </tr>
+                    <tr>
+                        <td>Местонахождение объекта</td>
+                        <td>{{ lot.locationObject }}</td>
+                    </tr>
+                    <tr>
+                        <td>Дополнительные характеристики объекта</td>
+                        <td>{{ lot.additionalObjectCharacteristics }}</td>
+                    </tr>
+                    <tr>
+                        <td>Начальная цена</td>
+                        <td>{{ money(lot.startingPrice) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Сумма задатка</td>
+                        <td>{{ money(lot.depositAmount) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Наименование отдела службы судебных приставо</td>
+                        <td>{{ lot.bailiffsName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Номер исполнительного производствао</td>
+                        <td>{{ lot.executiveProductionNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td>Торговая лот повторная</td>
+                        <td>{{ reloadLot(lot.reloadLot) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Основание для проведения лотов</td>
+                        <td>{{ lot.tenderBasic }}</td>
+                    </tr>
+                    <tr>
+                        <td>Тип НДС</td>
+                        <td>{{ ndsType(lot.nds) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Шаг аукциона</td>
+                        <td>{{ lot.auctionStep }}</td>
+                    </tr>
+                    <tr>
+                        <td>Дата начала подачи заявок</td>
+                        <td>{{ lot.startDateOfApplications }}</td>
+                    </tr>
+                    <tr>
+                        <td>Дата окончание подачи заявок</td>
+                        <td>{{ lot.closingDateOfApplications }}</td>
+                    </tr>
+                    <tr>
+                        <td>Подведение итогов приема заявок</td>
+                        <td>{{ lot.summingUpApplications }}</td>
+                    </tr>
+                    <tr>
+                        <td>Начало торгов</td>
+                        <td>{{ lot.startTradingDate }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+
+        </div>
+
+        <div class="card">
+            <div class="card-header">Информация о задатке</div>
+            <div class="card-body">
+                <table class="table table-responsive-sm table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>Задаток должен поступить на счет организатора не позднее</td>
+                        <td>{{ lot.advancePaymentTime }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Реквизиты для внесения задатка</td>
+                        <td>{{ lot.advancePaymentDetailsDeposit }}</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Сведения о должнике</div>
+            <div class="card-body">
+                <table class="table table-responsive-sm table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>Наименование (Ф.И.О)</td>
+                        <td>{{ lot.debtorFullName }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Наименование (Ф.И.О) в дат. падеже</td>
+                        <td>{{ lot.debtorFullNameDateCase }}</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-header">Документы</div>
+            <div class="card-body" id="documentBlock">
+                <table class="table table-responsive-sm table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Наименование</th>
+                        <th>Документ</th>
+                        <th>Дата и время загрузки</th>
+                        <th>Статус</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for document in documents %}
+                        <tr>
+                            <td>{{ document.documentName }}</td>
+                            <td><a target="_blank" href="{{ document.url }}">{{ document.fileRealName }}</a></td>
+                            <td>{{ document.createdAt }}</td>
+                            <td>
+                                    <span class="badge badge-success">Подписан</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,304 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Проверка ЭП| Электронная торговая площадка РесТорг{% endblock %}
+
+{% block body %}
+    <script src="/assets/front/js/polyfills/addEventListener.js"></script>
+    <script src="/assets/front/js/polyfills/promise.js"></script>
+    <script src="/assets/front/js/polyfills/forEach.js"></script>
+    <script src="/assets/front/js/polyfills/map.js"></script>
+    <!-- Библиотека -->
+    <script src="/assets/front/js/cryptopro/crypto-pro.js"></script>
+
+    <!-- Полифиллы для работы демо скриптов -->
+    <script src="/assets/front/js/polyfills/atob-btoa.js"></script>
+    <style>
+
+        .red-label{
+            color: red;
+            font-size: 16px;
+        }
+
+        body .modal1-open .modal1 {
+            overflow-x: hidden;
+            overflow-y: auto;
+            display: block;
+        }
+
+        .modal1-close {
+            background: #650a00;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            color: #fff;
+            border-radius: 0 3px 0 3px;
+        }
+
+        .modal1 {
+            background: rgba(0,0,0,.3);
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: none;
+            overflow: hidden;
+            -webkit-overflow-scrolling: touch;
+            outline: 0;
+            z-index: 111111;
+        }
+        a, a:active, a:focus {
+            color: #271bda;
+        }
+        .modal1-content {
+            background: #F6F7F8;
+            width: 600px;
+            margin: 30px auto;
+            padding: 30px;
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 18px 28px rgba(0,0,0,.1), 0 10px 10px rgba(0,0,0,.1);
+            -webkit-box-shadow: 0 18px 28px rgba(0,0,0,.1), 0 10px 10px rgba(0,0,0,.1);
+        }
+
+        .object_list--item {
+            display: block;
+            border: 1px solid #e3e3e3;
+            background: #fff;
+            padding: 10px;
+            border-radius: 3px;
+            text-decoration: none;
+            margin-bottom: 15px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            font-size: 11px;
+        }
+
+        .object_list--title {
+            font-weight: 700;
+            display: block;
+            padding: 10px 0;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .object_list--description {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+            padding-left: 15px;
+            float: left;
+            width: 33.33333333%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .digital{
+            width: 100%;
+            float: none;
+            clear: both;
+            border: dotted 1px #8F949C;
+            padding: 1px 1px 1px 20px;
+            vertical-align: middle;
+            margin: 10px 0 5px 0;
+            background-color: #f2f2f5;
+        }
+    </style>
+
+    <div class="container">
+
+        <div class="row m50">
+            <div class="col-xs-12">
+                <h3>Проверка ЭП</h3>
+                <p>Функция проверки ЭП позволяет определить, подходит ли ЭП пользователя для работы на площадке и корректно ли настроено необходимое ПО.</p>
+
+                <p>Прежде чем приступить к проверке, убедитесь, что ваш компьютер удовлетворяет представленным&nbsp;<a href="">требованиям</a>&nbsp;и выполнены&nbsp;<a href="">настройки для работы с ЭП</a>. Если это не так, предварительно установите недостающее ПО и выполните настройки для работы с ЭП.</p>
+
+                <p>Подключите usb-токен (электронную подпись) к порту ПК и нажмите на кнопку &quot;Проверить ЭП&quot;. В появившемся окне выберите сертификат подписи, которую хотите проверить.</p>
+
+                <p>Если проверка пройдена успешно, ЭП подходит для использования на площадке.</p>
+
+                <p>В случае неудачной проверки выполните процедуру настройки ЭП ещё раз сначала.</p>
+                <div id="checkSign_block" class="digital-signature">
+
+                </div>
+                <div class="modal1">
+                    <div class="modal1-wrap">
+                        <div class="modal1-content">
+                            <div class="modal1-close">x</div>
+                            <h5>Выбор ключа ЭП для проверки</h5>
+                            <div class="object_list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    window.CryptoPro.call('getSystemInfo').then(function (info) {
+                        var $panel = document.querySelector('.digital-signature');
+                        var $statusPlugin = document.createElement('p');
+                        $statusPlugin.innerText = 'КриптоПро ЭЦП Browser plug-in загружен.';
+                        $panel.appendChild($statusPlugin);
+
+                        var $pluginVersion = document.createElement('p');
+                        $pluginVersion.innerText = 'Версия плагина: '+info.cadesVersion+' Версия криптопровайдера: '+info.cspVersion+'.';
+                        $panel.appendChild($pluginVersion);
+
+                        var $cryptoProvider = document.createElement('p');
+                        $cryptoProvider.innerText = 'Криптопровайдер: '+info.cspName;
+                        $panel.appendChild($cryptoProvider);
+
+                        var $buttonCheck = '<button id="createSign" onclick="signHash();">Проверить ЭП</button>';
+                        $(".digital-signature").append($buttonCheck);
+
+                    }, function (error) {
+                        var $panel = document.querySelector('.digital-signature');
+                        var $pluginVersion = document.createElement('p');
+                        $pluginVersion.className = 'red-label';
+                        $pluginVersion.innerText = error;
+                        $panel.appendChild($pluginVersion);
+                    });
+
+                    // Модалка
+                    function signHash() {
+                        $("div.digital-signature").empty();
+
+                        var $panel = document.querySelector('.digital-signature');
+                        var $loader = document.createElement('img');
+                        $loader.setAttribute('src', '/assets/front/images/ajax-loader.gif');
+                        $panel.appendChild($loader);
+
+                        ;(function () {
+                            'use strict';
+                            var $certs = document.querySelector('.object_list');
+                            window.CryptoPro.call('getCertsList', true).then(function (list) {
+                                list.forEach(function (cert) {
+                                    // console.log(cert.position);
+                                    var $certOption = document.createElement('a');
+                                    $certOption.className = 'object_list--item key-item';
+                                    $certOption.href = "javascript: return false;";
+                                    $($certOption).attr('data-cert', cert.thumbprint);
+
+                                    var $title = document.createElement('div');
+                                    $title.className = 'object_list--title';
+                                    if (typeof $certOption.textContent !== 'undefined') {
+                                        $title.textContent = cert.label;
+                                    } else {
+                                        $title.innerText = cert.label;
+                                    }
+                                    $certOption.appendChild($title);
+
+                                    var $rowSpan = document.createElement('span');
+                                    $rowSpan.className = 'row';
+
+                                    var $spanListDirector = document.createElement('span');
+                                    $spanListDirector.className = 'object_list--description';
+                                    $spanListDirector.innerText = cert.position + ' ' + cert.name;
+                                    var $spanListVidan = document.createElement('span');
+                                    $spanListVidan.className = 'object_list--description';
+                                    $spanListVidan.innerText = 'Выдан: ' + cert.nameIssuer;
+                                    var $spanListValid = document.createElement('span');
+                                    $spanListValid.className = 'object_list--description';
+                                    $spanListValid.innerText = 'Действителен с ' + cert.validFrom + ' по ' + cert.validTo;
+                                    $rowSpan.appendChild($spanListDirector);
+                                    $rowSpan.appendChild($spanListVidan);
+                                    $rowSpan.appendChild($spanListValid);
+                                    $certOption.appendChild($rowSpan);
+                                    $certs.appendChild($certOption);
+                                    $('.modal1').css('display', 'block');
+                                    $('html, body').css('overflowY', 'hidden');
+                                    $('.modal1').css('overflowY', 'scroll');
+                                });
+                            }, function (error) {
+                                console.error(error);
+                            });
+                        }());
+
+                    }
+
+                    $('.modal1-close').on('click', function (e) {
+                        $("div.digital-signature").empty();
+                        $('.modal1').css('display','none');
+                        $('html, body').css('overflowY', 'auto');
+                        var $panel = document.querySelector('.digital-signature');
+                        var $status = document.createElement('p');
+                        $status.className = 'red-label';
+                        $status.innerText = 'Не удалось создать подпись: Действие было отменено пользователем.';
+                        $panel.appendChild($status);
+                    });
+
+                    $(document).ready(function(){
+                        $('.object_list').on('click', ".key-item", function (event) {
+                            var $cert = $(this).data('cert');
+                            window.CryptoPro.call('getCert', $cert).then(function (cert) {
+                                hash = '{{ hash }}';
+                                hashBase64 = window.btoa(hash);
+                                window.CryptoPro.call('signData', cert.thumbprint, hashBase64)
+                                    .then(function (signature) {
+                                        $.ajax({
+                                            method: 'POST',
+                                            dataType: 'json',
+                                            data: {hash: hash, sign: signature},
+                                            success: function (data) {
+
+
+
+                                                switch (data.answer){
+                                                    case "ok":
+                                                        $("div.digital-signature").empty();
+                                                        var $panel = document.querySelector('.digital-signature');
+                                                        var $status = document.createElement('p');
+                                                        $status.innerText = 'Проверка ЭП пройдена успешно.';
+                                                        $status.className = 'red-label';
+                                                        $panel.appendChild($status);
+
+                                                        var $company = document.createElement('p');
+                                                        $company.innerText = 'Владелец: '+cert.name;
+                                                        $panel.appendChild($company);
+                                                        $('.modal1').css('display','none');
+                                                        break;
+
+                                                        default:
+                                                            $("div.digital-signature").empty();
+                                                            var $panel = document.querySelector('.digital-signature');
+                                                            var $status = document.createElement('p');
+                                                            $status.innerText = data.answer;
+                                                            $panel.appendChild($status);
+
+                                                            $('.modal1').css('display','none');
+                                                            break;
+                                                }
+
+
+                                            },
+                                            error: function (e) {
+                                                console.error(e);
+                                            }
+                                        });
+
+                                }, function (error) {
+                                    $("div.digital-signature").empty();
+                                    var $panel = document.querySelector('.digital-signature');
+                                    var $status = document.createElement('p');
+                                    $status.innerText = error;
+                                    $status.className = 'red-label';
+                                    $panel.appendChild($status);
+                                });
+
+                            });
+
+                        });
+                    });
+                </script>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

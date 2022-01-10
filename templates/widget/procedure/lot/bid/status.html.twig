@@ -1,0 +1,15 @@
+{% if status == 'STATUS_SENT' %}
+    <span class="badge badge-success">Утвержден оператором</span>
+{% elseif status == 'STATUS_ARCHIVED' %}
+    <span class="badge badge-secondary">В архиве</span>
+{% elseif status == 'STATUS_REJECT' %}
+    <span class="badge badge-danger">Отклонен</span>
+{% elseif status == 'STATUS_NEW' %}
+    <span class="badge badge-info">Черновик</span>
+{% elseif status == 'STATUS_APPROVED' %}
+    <span class="badge badge-primary">Допущен</span>
+{% elseif status == 'STATUS_RECALLED' %}
+    <span class="badge badge-warning">Отозван</span>
+{% elseif status == 'STATUS_SIGNED' %}
+    <span class="badge badge-info">Подписан</span>
+{% endif %}

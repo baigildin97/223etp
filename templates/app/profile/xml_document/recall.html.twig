@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заявление №{{ xml_document.id_number}} от {{ xml_document.created_at }}{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('profile', {'profile_id': xml_document.profile_id }) }}">{{ xml_document.certificate_owner }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('profile.xml_documents', {'profile_id': xml_document.profile_id }) }}">Заявления на регистрацию</a></li>
+        <li class="breadcrumb-item active"><a href="{{ path('profile.xml_document.show', {'profile_id': xml_document.profile_id, 'xml_document_id':xml_document.id }) }}">Заявление №{{ xml_document.id_number}} от {{ date(xml_document.created_at, true) }}</a></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ xml.generalInformation.statementText.title | raw }}
+                </div>
+                <div class="card-body">
+                    {{ xml.generalInformation.statementText.text | raw }}
+                </div>
+                {{ form_start(form) }}
+                {{ form_widget(form.sign) }}
+                {{ form_errors(form.sign) }}
+                <div class="card-footer">
+                    <button id="sign_recall" class="btn btn-sm btn-success" data-hash="{{hash}}" data-thumbprint="{{ xml_document.certificate_thumbprint }}" type="submit">Подписать и отправить</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('profile_recall_sign') }}
+{% endblock %}
+

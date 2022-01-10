@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ procedureXmlDocumentType(notification.type) }}№{{ notification.number }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': procedure.id }) }}">Процедура №{{ procedure.id_number}}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.notifications', {'procedure_id': procedure.id}) }}">Извещения</a></li>
+        <li class="breadcrumb-item active">{{ procedureXmlDocumentType(notification.type) }}№{{ notification.number }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="fade-in">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        {% if profileAccess.canRecallNoticeProcedure(notification) %}
+                        <a class="btn btn-sm btn-dark" href="{{ path('procedure.notification.recall', {'procedure_id':procedure.id, 'notification_id':notification.id}) }}">Отозвать заявление</a>
+                        {% endif %}
+                        {% if profileAccess.canShowNoticeHistoryProcedure(notification) %}
+                        <a class="btn btn-sm btn-dark" href="{{ path('procedure.notification.history', { 'procedure_id': procedure.id, 'notification_id': notification.id }) }}">История изменений</a>
+                        {% endif %}
+                        {% if profileAccess.isModeratorOrAdmin() %}
+                        <a class="{% if notification.status_tactic != 'STATUS_PUBLISHED' %}link-disabled{% endif %} btn btn-sm btn-dark" href="{{ path('moderate.procedure.processing.start', {'procedure_id':procedure.id, 'xml_document_id':notification.id}) }}">Начать обработку</a>
+                        <a class="{% if notification.status_tactic != 'STATUS_PROCESSING' %}link-disabled{% endif %} btn btn-sm btn-dark" href="{{ path('moderate.procedure.processing.return', {'procedure_id':procedure.id, 'xml_document_id':notification.id}) }}">Отменить обработку</a>
+                        <a class="{% if notification.status_tactic != 'STATUS_PROCESSING' %}link-disabled{% endif %} btn btn-sm btn-dark" href="{{ path('moderate.procedure.processing.confirm', {'procedure_id':procedure.id, 'xml_document_id':notification.id}) }}">Принять решение</a>
+                        {% endif %}
+
+                        {% if profileAccess.canCancellingPublication(procedure.id) %}
+                            <a class="btn btn-sm btn-dark" href="{{ path('procedure.notification.recall_published', { 'procedure_id': procedure.id, 'notification_id': notification.id }) }}">Отмена публикации</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if notification.isRejected() %}
+                <div class="col-md-12">
+                    <div class="alert alert-danger">
+                        <strong>Извещение отклонено модератором: </strong>{{ notification.moderator_comment }}
+                    </div>
+                </div>
+            {% else %}
+            {% if(profileAccess.canSignNotice(notification)) %}
+                {% if profileAccess.canPublicationNotification(procedure.id) %}
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-footer">
+                                <div class="d-inline-block">
+                                    {{ form_start(formSign, {'attr': {'id': 'form_organizer'}}) }}
+                                    <button  id="sign_procedure_notification" class="btn btn-sm btn-success" data-hash="{{ hash }}" data-thumbprint="{{ procedure.certificate_thumbprint }}" type="submit">Подписать и опубликовать</button>
+                                    {{ form_end(formSign) }}
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+            {% endif %}
+            <div id="printableArea" class="col-sm-12">
+                <div class="card">
+                    {% if notification.isCancelType() %}
+                    <div class="card-header text-center">
+                        <h5>{{ xml.documentName }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                        <p><strong>Форма проведения торгов: </strong>{{ xml.procedureType }}</p>
+                        <p><strong>Форма подачи предложений о цене: </strong>{{ xml.pricePresentationForm }}</p>
+                        <p><strong>Оператор электронной торговой площадки: </strong>{{ xml.nameOrganization }}</p>
+                        <p><strong>Организатор торгов: </strong>{{ xml.organizerFullName }}</p>
+                        {% for lot in xml.lots %}
+                            <p><strong>Процедура №{{ procedure.id_number }}: </strong>{{ lot.name }}</p>
+                            <p><strong>Начальная цена лота: </strong>{{ lot.startingPrice }}, {{ lot.nds }}</p>
+                            <p><strong>Размер задатка: </strong>{{ lot.depositAmount }}</p>
+                            <p><strong>Шаг аукциона: </strong>{{ lot.auctionStep }}</p>
+                        {% endfor %}
+                        <p><strong>Основание: </strong>{{ xml.organizerComment }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    {% for lot in xml.lots %}
+                        <div class="card-header text-center">
+                            <h5>{{ xml.documentName }}</h5>
+                            <h6>Торги состоятся {{ date(lot.startTradingDate) }} </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p><strong>Оператор электронной торговой площадки: </strong>{{ xml.nameOrganization }}</p>
+                                    <p><strong>Организатор торгов: </strong>{{ xml.organizerFullName }}</p>
+
+                                    <br/>
+                                    <p><strong style="font-size: 16px">Предмет торгов</strong></p>
+{#
+                                    <p><strong>Лот: №{{ lot.number }}</strong></p>
+#}
+                                    <p>{{ lot.name }}</p>
+                                    <p><strong>Основание для проведения торгов: </strong>{{ lot.tenderBasic }}</p>
+                                    <p><strong>Форма проведения торгов: </strong>{{ lot.procedureType }}</p>
+                                    <p><strong>Форма подачи предложений о цене: </strong>{{ xml.pricePresentationForm }}</p>
+                                    <p><strong>Начальная цена лота: </strong>{{ lot.startingPrice }}, {{ lot.nds }}</p>
+                                    <p><strong>Шаг аукциона: </strong>{{ lot.auctionStep }}</p>
+                                    <p><strong>Сумма задатка: </strong>{{ lot.depositAmount }}</p>
+                                    <br/>
+                                    <p>
+                                        В установленных законодательством РФ случаях на стоимость имущества начисляется НДС.
+                                        Задаток должен поступить на реквизиты: {{ lot.requisite }}, не позднее {{ date(lot.advancePaymentTime, true) }}.
+                                        Документом, подтверждающим поступление задатка на счет, является выписка со счета.
+                                        Сумма внесенного задатка засчитывается в счет исполнения обязательств Победителя торгов по оплате приобретенного имущества.
+                                    </p>
+                                    <p>
+                                        Ознакомиться с дополнительной информацией о предмете торгов и порядке их проведения и проектом договора купли-продажи заинтересованные лица могут на сайтах:
+                                        https://229etp.ru/, http://www.torgi.gov.ru,
+                                        {{ xml.organizerWebSite }}
+                                        торгов и по телефону {{ xml.organizerPhone }}
+                                    </p>
+                                    <p><strong>Контактное лицо организатора: </strong>{{ xml.contactPerson }}
+                                    </p>
+                                    <p style="white-space: pre-line;"><strong>Место представления заявок: </strong>{{ lot.infoPointEntry }}</p>
+                                    <p style="white-space: pre-line;"><strong>Место проведения торгов: </strong>{{ xml.infoTradingVenue }}</p>
+                                    <p style="white-space: pre-line;"><strong>Порядок оформления участия в торгах и их проведение: </strong>{{ xml.infoBiddingProcess }}
+                                        {{ xml.tendering_process }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('sign_procedure_xml') }}
+    {% endblock %}

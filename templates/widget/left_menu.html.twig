@@ -1,0 +1,214 @@
+<ul class="c-sidebar-nav" data-drodpown-accordion="true">
+    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("home") }}">
+            <svg class="c-sidebar-nav-icon">
+                <use xlink:href="/assets/svg/free.svg#cil-speedometer"></use>
+            </svg>Панель управления</a></li>
+
+    {% if(profileAccess.isUser()) and (profileAccess.issetProfile()) %}
+        <li class="c-sidebar-nav-dropdown"><a class="c-sidebar-nav-dropdown-toggle" href="#">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-puzzle"></use>
+                </svg>
+                Торги</a>
+            <ul class="c-sidebar-nav-dropdown-items">
+                <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("procedures") }}">
+                        <svg class="c-sidebar-nav-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use>
+                        </svg>
+                        Все торги</a></li>
+                {% if(profileAccess.isAccreditedUser()) %}
+                    {% if(profileAccess.isOrganizer()) %}
+                        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link"
+                                                          href="{{ path("procedures.my", {'profile_id': profile.id}) }}">
+                                <svg class="c-sidebar-nav-icon">
+                                    <use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use>
+                                </svg>
+                                Мои торги</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </li>
+
+
+
+        {% if(profileAccess.isAccreditedUser()) %}
+            {% if(profileAccess.isParticipant()) %}
+                <li class="c-sidebar-nav-dropdown"><a class="c-sidebar-nav-dropdown-toggle" href="#">
+                        <svg class="c-sidebar-nav-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-puzzle"></use>
+                        </svg>
+                        Заявки</a>
+                    <ul class="c-sidebar-nav-dropdown-items">
+                        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("bids", {'profile_id': profile.id}) }}">
+                                <svg class="c-sidebar-nav-icon"><use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use></svg>Все</a>
+                        </li>
+
+                        <li class="c-sidebar-nav-item">
+                            <a class="c-sidebar-nav-link" href="{{ path("bids.draft", {'profile_id': profile.id}) }}">
+                                <svg class="c-sidebar-nav-icon"><use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use></svg>Черновики</a>
+                        </li>
+                    </ul>
+                </li>
+            {% endif %}
+        {% endif %}
+
+
+
+    {% elseif (profileAccess.isAdmin()) or (profileAccess.isModerator()) %}
+        <li class="c-sidebar-nav-dropdown"><a class="c-sidebar-nav-dropdown-toggle" href="#">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-puzzle"></use>
+                </svg>
+                Торги</a>
+            <ul class="c-sidebar-nav-dropdown-items">
+                <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ path("procedures") }}">
+                        <svg class="c-sidebar-nav-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use>
+                        </svg>
+                        Все торги</a></li>
+
+                <li class="c-sidebar-nav-item">
+                    <a class="c-sidebar-nav-link" href="{{ path("moderate.bids") }}">
+                        <svg class="c-sidebar-nav-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-arrow-right"></use>
+                        </svg>
+                        Список заявок к торгам</a>
+                </li>
+            </ul>
+        </li>
+    {% endif %}
+    <li class="c-sidebar-nav-title">Личный кабинет</li>
+    {% if(profileAccess.isUser()) %}
+
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="{{ path('certificates', {'user_id': profileAccess.getIdUser()}) }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-list"></use>
+                </svg>
+                Мои сертификаты ЭП</a>
+        </li>
+    {% endif %}
+
+    {% if(profileAccess.isUser()) %}
+        {% if(profileAccess.issetProfile()) %}
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link" href="{{ path('profile', {'profile_id': profile.id}) }}">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="/assets/svg/free.svg#cil-user"></use>
+                    </svg>
+                     Профиль</a>
+            </li>
+        {% endif %}
+        {% if not (profileAccess.issetProfile()) %}
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link" href="{{ path('profile.create') }}">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="/assets/svg/free.svg#cil-plus"></use>
+                    </svg>
+                    Создать профиль</a>
+            </li>
+        {% endif %}
+        {% if profileAccess.isOrganizerOrIsParticipant() %}
+            {% if profileAccess.isAccreditation() %}
+                <li class="c-sidebar-nav-item">
+                    <a class="c-sidebar-nav-link" href="{{ path('payments', {'profile_id': profile.id }) }}">
+                        <svg class="c-sidebar-nav-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-money"></use>
+
+                        </svg>
+                        Счета и транзакции
+                    </a>
+                </li>
+
+                <li class="c-sidebar-nav-item">
+                    <a class="c-sidebar-nav-link"
+                       href="{{ path('payment.requisites', {'payment_id': profile.payment_id }) }}">
+                        <svg class="c-sidebar-nav-icon">
+                            <use xlink:href="/assets/svg/free.svg#cil-credit-card"></use>
+                        </svg>
+                        Банковские реквизиты
+                    </a>
+                </li>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+
+
+{#    {% if not profileAccess.isOrganizer() %}#}
+{#        {% if (profileAccess.issetProfile()) %}#}
+{#            <li class="c-sidebar-nav-item">#}
+{#                <a class="c-sidebar-nav-link" href="{{ path('tariffs') }}">#}
+{#                    <svg class="c-sidebar-nav-icon">#}
+{#                        <use xlink:href="/assets/svg/free.svg#cil-briefcase"></use>#}
+{#                    </svg>#}
+{#                    Тарифы#}
+{#                </a>#}
+{#                #}
+{#            </li>#}
+{#        {% endif %}#}
+{#    {% endif %}#}
+
+    {{ notification() }}
+
+    <li class="c-sidebar-nav-item">
+        <a class="c-sidebar-nav-link" href="{{ path('app_logout') }}">
+            <svg class="c-sidebar-nav-icon">
+                <use xlink:href="/assets/svg/free.svg#cil-account-logout"></use>
+            </svg>
+            Выйти</a>
+    </li>
+
+    {% if (profileAccess.isAdmin()) or (profileAccess.isModerator()) %}
+        <li class="c-sidebar-nav-title">Администратор</li>
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="{{ path('admin.dashboard') }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-bar-chart"></use>
+                </svg>
+                Статистика</a>
+        </li>
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="{{ path('admin.users') }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-shield-alt"></use>
+                </svg>
+                Пользователи</a>
+        </li>
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="{{ path('settings') }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-settings"></use>
+                </svg>
+                Настройки</a>
+        </li>
+
+
+
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="{{ path('tariffs') }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-briefcase"></use>
+                </svg>
+                Тарифы
+            </a>
+        </li>
+
+
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="{{ path('admin.news') }}">
+                <svg class="c-sidebar-nav-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-file"></use>
+                </svg>
+                Новости</a>
+        </li>
+    {% endif %}
+
+
+
+    {% if(profileAccess.isModerator() or profileAccess.isAdmin()) %}
+        <li class="c-sidebar-nav-title">Задачи</li>
+        {{ tasks() }}
+    {% endif %}
+
+</ul>

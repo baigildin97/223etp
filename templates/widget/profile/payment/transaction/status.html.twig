@@ -1,0 +1,7 @@
+{% if status == 'STATUS_COMPLETED' %}
+    Завершен
+{% elseif status == 'STATUS_PENDING' %}
+    Ожидает подтверждения
+{% elseif status == 'STATUS_ARCHIVE' %}
+    Отменен
+{% endif %}

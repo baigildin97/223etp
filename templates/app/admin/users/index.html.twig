@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Все пользователи{% endblock %}
+{% block meta %}
+    <meta name="description" content="Page {{ pagination.currentPage }}">
+{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item active">Все пользователи</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Все пользователи ЭТП</div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.userName, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.inn, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.email, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.phone, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.clientIp, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Найти</button>
+                            <a href="{{ path('admin.users') }}" class="btn btn-outline-secondary">Сбросить</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form_widget(form.incorporationForm, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form_widget(form.role, {'attr':{'class':'form-control'}}) }}
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form_widget(form.status, {'attr':{'class':'form-control'}}) }}
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Пользователь</th>
+                            <th>ИНН</th>
+                            <th>Email</th>
+                            <th>Телефон</th>
+                            <th>Тип пользователя</th>
+                            <th>Роль</th>
+                            <th>IP</th>
+                            <th>Статус</th>
+                            <th{% if pagination.isSorted('u.created_at') %} class="sorted"{% endif %}>
+                                {{ knp_pagination_sortable(pagination, 'Дата создания учетной записи', 'u.created_at') }}
+                            <th>Дата подачи заявления</th>
+                            <th{% if pagination.isSorted('p.registration_date') %} class="sorted"{% endif %}>
+                                {{ knp_pagination_sortable(pagination, 'Дата регистрации', 'p.registration_date') }}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in pagination %}
+                            <tr>
+                                <td>
+
+                                    <a href="{{ path('admin.users.show', {'user_id':user.id}) }}">
+                                        {% if(user.user_name != null) %}
+                                            {% if user.incorporated_form == 'INDIVIDUAL_ENTREPRENEUR' %}
+                                                ИП {{ user.user_name }}
+                                            {% endif %}
+                                            {% if user.incorporated_form == 'LEGAL_ENTITY'%}
+                                                {{ user.short_title_organization }}
+                                            {% endif %}
+                                            {% if user.incorporated_form == 'INDIVIDUAL'%}
+                                                {{ user.user_name }}
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-danger">Профиль ещё не заполнен</span>
+                                        {% endif %}
+
+                                </td>
+                                {% if user.incorporated_form == 'LEGAL_ENTITY' %}
+                                    <td>{{ filter_inn(user.subject_name_inn) }}</td>
+                                {% else %}
+                                    <td>{{ user.subject_name_inn ?? 'Нет ЭП' }}</td>
+                                {% endif %}
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>
+                                    {{ incorporation_form_profile(user.incorporated_form) }}
+                                </td>
+                                <td>{{ user_role(user.role) }}</td>
+                                <td>{{ user.client_ip }}</td>
+                                <td>{{ user_status(user.status, user.profile_status, user.profile_id) }}</td>
+                                <td>{{ date(user.created_at) }}</td>
+                                <td>{{ dateApplicationSubmission(user.profile_id) }}</td>
+                                <td>{{ date(user.registration_date) }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

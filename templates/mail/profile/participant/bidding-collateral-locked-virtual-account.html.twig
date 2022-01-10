@@ -1,0 +1,10 @@
+{% extends 'mail.html.twig' %}
+
+{% block body %}
+    <p style="margin: 10px 0;">Средства гарантийного обеспечения для участия в торгах №{{ procedure_number }}
+        по заявке №{{ bid_number }},
+        в размере {{ security_percent }}% от начальной (минимальной) цены имущества,
+        в сумме {{ initial_lot_price }} (НДС не облагается),
+        заблокированы на вашем виртуальном счете.
+    </p>
+{% endblock %}

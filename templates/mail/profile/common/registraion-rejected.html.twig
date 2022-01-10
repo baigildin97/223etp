@@ -1,0 +1,8 @@
+{% extends 'mail.html.twig' %}
+
+{% block body %}
+    <p style="margin: 10px 0;">Уважаемый, {{ username }}.</p>
+    <p style="margin: 10px 0;">Ваша регистрация отклонена на электронной торговой площадке {{ site_name }}.<br/>
+        Причина: {{ cause }}
+    </p>
+{% endblock %}

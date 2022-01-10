@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Аукционный зал{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('procedures') }}">Процедуры</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('procedure.show', {'procedureId': lot.procedure_id}) }}">Процедура №{{ lot.procedure_number }}</a></li>
+        <li class="breadcrumb-item active">Аукционный зал</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">Общее сведения аукциона</div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">Номер извещения об аукционе: <a href="{{ path('procedure.show', {'procedureId': lot.procedure_id}) }}">№{{ lot.procedure_number }}</a> </li>
+                                <li class="list-group-item">Наименование предмета торгов: <br/>
+                                    <strong>{{ lot.title }}</strong>
+                                </li>
+                            </ul>
+                            <ul class="list-group mt-3">
+                                <li class="list-group-item">Начальная цена: <b>{{ money(lot.starting_price) }}</b></li>
+                                <li class="list-group-item">Текущая цена: <b id="current_cost">{% if last_offer is not null %}{{ money(auction.current_cost) }}{% else %}{{ money('RUB 0') }}{% endif %}</b></li>
+                                <li class="list-group-item">Текущее повышение: <strong id="state_percent"></strong></li>
+                                <li class="list-group-item">Время до окончания: <strong id="date-closing" data-closing-time="{{ auction.default_closed_time | date('U') }}"></strong></li>
+                            </ul>
+                            {% if(profileAccess.isParticipant()) %}
+                            <ul class="list-group mt-3">
+                                <li class="list-group-item">Ваше последнее ценовое предложение</li>
+                                <li class="list-group-item"><h3 id="my_offers_cost">{% if my_offer is not null %}{{ money(my_offer.cost) }}{% else %}{{ money('RUB 0') }}{% endif %}</h3></li>
+                                <li class="list-group-item">Ваше текущая позиция: {% if my_offer is not null %}<b id="current_position"></b>{% else %}<b id="current_position">0</b>{% endif %}</li>
+                                                </ul>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="row row-default">
+                <div class="col-md-6" style="padding-left: 25px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">Расчетные дата и время окончания:</li>
+                                <li class="list-group-item"><strong id="default_closed_time">{{ date(auction.default_closed_time) }}</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">Предложенная цена: <h3 id="last_offer_cost">{% if last_offer is not null %}{{ money(auction.current_cost) }}{% else %}{{ money('RUB 0') }}{% endif %}</h3></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if(profileAccess.isParticipant()) %}
+            <div class="row row-default">
+                <div class="col-md-12" style="padding-left: 25px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                <input type="hidden" id="auctionId" value="{{ auction.id }}">
+                                <input type="hidden" id="thumbprint" value="{{ bid.certificate_thumbprint }}">
+                            <ul class="list-group mt-4">
+                                <li class="list-group-item"><h6>Предложение о цене по заявке №{{ bid.number }}</h6></li>
+                                <li class="list-group-item"><strong>Шаг аукциона:</strong> <span id="price-range"></span></li>
+                                <li class="list-group-item">
+                                    <input type="range" id="cost" min="{{ decimalMoney(lot.auction_step) }}" max="{{ decimalMoney(lot.auction_step) }}" value="" class="slider w-100" onchange="changePriceRange();">
+                                </li>
+                                <li class="list-group-item">
+                                    Предложить новую цену с учетом шага аукциона: <b><span id="next_cost"></span></b>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="form-group">
+                                        <button id="sign_bet" type="button" class="btn btn-success btn-sm">Подписать и отправить</button>
+                                    </div>
+                                </li>
+                            </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+<div class="row">
+    <div class="col-md-12">
+    <div class="card">
+    <div class="card-body">
+         <div id="preloader-offers-list" class="preloader-offers-list">
+             <div class="rect1"></div>
+             <div class="rect2"></div>
+             <div class="rect3"></div>
+             <div class="rect4"></div>
+             <div class="rect5"></div>
+         </div>
+        <div id="offers-list"  {% if(profileAccess.isParticipant()) %}data-bid-id="{{ bid.id }}" {% endif %} data-auction-id="{{ auction.id }}" data-lot-id="{{ lot.id }}" class="auction-offer mt-5"></div>
+    </div>
+        <div class="card-footer">
+            <div class="timer" id="timer" style="display: none">
+                <div class="container">
+                    <div class="row row-default">
+                        <form class="form-horizontal mt-2">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <button type="button" onClick="window.location.reload();" class="btn btn-primary btn-sm">
+                                        Обновить страницу (автоматическое обновление через: <span id="counterTime"></span>)
+                                    </button>
+                                </div>
+                                <label class="col-md-3 col-form-label" for="text-input">Время обновления страницы</label>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input id="new-timer" class="form-control form-control-sm .col-sm-3" type="number" placeholder="сек.">
+                                        <div class="input-group-append input-group-sm">
+                                            <button type="button" class="btn btn-primary btn-sm set-new-interval">Установить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('auction') }}
+{% endblock %}

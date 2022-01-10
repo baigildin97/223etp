@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Уровни{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('tariffs') }}">Тарифы</a></li>
+        <li class="breadcrumb-item active">Тариф - {{ tariff.title }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {% if(profileAccess.isAdmin() or profileAccess.isModerator()) %}
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a href="{{ path('tariff.level.create', {'tariff_id': tariff.id}) }}">Добавить новый уровень</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Уровни</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Приоритет</th>
+                            <th>Сумма</th>
+                            <th>Процент снятия</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% for level in levels %}
+                            <tr>
+                                <td>{{ level.priority }}</td>
+                                <td>{{ money(level.amount) }}</td>
+                                <td>{{ level.percent }}%</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

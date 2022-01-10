@@ -1,0 +1,88 @@
+<li class="c-header-nav-item dropdown">
+    <a title="Управление профилем" class="c-header-nav-link" data-toggle="dropdown" href="#" role="button"
+       aria-haspopup="true" aria-expanded="false">
+        <div class="c-avatar" style="background-color: #F29B34">
+            <span><strong>{{ avatar }}</strong></span>
+        </div>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right pt-0">
+        <div class="dropdown-header bg-light py-2"><strong>Аккаунт</strong></div>
+        {# <a class="dropdown-item" href="#"> #}
+        {# <svg class="c-icon mfe-2"> #}
+        {# <use xlink:href="/assets/svg/free.svg#cil-bell"></use> #}
+        {# </svg> #}
+        {# Уведомления<span class="badge badge-info mfs-auto">42</span></a><a class="dropdown-item" href="#"> #}
+        {# <svg class="c-icon mfe-2"> #}
+        {# <use xlink:href="/assets/svg/free.svg#cil-envelope-open"></use> #}
+        {# </svg> #}
+        {# Сообщения<span class="badge badge-success mfs-auto">42</span></a><a class="dropdown-item" href="#"> #}
+        {# <svg class="c-icon mfe-2"> #}
+        {# <use xlink:href="/assets/svg/free.svg#cil-task"></use> #}
+        {# </svg> #}
+        {# Задачи<span class="badge badge-danger mfs-auto">42</span></a><a class="dropdown-item" href="#"> #}
+        {# <svg class="c-icon mfe-2"> #}
+        {# <use xlink:href="/assets/svg/free.svg#cil-comment-square"></use> #}
+        {# </svg> #}
+        {# Комментарии<span class="badge badge-warning mfs-auto">42</span></a> #}
+        {# <div class="dropdown-header bg-light py-2"> #}
+        {# <strong>Настройки</strong></div> #}
+        {% if(profileAccess.isUser()) %}
+            {% if(profileAccess.issetProfile()) %}
+                <a class="dropdown-item" href="{{ path('profile', {'profile_id': profile.id}) }}">
+                    <svg class="c-icon mfe-2">
+                        <use xlink:href="/assets/svg/free.svg#cil-user"></use>
+                    </svg>
+                    Профиль</a>
+            {% endif %}
+            {% if not (profileAccess.issetProfile()) %}
+                <a class="dropdown-item" href="{{ path('profile.create') }}">
+                    <svg class="c-icon mfe-2">
+                        <use xlink:href="/assets/svg/free.svg#cil-user"></use>
+                    </svg>
+                    Создать профиль</a>
+            {% endif %}
+            {% if profileAccess.isOrganizerOrIsParticipant() %}
+                <a class="dropdown-item" href="{{ path('payments', {'profile_id': profile.id }) }}">
+                    <svg class="c-icon mfe-2">
+                        <use xlink:href="/assets/svg/free.svg#cil-credit-card"></use>
+                    </svg>
+                    Счета и транзакции
+                </a>
+            {% endif %}
+        {% endif %}
+
+
+            {% if (profileAccess.isAdmin()) or (profileAccess.isModerator()) %}
+                <a class="dropdown-item" href="{{ path('tariffs') }}">
+                    <svg class="c-icon mfe-2">
+                        <use xlink:href="/assets/svg/free.svg#cil-briefcase"></use>
+                    </svg>
+                    Тарифы
+                </a>
+                {% else %}
+                    {% if not profileAccess.isOrganizer() %}
+
+                        {% if (profileAccess.issetProfile()) %}
+                            <a class="dropdown-item" href="{{ path('tariffs') }}">
+                                <svg class="c-icon mfe-2">
+                                    <use xlink:href="/assets/svg/free.svg#cil-briefcase"></use>
+                                </svg>
+                                Тарифы
+                            </a>
+                        {% endif %}
+                    {% endif %}
+            {% endif %}
+
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">
+            <svg class="c-icon mfe-2">
+                <use xlink:href="/assets/svg/free.svg#cil-school"></use>
+            </svg>
+            Помощь</a>
+        <a class="dropdown-item" href="{{ path('app_logout') }}">
+            <svg class="c-icon mfe-2">
+                <use xlink:href="/assets/svg/free.svg#cil-account-logout"></use>
+            </svg>
+            Выйти</a>
+    </div>
+</li>

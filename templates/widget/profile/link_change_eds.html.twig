@@ -1,0 +1,9 @@
+{% if status != 'STATUS_MODERATE' %}
+    {% if incorporationForm == 'INDIVIDUAL' %}
+        <a class="btn btn-sm btn-dark" href="{{ path("profile.certificate.change.individual", {'profile_id': profile_id}) }}">Сменить ЭП</a>
+    {% elseif(incorporationForm) == 'INDIVIDUAL_ENTREPRENEUR' %}
+        <a class="btn btn-sm btn-dark" href="{{ path("profile.certificate.change.individual.entrepreneur", {'profile_id': profile_id}) }}">Сменить ЭП</a>
+    {% elseif(incorporationForm) == 'LEGAL_ENTITY' %}
+        <a class="btn btn-sm btn-dark" href="{{ path("profile.certificate.change.legal.entity", {'profile_id': profile_id}) }}">Сменить ЭП</a>
+    {% endif %}
+{% endif %}

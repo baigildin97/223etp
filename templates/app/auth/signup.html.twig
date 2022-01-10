@@ -1,0 +1,99 @@
+{% extends 'auth.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        {% include '_flashes.html.twig' %}
+                        {% block form_errors %}
+                            {% apply spaceless %}
+                                {% if form.vars.errors|length > 0 %}
+                                    {% for error in form.vars.errors %}
+                                        <div class="alert alert-danger">
+                                            {{ error.message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endapply %}
+                        {% endblock form_errors %}
+                        <h1>Регистрация на ЭТП</h1>
+                        <a class="btn btn-link px-0" href="{{ path('app_login') }}">Есть учетная запись?</a>
+                        {{ form_start(form) }}
+            {#            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                            <svg class="c-icon">
+                                    <use xlink:href="/assets/svg/free.svg#cil-phone"></use>
+                                </svg>
+                                </span>
+                            </div>
+                            {{ form_widget(form.phone, {'attr': {'placeholder': '79998887766', 'class':'form-control'}}) }}
+                            {{ form_errors(form.phone) }}
+                        </div>#}
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                         <svg class="c-icon">
+                                    <use xlink:href="/assets/svg/free.svg#cil-envelope-closed"></use>
+                                </svg>
+                                </span>
+                            </div>
+                            {{ form_widget(form.email, {'attr': {'placeholder': 'Email', 'class':'form-control'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+{#                        <div class="input-group mb-4">#}
+{#                            <div class="input-group-prepend">#}
+{#                                <span class="input-group-text">#}
+{#                                                 <svg class="c-icon">#}
+{#                                    <use xlink:href="/assets/svg/free.svg#cil-lock-locked"></use>#}
+{#                                </svg>#}
+{#                                </span>#}
+{#                            </div>#}
+{#                            {{ form_widget(form.password, {'attr': {'placeholder': 'Пароль', 'class':'form-control'}}) }}#}
+{#                            {{ form_errors(form.password) }}#}
+{#                        </div>#}
+
+                        <div class="input-group mb-4">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                                 <svg class="c-icon">
+                                    <use xlink:href="/assets/svg/free.svg#cil-lock-locked"></use>
+                                </svg>
+                                </span>
+                            </div>
+                            {{ form_widget(form.plainPassword.first, {'attr': {'placeholder': 'Пароль', 'class':'form-control'}}) }}
+                            {{ form_errors(form.plainPassword.first) }}
+                        </div>
+
+                        <div class="input-group mb-4">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                                 <svg class="c-icon">
+                                    <use xlink:href="/assets/svg/free.svg#cil-lock-locked"></use>
+                                </svg>
+                                </span>
+                            </div>
+                            {{ form_widget(form.plainPassword.second, {'attr': {'placeholder': 'Повтор ввода пароля', 'class':'form-control'}}) }}
+                            {{ form_errors(form.plainPassword.second) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-block btn-success">Создать учетную запись</button>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+{#        {{ encore_entry_script_tags('create_profile') }}#}
+    {% endblock %}

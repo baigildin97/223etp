@@ -1,0 +1,201 @@
+@import "../../public/assets/style.css";
+@import "pace.min.css";
+@import "~toastr/toastr";
+@import "~font-awesome/scss/font-awesome";
+@import "ladda-min.css";
+
+.c-main {
+  padding-top: 1rem;
+}
+
+@media (min-width: 768px){
+  .c-main>.container-fluid {
+    padding-left: 15px;
+  }
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col, .col-auto, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm, .col-sm-auto, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-md, .col-md-auto, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg, .col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl, .col-xl-auto {
+  position: relative;
+  width: 100%;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+//.c-main {
+//  padding-top: 0.3rem;
+//}
+
+.card-body {
+  padding: 0.3rem;
+}
+
+.table th, .table td {
+  padding: .3rem;
+}
+
+.c-sidebar-nav-link, .c-sidebar-nav-dropdown-toggle {
+  padding: .3rem 1rem;
+}
+
+.c-sidebar {
+  width: 200px;
+}
+
+@media (min-width: 768px) and (min-width: 992px){
+  html:not([dir=rtl]) .c-sidebar.c-sidebar-lg-show:not(.c-sidebar-right).c-sidebar-fixed~.c-wrapper, html:not([dir=rtl]) .c-sidebar.c-sidebar-show:not(.c-sidebar-right).c-sidebar-fixed~.c-wrapper {
+    margin-left: 200px;
+  }
+}
+
+
+.list-group-item:first-child {
+  border-top-left-radius: 0rem;
+  border-top-right-radius: 0rem;
+}
+
+.mini-btn {
+  padding: .1rem .4rem;
+}
+
+.mini-table-body{
+  font-size: 12px;
+}
+
+.row {
+  margin-left: -5px;
+  margin-right: -5px;
+}
+
+
+.btn-link-css {
+  border: 0px;
+  background: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.commentary-popover {
+  opacity: 0;
+  visibility: hidden;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  max-width: 300px;
+}
+
+.show-commentary:focus + .commentary-popover {
+  opacity: 1;
+  visibility: visible;
+}
+
+body{
+  font-size: .79rem;
+}
+
+.list-group-item {
+  padding: .3rem .3rem;
+}
+
+#actions{
+  display: inline-flex;
+}
+
+.action-form {
+  margin-right: 5px;
+}
+
+.row-default{
+  margin-right: -15px !important;
+  margin-left: -15px !important;
+}
+
+.btn-sign{
+  font-size: 0.765rem;
+  padding: 2px 4px;
+}
+
+
+.preloader-offers-list {
+  margin: 35px auto;
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.preloader-offers-list > div {
+  background-color: #333;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.preloader-offers-list .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.preloader-offers-list .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.preloader-offers-list .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.preloader-offers-list .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% {
+       transform: scaleY(1.0);
+       -webkit-transform: scaleY(1.0);
+     }
+}
+
+.link-disabled {
+  pointer-events: none;
+  cursor: default;
+  color: #888;
+  background: #ebedef;
+  border: 1px solid #d8dbe0;
+}
+
+.daterangepicker select.yearselect{
+  float: left;
+}
+
+.daterangepicker select.monthselect{
+  float: right;
+}
+
+.nav-tabs-boxed.nav-tabs-boxed-left .nav-item, .nav-tabs-boxed.nav-tabs-boxed-right .nav-item{
+  flex-grow: unset !important;
+}
+
+.form-control{
+  color: #080808 !important;
+}
+
+.form-control::placeholder{
+  color: #768192 !important;
+}
+
+.form-control:-ms-input-placeholder {
+  color: #768192 !important;
+}

@@ -1,0 +1,45 @@
+{% extends 'auth.html.twig' %}
+
+{% block title %}Восстановление пароля{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <h1>Восстановление пароля</h1>
+                        {% include '_flashes.html.twig' %}
+                        {% block form_errors %}
+                            {% apply spaceless %}
+                                {% if form.vars.errors|length > 0 %}
+                                    {% for error in form.vars.errors %}
+                                        <div class="alert alert-danger">
+                                            {{ error.message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endapply %}
+                        {% endblock form_errors %}
+                        <a class="btn btn-link px-0" href="{{ path('app_login') }}">Вспомнили пароль?</a>
+                        {{ form_start(form) }}
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <svg class="c-icon">
+                                    <use xlink:href="/assets/svg/free.svg#cil-envelope-open"></use>
+                                </svg>
+                                </span>
+                            </div>
+                            {{ form_widget(form.email, {'attr': {'placeholder': 'Email', 'class':'form-control'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <button class="btn btn-block btn-success" type="submit">Восстановить</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% if status == 'STATUS_ACTIVE' %}
+    <span class="badge badge-success">Опубликован</span>
+{% elseif status == 'STATUS_MODERATE' %}
+    <span class="badge badge-warning">На модерации</span>
+{% elseif status == 'STATUS_MODERATED' %}
+    <span class="badge badge-info">Одобрен к публикации</span>
+{% elseif status == 'STATUS_ARCHIVED' %}
+    <span class="badge badge-secondary">В архиве</span>
+{% elseif status == 'STATUS_REJECT' %}
+    <span class="badge badge-warning">Отклонен</span>
+{% elseif status == 'STATUS_NEW' %}
+    <span class="badge badge-info">Черновик</span>
+{% elseif status == 'STATUS_FAILED' %}
+    <span class="badge badge-danger">Несостоявшийся</span>
+{% elseif status == 'STATUS_ACCEPTING_APPLICATIONS' %}
+    <span class="badge badge-info">Идёт прием заявок</span>
+{% elseif status == 'STATUS_APPLICATIONS_RECEIVED' %}
+    <span class="badge badge-info">Окончен прием заявок</span>
+{% elseif status == 'STATUS_SUMMING_UP_APPLICATIONS' %}
+    <span class="badge badge-info">Подведение итогов приема заявок</span>
+{% elseif status == 'STATUS_START_OF_TRADING' %}
+    <span class="badge badge-info">Ожидание начала торгов</span>
+{% elseif status == 'STATUS_BIDDING_PROCESS' %}
+    <span class="badge badge-success">Идут торги</span>
+{% elseif status == 'STATUS_BIDDING_COMPLETED' %}
+    <span class="badge badge-success">Торги завершены</span>
+{% elseif status == 'STATUS_CANCEL' %}
+    <span class="badge badge-info">Отменена</span>
+{% elseif status == 'STATUS_PAUSE' %}
+    <span class="badge badge-info">Приостановлена</span>
+{% elseif status == 'STATUS_RESUME' %}
+    <span class="badge badge-info">Восстановлена</span>
+{% elseif status == 'STATUS_SIGNED_PROTOCOL_RESULT' %}
+    <span class="badge badge-info">Подписан протокол о результатах торгов</span>
+{% endif %}

@@ -1,0 +1,29 @@
+ <div class="container">
+        <div class="row row-default">
+            <div class="col-lg-12">
+                <h4 class="pt-2 pb-2">Все предложения</h4>
+                {% if offers is empty %}
+                    В данный момент отсутствует предложения...
+                {% else %}
+                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th>Заявка участника</th>
+                        <th>Предложенная цена</th>
+                        <th>Дата и время</th>
+                    </tr>
+                    </thead>
+                    <tbody class="mini-table-body">
+                    {% for offer in offers %}
+                        <tr>
+                            <td>№{{ offer.bid_number }}</td>
+                            <td>{{ money(offer.cost) }}</td>
+                            <td>{{ date(offer.created_at) }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>

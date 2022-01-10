@@ -1,0 +1,15 @@
+{% if action == 'ACTION_SEND' %}
+    Отправлено на модерацию
+{% elseif action == 'ACTION_PROCESSING' %}
+    Оператор начал обработку
+{% elseif action == 'ACTION_REJECTED' %}
+    Оператор отклонил извещение
+{% elseif action == 'ACTION_RETURNED' %}
+    Оператор вернул извещение в общий список
+{% elseif action == 'ACTION_RECALLED' %}
+    Организатор отозвал извещение
+{% elseif action == 'ACTION_APPROVED' %}
+    Оператор одобрил извещение
+{% elseif action == 'ACTION_CANCEL_PUBLISHED' %}
+    Организатор отменил публикацию
+{% endif %}

@@ -1,0 +1,11 @@
+<li class="c-sidebar-nav-item">
+    <a class="c-sidebar-nav-link" href="{{ path('notifications', {'user_id': profileAccess.getIdUser()}) }}" {% if count_unread_notification != 0 %}title="У вас есть непрочитанные уведомления"{% endif %}>
+        <svg id="notification-widget" class="c-sidebar-nav-icon {% if count_unread_notification != 0 %}text-warning{% endif %}">
+            <use xlink:href="/assets/svg/free.svg#cil-bell"></use>
+        </svg> Уведомления
+        {% if count_unread_notification != 0 %}
+        <span class="badge badge-warning" id="count_unread_notification">{{ count_unread_notification }}</span>
+        {% endif %}
+
+    </a>
+</li>

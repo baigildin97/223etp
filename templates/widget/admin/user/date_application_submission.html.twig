@@ -1,0 +1,5 @@
+{% if date is not null %}
+    {% if date.created_at is not null %}
+        {{ date(date.created_at) }}
+    {% endif %}
+{% endif %}

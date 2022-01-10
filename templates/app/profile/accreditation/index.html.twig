@@ -1,0 +1,257 @@
+{% extends 'base.html.twig' %}
+{% block title %}Отправить заявление на регистрацию{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('profile', {'profile_id': profile.id}) }}">{{ profile.certificate_owner }}</a></li>
+{#
+        <li class="breadcrumb-item"><a href="{{ path('profile.xml_documents', {'profile_id': profile.id}) }}">Заявления на регистрацию</a></li>
+#}
+        <li class="breadcrumb-item active">Отправить заявление на регистрацию</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card">
+                {{ form_start(form) }}
+                {{ form_widget(form.sign) }}
+                {{ form_errors(form.sign) }}
+{#                {% if profile.status == 'STATUS_WAIT' or profile.status == 'STATUS_REJECT' %}#}
+                    <div class="card-footer">
+                        <button id="sign_profile" class="btn btn-sm btn-success" data-hash="{{hash}}" data-thumbprint="{{ profile.certificate_thumbprint }}" type="submit">Подписать и отправить</button>
+                    </div>
+{#                {% endif %}#}
+                {{ form_end(form) }}
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{{ xml.generalInformation.statementText.title | raw }}</strong>
+                </div>
+                <div class="card-body">
+                    {{ xml.generalInformation.statementText.text | raw }}
+                </div>
+            </div>
+                <div class="card">
+                    <div class="card-header">
+                        Общие сведения
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <tbody>
+                            <tr>
+                                <td style="width: 25%;">Роль</td>
+                                <td>{{ xml.generalInformation.typeProfile }}</td>
+                            </tr>
+                            <tr>
+                                <td>Тип пользователя</td>
+                                <td>{{ xml.generalInformation.incorporatedForm }}</td>
+                            </tr>
+                           {# <tr>
+                                <td>Дата регистрации</td>
+                                <td>{{ date(xml.generalInformation.createdAt) }}</td>
+                            </tr>#}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% if(profile.isLegalEntity()) %}
+            <div class="card">
+                <div class="card-header">Данные организации</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <tbody>
+                        <tr>
+                            <td style="width: 25%;">Полное наименование организации</td>
+                            <td>{{ xml.organizationInfo.fullTitleOrganization }}</td>
+                        </tr>
+                        <tr>
+                            <td>Краткое наименование организации</td>
+                            <td>{{ xml.organizationInfo.shortTitleOrganization }}</td>
+                        </tr>
+                        <tr>
+                            <td>ИНН</td>
+                            <td>{{ xml.organizationInfo.inn }}</td>
+                        </tr>
+                        <tr>
+                            <td>КПП</td>
+                            <td>{{ xml.organizationInfo.kpp }}</td>
+                        </tr>
+                        <tr>
+                            <td>ОГРН</td>
+                            <td>{{ xml.organizationInfo.ogrn }}</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>Юридический адрес</td>
+                            <td>
+                                {{ xml.organizationInfo.legalIndex }},
+                                {{ country(xml.organizationInfo.legalCountry) }},
+                                {{ xml.organizationInfo.legalRegion }},
+                                {{ xml.organizationInfo.legalCity }},
+                                {{ xml.organizationInfo.legalStreet }},
+                                {{ xml.organizationInfo.legalHouse }}
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Адрес фактического места нахождения</td>
+                            <td>
+                                {{ xml.organizationInfo.factIndex }},
+                                {{ country(xml.organizationInfo.factCountry) }},
+                                {{ xml.organizationInfo.factRegion }},
+                                {{ xml.organizationInfo.factCity }},
+                                {{ xml.organizationInfo.factStreet }},
+                                {{ xml.organizationInfo.factHouse }}
+                            </td>
+                        </tr>
+
+                        {% if not xml.organizationInfo.webSite is empty %}
+                            <tr>
+                                <td>Адрес сайта</td>
+                                <td>{{ xml.organizationInfo.webSite }}</td>
+                            </tr>
+                        {% endif %}
+
+                        <tr>
+                            <td>Email</td>
+                            <td>{{ xml.organizationInfo.orgEmail }}</td>
+                        </tr>
+                        </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="card">
+                    <div class="card-header">
+                        Данные пользователя
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <tbody>
+                            <tr>
+                                <td style="width: 25%;">ФИО</td>
+                                <td>{{ xml.representativeInfo.reprPassportLastName }} {{ xml.representativeInfo.reprPassportFirstName }} {{ xml.representativeInfo.reprPassportMiddleName }} </td>
+                            </tr>
+                            <tr>
+                                <td>Контактный телефон</td>
+                                <td>{{ xml.representativeInfo.phone }}</td>
+                            </tr>
+                                {% if(profileAccess.isLegalEntity) %}
+                                <tr>
+                                    <td>Должность</td>
+                                    <td>{{ xml.representativeInfo.ownerPosition }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Документ(ы), подтверждающие полномочия представителя/руководителя юридического лица</td>
+                                    <td>{{ xml.representativeInfo.confirmingDocument }}</td>
+                                </tr>
+                                {% endif %}
+
+                                {% if(profileAccess.isIndividualOrIndividualEntrepreneur()) %}
+                                <tr>
+                                    <td>Серия и номер паспорта</td>
+                                    <td>{{ xml.representativeInfo.passportSeries }} {{ xml.representativeInfo.passportNumber }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Кем выдан</td>
+                                    <td>{{ xml.representativeInfo.passportIssuer }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Дата выдачи</td>
+                                    <td>{{ date(xml.representativeInfo.passportIssuanceDate, true) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Код подразделения</td>
+                                    <td>{{ xml.representativeInfo.passportUnitCode }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Гражданство</td>
+                                    <td>{{ country(xml.representativeInfo.passportCitizenship) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Дата рождения</td>
+                                    <td>{{ date(xml.representativeInfo.passportBirthDay, true) }}</td>
+                                </tr>
+                                    <tr>
+                                        <td>Адрес регистрации</td>
+                                        <td>
+                                            {{ xml.representativeInfo.legalIndex }},
+                                            {{ country(xml.representativeInfo.legalCountry) }},
+                                            {{ xml.representativeInfo.legalRegion }},
+                                            {{ xml.representativeInfo.legalCity }},
+                                            {{ xml.representativeInfo.legalStreet }},
+                                            {{ xml.representativeInfo.legalHouse }}
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Адрес фактического места нахождения</td>
+                                        <td>
+                                            {{ xml.representativeInfo.factIndex }},
+                                            {{ country(xml.representativeInfo.factCountry) }},
+                                            {{ xml.representativeInfo.factRegion }},
+                                            {{ xml.representativeInfo.factCity }},
+                                            {{ xml.representativeInfo.factStreet }},
+                                            {{ xml.representativeInfo.factHouse }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            <tr>
+                                <td>СНИЛС</td>
+                                <td> {{ xml.representativeInfo.snils }}</td>
+                            </tr>
+                            <tr>
+                                <td>ИНН</td>
+                                <td> {{ xml.representativeInfo.reprPassportInn }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Документы
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-sm">
+                            <thead>
+                            <tr>
+                                <th>Категория документа</th>
+                                <th>Документ</th>
+                                <th>Дата и время загрузки</th>
+                                <th>Статус</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for file in xml.documents %}
+                                <tr>
+                                    <td>{{ file.fileType }}</td>
+                                    <td>
+                                        <a href="{{ file.url }}">{{ file.fileName }}</a>
+                                    </td>
+                                    <td>{{ date(file.createdAt) }}</td>
+                                    <td>{{ file.fileStatus }}</td>
+                                </tr>
+                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('sign_profile_file') }}
+    {{ encore_entry_script_tags('sign_profile_xml') }}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% if status == 'ROLE_ADMIN' %}
+    Администратор
+{% elseif status == 'ROLE_MODERATOR' %}
+    Модератор
+{% elseif status == 'ROLE_USER' %}
+    Пользователь
+{% endif %}

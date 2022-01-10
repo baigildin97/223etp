@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('css') }}
+    {% endblock %}
+</head>
+<body class="c-app">
+<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
+    <div class="c-sidebar-brand">
+        <img class="c-sidebar-brand-full" src="/assets/brand/coreui-pro-base-white.svg" width="118" height="46" alt="CoreUI Logo">
+        <img class="c-sidebar-brand-minimized" src="/assets/brand/coreui-signet-white.svg" width="118" height="46" alt="CoreUI Logo">
+    </div>
+    {{ left_menu() }}
+    <button id="sidebar-minimizer" class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-unfoldable"></button>
+</div>
+<div class="c-sidebar c-sidebar-lg c-sidebar-light c-sidebar-right c-sidebar-overlaid" id="aside">
+    <button class="c-sidebar-close c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-show" responsive="true">
+        <svg class="c-icon">
+            <use xlink:href="/assets/svg/free.svg#cil-x"></use>
+        </svg>
+    </button>
+    <ul class="nav nav-tabs nav-underline nav-underline-primary" role="tablist">
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#timeline" role="tab">
+                <svg class="c-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-list"></use>
+                </svg></a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#messages" role="tab">
+                <svg class="c-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-speech"></use>
+                </svg></a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#settings" role="tab">
+                <svg class="c-icon">
+                    <use xlink:href="/assets/svg/free.svg#cil-settings"></use>
+                </svg></a></li>
+    </ul>
+
+</div>
+<div class="c-wrapper">
+    <header class="c-header c-header-light c-header-fixed c-header-with-subheader">
+        <button  class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar" data-class="c-sidebar-show"><span class="c-header-toggler-icon"></span></button><a class="c-header-brand d-sm-none" href="#"><img class="c-header-brand-full c-d-dark-none" src="/assets/brand/coreui-pro-base.svg" width="118" height="46" alt="CoreUI Logo"><img class="c-header-brand-minimized c-d-dark-none" src="/assets/brand/coreui-signet.svg" width="46" height="46" alt="CoreUI Logo"><img class="c-header-brand-full c-d-light-none" src="/assets/brand/coreui-pro-base-white.svg" width="118" height="46" alt="CoreUI Logo"><img class="c-header-brand-minimized c-d-light-none" src="/assets/brand/coreui-signet-white.svg" width="46" height="46" alt="CoreUI Logo"></a>
+        <button id="top-toggle" class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true"><span class="c-header-toggler-icon"></span></button>
+
+        <ul class="c-header-nav">
+
+        </ul>
+        <div class="c-subheader justify-content-between px-3">
+            {% block breadcrumbs %}{% endblock %}
+        </div>
+
+    </header>
+    <div class="c-body">
+        <main class="c-main">
+            <div class="container-fluid">
+                <div id="ui-view">
+                    {% if (profileAccess.issetProfile()) %}
+                  {#  {{ negative_balance() }}#}
+                    {% endif %}
+
+                    {% include '_flashes.html.twig' %}
+                    {% block body %}
+                    {% endblock %}
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="c-footer">
+        <div>2021</div>
+        <div class="mfs-auto"></div>
+    </footer>
+</div>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Тарифы{% endblock %}
+{% block meta %}
+    {#    <meta name="description" content="Page {{ pagination.currentPage }}">#}
+{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Панель управления</a></li>
+        <li class="breadcrumb-item active">Тарифы</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {% if(profileAccess.isAdmin() or profileAccess.isModerator()) %}
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <a href="{{ path('tariff.create') }}">Добавить новый тариф</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">Тарифы</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Тариф</th>
+                            <th>Стоимость</th>
+                            <th>Период действия</th>
+                            <th>Статус</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mini-table-body">
+                        {% for tariff in tariffs %}
+                            <tr>
+                                <td><a href="{{ path('tariff.show', {'tariff_id': tariff.id}) }}">{{ tariff.title }}</a></td>
+                                <td>{{ money(tariff.cost) }}</td>
+                                <td>{{ tariff.period }} мес</td>
+                                <td>{{ tariff_status(tariff.status) }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
